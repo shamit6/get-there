@@ -1,0 +1,10 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 20em;
+  margin: auto;
+}
+
+.form input[type="submit"] {
+  height: 2em;
+}
