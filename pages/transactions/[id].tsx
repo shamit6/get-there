@@ -1,6 +1,6 @@
 import Form from './Form';
 
-function New() {
+function New2() {
   return <Form />
 }
-export default New
+export default New2

@@ -7,13 +7,14 @@ export enum TimePeriod {
 export interface TransactionnInetrval {
   timePeriod: TimePeriod;
   amount: number;
+  endDate?: Date;
 }
 
 export interface TransactionConfig {
+  id?: string;
   type: string;
   date: Date;
   amount: number;
-  endDate?: Date;
   interval?: TransactionnInetrval;
 }
 

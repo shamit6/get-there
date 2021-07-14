@@ -13,12 +13,12 @@ function getNextIntervalTimeFunc(timePeriod: TimePeriod): (date: Date | number, 
 } 
 
 function generateTransactionConfigOccurances(transactionConfig: TransactionConfig, untilDate: Date): Transaction[] {
-  const {date, interval, type, amount, endDate} = transactionConfig;
+  const {date, interval, type, amount} = transactionConfig;
   const transactionOccurances: Transaction[] = [];
   
   let currentDate = date;
   const getNextIntervalTime = getNextIntervalTimeFunc(interval!.timePeriod);
-  const generateUntilDate = endDate? min([untilDate, endDate]) : untilDate;
+  const generateUntilDate = interval!.endDate? min([untilDate, interval!.endDate]) : untilDate;
 
   while (!isAfter(currentDate, generateUntilDate)) {
     transactionOccurances.push({amount, type, date: currentDate});
