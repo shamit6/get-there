@@ -1,0 +1,63 @@
+.wrapper {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: [col1-start] 5% [col2-start]  5% [col3-start] 1fr [col4-start] 20% [col5-start] 5% [col5-end];
+  grid-template-columns: [col1-start] 10% [col2-start]  auto [col3-start] 10% [col3-end];
+}
+
+.header {
+  grid-row-start: 2;
+  grid-column-start: 2;
+  a {
+    margin-right: 2em;
+  }
+}
+
+.content {
+  grid-column-start: 2;
+  grid-row-start: 3;
+}
+
+.footer {
+  grid-column-start: 2;
+  grid-row-start: 4;
+}
+
+.balancePanel {
+  margin-top: 2em;
+  display: flex;
+  * {
+    margin-right: 0.5em;
+  }
+}
+
+.transactionTable {
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 2;
+  
+  .tableHeader {
+    background-color: darkslategrey;
+    color: white;
+  }
+  
+  .tableRow {
+    cursor: pointer;
+    text-align: center;
+
+    &:nth-of-type(even) {
+      background-color:lightgrey;
+      &:hover {
+        background: darken(lightgrey, 10%);
+      }
+    }
+
+    &:nth-of-type(odd) {
+      background-color:white;
+      &:hover {
+        background: darken(white, 10%);
+      }
+    }
+  }
+}
+  

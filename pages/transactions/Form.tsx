@@ -17,7 +17,6 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
   };
   
   const isRepeated = watch("repeated", !!transactionConfig?.interval);
-  console.log('isRepeated', isRepeated);
   
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -36,14 +35,14 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           control={control}
           name="date"
           rules={{required: true}}
-          defaultValue={transactionConfig?.date}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({ field: { onChange, onBlur, value } }) => {
+            return (
             <ReactDatePicker
               onChange={onChange}
               onBlur={onBlur}
-              selected={value}
+              selected={value || transactionConfig?.date}
             />
-          )}
+          )}}
         />
       </div>
       <div className={styles.field}>
@@ -83,14 +82,13 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
         <label>End Date: </label>
           <Controller 
             control={control}
-            name="endDate"
+            name="interval.endDate"
             rules={{required: isRepeated}}
-            defaultValue={transactionConfig?.interval?.endDate}
             render={({ field: { onChange, onBlur, value } }) => (
               <ReactDatePicker
                 onChange={onChange}
                 onBlur={onBlur}
-                selected={value}
+                selected={value || transactionConfig?.interval?.endDate}
               />
             )}
           />

@@ -1,8 +1,6 @@
 import Form from '../Form';
 
-function New() {
-  console.log('sssss');
-  
+function New() {  
   return <Form />
 }
 export default New

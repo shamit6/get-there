@@ -26,7 +26,7 @@ function generateTransactionConfigOccurances(transactionConfig: TransactionConfi
 
   while (!isAfter(currentDate, generateUntilDate)) {
     currentDate = getNextIntervalTime(currentDate, interval!.amount);
-    transactionOccurances.push({amount, type, date});
+    transactionOccurances.push({amount, type, date: currentDate});
   }
 
   return transactionOccurances;

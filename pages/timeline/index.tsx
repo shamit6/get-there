@@ -11,8 +11,6 @@ const currentBalance = 24000;
 function Timeline() {
   const [transactions, setTransactions] = useState<TimelineTransaction[]>([]);
   useEffect(() => {
-    console.log('getAllTransactions()', getAllTransactions());
-    
     const allTransactions = generateTransactionConfigsOccurances(getAllTransactions(), new Date(2023, 1, 1));
     const transactionToView = addBalanaceToSortTransaction(
       allTransactions.filter(({date}) =>  date.getTime() >= Date.now()),
@@ -23,8 +21,8 @@ function Timeline() {
   }, []);
     
   return (  
-    <div style={{backgroundColor: '#dff3d8'}} >
-    <VerticalTimeline>
+    <div>
+    <VerticalTimeline animate={false}>
       <VerticalTimelineElement
             className="vertical-timeline-element--work"
             contentStyle={{}}
@@ -51,9 +49,12 @@ function Timeline() {
             width={50} 
             height={50} />}
           >
-          <div style={{color: transaction.amount > 0 ? 'green': 'red'}}>
+          <span>
+            {`${transaction.type}:  `}
+          </span>
+          <span style={{color: transaction.amount > 0 ? 'green': 'red'}}>
             {transaction.amount}
-          </div>
+          </span>
           <div>
             {`balance: ${transaction.balance}`}
           </div>

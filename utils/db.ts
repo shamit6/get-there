@@ -2,8 +2,6 @@ import type {TransactionConfig} from './types'
 
 function serialize(transactions: TransactionConfig[]) {
   const serializedList = transactions.map(transaction => {
-    console.log('ser', transaction);
-    
     const {date, interval, ...rest} = transaction;
     const serialized = {...rest, date: transaction.date.getTime()};
 
@@ -20,8 +18,6 @@ function serialize(transactions: TransactionConfig[]) {
 
 function diserialize(transactions: string) {
   const diserializedList = JSON.parse(transactions);
-  console.log('diserializedList', diserializedList);
-  // return [];
   //@ts-ignore
   return diserializedList.map(transaction => {
     const {date, interval, amount, ...rest} = transaction;
@@ -49,4 +45,7 @@ export function createOrUpdateTransaction(transaction: TransactionConfig){
 
 export function getAllTransactions(){
   return diserialize(localStorage.getItem('transactions') || '[]') as Array<TransactionConfig>;
+}
+export function getTransactionById(id: number){
+  return getAllTransactions().find((({id: _id})=> _id === id))
 }
