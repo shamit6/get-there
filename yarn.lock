@@ -649,8 +649,8 @@ chokidar@3.5.1:
 
 "chokidar@>=3.0.0 <4.0.0":
   version "3.5.2"
-  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"
-  integrity sha1-26OXb8rbAW9m/TZQIdkWANAcHnU=
+  resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"
+  integrity sha512-ekGhOnNVPgT77r4K/U3GDhu+FQ2S8TnK/s2KbIGXi0SZWuwkZ2QNyfWdZW+TVfn84DpEP7rLeCt2UI6bJ8GwbQ==
   dependencies:
     anymatch "~3.1.2"
     braces "~3.0.2"
@@ -2618,8 +2618,8 @@ readdirp@~3.5.0:
 
 readdirp@~3.6.0:
   version "3.6.0"
-  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/readdirp/-/readdirp-3.6.0.tgz#74a370bd857116e245b29cc97340cd431a02a6c7"
-  integrity sha1-dKNwvYVxFuJFspzJc0DNQxoCpsc=
+  resolved "https://registry.yarnpkg.com/readdirp/-/readdirp-3.6.0.tgz#74a370bd857116e245b29cc97340cd431a02a6c7"
+  integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
 
@@ -2711,8 +2711,8 @@ safe-buffer@~5.1.0, safe-buffer@~5.1.1:
 
 sass@^1.35.2:
   version "1.35.2"
-  resolved "https://repo.dev.wixpress.com/artifactory/api/npm/npm-repos/sass/-/sass-1.35.2.tgz#b732314fcdaf7ef8d0f1698698adc378043cb821"
-  integrity sha1-tzIxT82vfvjQ8WmGmK3DeAQ8uCE=
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.35.2.tgz#b732314fcdaf7ef8d0f1698698adc378043cb821"
+  integrity sha512-jhO5KAR+AMxCEwIH3v+4zbB2WB0z67V1X0jbapfVwQQdjHZUGUyukpnoM6+iCMfsIUC016w9OPKQ5jrNOS9uXw==
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
