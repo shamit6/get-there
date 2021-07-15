@@ -1,38 +1,27 @@
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import Image from 'next/image'
-import {TransactionConfig, TimePeriod} from '../../utils/types';
+import {TimelineTransaction, TimePeriod} from '../../utils/types';
 import {generateTransactionConfigsOccurances, addBalanaceToSortTransaction} from '../../utils/transactionsCalculator';
+import {getAllTransactions} from '../../utils/db';
+import { useEffect, useState } from 'react';
 
-const transactionConfigs: TransactionConfig[] = [
-  {
-    type: 'salary', 
-    date: new Date(2021, 1, 1), 
-    amount: 10000, 
-    interval: {timePeriod: TimePeriod.MONTH, amount:1}
-  },
-  {
-    type: 'lease', 
-    date: new Date(2021, 7, 1), 
-    amount: 3000, 
-    interval: {timePeriod: TimePeriod.MONTH, amount:1}
-  },
-  {
-    type: 'credit card', 
-    date: new Date(2021, 6, 10), 
-    amount: -4000, 
-    interval: {timePeriod: TimePeriod.MONTH, amount:1}
-  },
-]
 const currentBalance = 24000;
-const allTransactions = generateTransactionConfigsOccurances(transactionConfigs, new Date(2023, 1, 1));
 
 function Timeline() {
-  const transactionToView = addBalanaceToSortTransaction(
-    allTransactions.filter(({date}) =>  date.getTime() >= Date.now()),
-    {amount: 30000, updatedDate: new Date(2021, 6, 3)}
-  );
-  
+  const [transactions, setTransactions] = useState<TimelineTransaction[]>([]);
+  useEffect(() => {
+    console.log('getAllTransactions()', getAllTransactions());
+    
+    const allTransactions = generateTransactionConfigsOccurances(getAllTransactions(), new Date(2023, 1, 1));
+    const transactionToView = addBalanaceToSortTransaction(
+      allTransactions.filter(({date}) =>  date.getTime() >= Date.now()),
+      {amount: 30000, updatedDate: new Date(2021, 6, 3)}
+      );
+
+      setTransactions(transactionToView);
+  }, []);
+    
   return (  
     <div style={{backgroundColor: '#dff3d8'}} >
     <VerticalTimeline>
@@ -47,7 +36,7 @@ function Timeline() {
             {`current balance: ${currentBalance}`}
           </div>
         </VerticalTimelineElement>
-      {transactionToView.map((transaction, index) => {
+      {transactions.map((transaction, index) => {
         return (
           <VerticalTimelineElement
             key={index}

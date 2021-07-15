@@ -1,4 +1,4 @@
-import type {TransactionConfig, Transaction, TimePeriod, BalanceStatus} from "./types";
+import type {TransactionConfig, Transaction, TimePeriod, BalanceStatus, TimelineTransaction} from "./types";
 import {addWeeks, addMonths, addYears, isAfter, min} from "date-fns";
 
 function getNextIntervalTimeFunc(timePeriod: TimePeriod): (date: Date | number, amount: number) => Date {
@@ -14,15 +14,19 @@ function getNextIntervalTimeFunc(timePeriod: TimePeriod): (date: Date | number, 
 
 function generateTransactionConfigOccurances(transactionConfig: TransactionConfig, untilDate: Date): Transaction[] {
   const {date, interval, type, amount} = transactionConfig;
-  const transactionOccurances: Transaction[] = [];
+  const transactionOccurances: Transaction[] = [{amount, type, date}];
   
+  if (!interval) {
+    return transactionOccurances;
+  }
+
   let currentDate = date;
   const getNextIntervalTime = getNextIntervalTimeFunc(interval!.timePeriod);
   const generateUntilDate = interval!.endDate? min([untilDate, interval!.endDate]) : untilDate;
 
   while (!isAfter(currentDate, generateUntilDate)) {
-    transactionOccurances.push({amount, type, date: currentDate});
     currentDate = getNextIntervalTime(currentDate, interval!.amount);
+    transactionOccurances.push({amount, type, date});
   }
 
   return transactionOccurances;
@@ -38,7 +42,7 @@ export function generateTransactionConfigsOccurances(transactionConfigs: Transac
 }
 
 export function addBalanaceToSortTransaction(transactions: Transaction[], balanceStatus: BalanceStatus) {
-  const transactionsWithBalance: (Transaction & {balance?: number})[] = [];
+  const transactionsWithBalance: TimelineTransaction[] = [];
   const {updatedDate, amount}  = balanceStatus;
   let currentAmount = amount;
   

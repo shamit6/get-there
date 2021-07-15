@@ -11,7 +11,7 @@ export interface TransactionnInetrval {
 }
 
 export interface TransactionConfig {
-  id?: string;
+  id?: number;
   type: string;
   date: Date;
   amount: number;
@@ -23,7 +23,9 @@ export interface Transaction {
   date: Date;
   amount: number;
 }
-
+export interface TimelineTransaction extends Transaction{
+  balance?: number;
+}
 export interface BalanceStatus {
   updatedDate: Date;
   amount: number;

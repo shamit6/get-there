@@ -3,8 +3,12 @@
   flex-direction: column;
   max-width: 20em;
   margin: auto;
-}
 
-.form input[type="submit"] {
-  height: 2em;
+  .field {
+    margin-top: 1em;
+  }
+
+  input[type="submit"] {
+    height: 2em;
+  }
 }

@@ -1,12 +1,14 @@
 import React, {FunctionComponent} from "react";
-import { useForm } from "react-hook-form";
-import styles from './Form.module.css';
+import { useForm, Controller } from "react-hook-form";
+import styles from './Form.module.scss';
 import type {TransactionConfig} from '../../utils/types';
 import {createOrUpdateTransaction} from '../../utils/db';
 import { useRouter } from 'next/router';
+import ReactDatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function Form({transactionConfig} : {transactionConfig?: TransactionConfig}) {
-  const { register, handleSubmit, watch} = useForm();
+  const { register, handleSubmit, watch, control} = useForm();
   const router = useRouter()
   const onSubmit = (data: TransactionConfig & {repeated: boolean}) => {
     const {repeated, interval, ...rest} = data;
@@ -19,7 +21,7 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
   
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-      <p>
+      <div className={styles.field}>
         <label>Amount: </label>
         <input
           type="number"
@@ -27,29 +29,38 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           defaultValue={transactionConfig?.amount}
           {...register("amount", { required: true})}
         />
-      </p>
-      <p>
+      </div>
+      <div className={styles.field}>
         <label>Date: </label>
-        <input
-          type="date"
-          defaultValue={transactionConfig?.date.getTime()}
-          {...register("date", { required: true})}
+        <Controller 
+          control={control}
+          name="date"
+          rules={{required: true}}
+          defaultValue={transactionConfig?.date}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <ReactDatePicker
+              onChange={onChange}
+              onBlur={onBlur}
+              selected={value}
+            />
+          )}
         />
-      </p>
-      <p>
+      </div>
+      <div className={styles.field}>
         <label>Type: </label>
         <input
+          id="type"
           type="text"
           placeholder="Salary"
           defaultValue={transactionConfig?.type}
           {...register("type", { required: true})}
           />
-      </p>
-      <p>
+      </div>
+      <div className={styles.field}>
           <input type="checkbox" id="repeated" {...register("repeated", { required: isRepeated})}/>
           <label htmlFor="repeated">Repeated</label>
-      </p>
-      <p>
+      </div>
+      <div className={styles.field}>
         <label>In: </label>
         <input
           type="number"
@@ -67,16 +78,23 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           <option value="month">months</option>
           <option value="year">years</option>
         </select>
-      </p>
-      <p>
+      </div>
+      <div className={styles.field}>
         <label>End Date: </label>
-        <input
-          type="date"
-          defaultValue={transactionConfig?.interval?.endDate?.getTime()}
-          disabled={!isRepeated}
-          {...register("interval.endDate", { required: isRepeated})}
-        />
-      </p>
+          <Controller 
+            control={control}
+            name="endDate"
+            rules={{required: isRepeated}}
+            defaultValue={transactionConfig?.interval?.endDate}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <ReactDatePicker
+                onChange={onChange}
+                onBlur={onBlur}
+                selected={value}
+              />
+            )}
+          />
+      </div>
       <input type="submit"/>
     </form>
   );
