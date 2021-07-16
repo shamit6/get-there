@@ -1,15 +1,18 @@
 import { VerticalTimeline, VerticalTimelineElement }  from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import Image from 'next/image'
-import {TimelineTransaction, TimePeriod} from '../../utils/types';
+import {BalanceStatus, TimelineTransaction, TimePeriod} from '../../utils/types';
 import {generateTransactionConfigsOccurances, addBalanaceToSortTransaction} from '../../utils/transactionsCalculator';
-import {getAllTransactions} from '../../utils/db';
+import {getAllTransactions, getBalanceStatus} from '../../utils/db';
 import { useEffect, useState } from 'react';
-
-const currentBalance = 24000;
+import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 
 function Timeline() {
   const [transactions, setTransactions] = useState<TimelineTransaction[]>([]);
+  const [balanceStatus, setBalanceStatus] = useState<BalanceStatus>();
+  const router = useRouter();
+
   useEffect(() => {
     const allTransactions = generateTransactionConfigsOccurances(getAllTransactions(), new Date(2023, 1, 1));
     const transactionToView = addBalanaceToSortTransaction(
@@ -18,22 +21,29 @@ function Timeline() {
       );
 
       setTransactions(transactionToView);
+
+    const balanceStatus = getBalanceStatus();
+    if (!balanceStatus) {
+      router.replace('/transactions');
+    } else {
+      setBalanceStatus(balanceStatus);
+    }
   }, []);
-    
+
   return (  
     <div>
     <VerticalTimeline animate={false}>
-      <VerticalTimelineElement
+      {balanceStatus && <VerticalTimelineElement
             className="vertical-timeline-element--work"
             contentStyle={{}}
             contentArrowStyle={{ borderRight: '7px solid #fff' }}
-            date={new Date().toDateString()}
+            date={format(balanceStatus.updatedDate, 'dd/MM/yyyy')}
             iconStyle={{ background: 'rgb(255, 255, 255)', color: '#fff', padding: '10px'}}
           >
           <div>
-            {`current balance: ${currentBalance}`}
+            {`balance was updated tp: ${balanceStatus.amount}`}
           </div>
-        </VerticalTimelineElement>
+        </VerticalTimelineElement>}
       {transactions.map((transaction, index) => {
         return (
           <VerticalTimelineElement

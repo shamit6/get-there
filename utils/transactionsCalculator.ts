@@ -58,3 +58,13 @@ export function addBalanaceToSortTransaction(transactions: Transaction[], balanc
   return transactionsWithBalance;
 }
 
+export function getCurrentBalanceAmount(transactionConfigs: TransactionConfig[], balanceStatus: BalanceStatus){
+  if (transactionConfigs.length === 0) {
+    return balanceStatus.amount;
+  }
+  
+  const transactionsUntilNow = generateTransactionConfigsOccurances(transactionConfigs, new Date());
+  const transactionsWithBlance = addBalanaceToSortTransaction(transactionsUntilNow, balanceStatus);
+
+  return transactionsWithBlance[transactionsWithBlance.length - 1].balance;
+}

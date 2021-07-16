@@ -1,4 +1,4 @@
-import type {TransactionConfig} from './types'
+import type {BalanceStatus, TransactionConfig} from './types'
 
 function serialize(transactions: TransactionConfig[]) {
   const serializedList = transactions.map(transaction => {
@@ -48,4 +48,19 @@ export function getAllTransactions(){
 }
 export function getTransactionById(id: number){
   return getAllTransactions().find((({id: _id})=> _id === id))
+}
+
+export function createOrUpdateBalanceStatus(amount: number) {
+  localStorage.setItem('currentBalance', JSON.stringify({amount, updatedDate: new Date().getTime()}));
+}
+
+export function getBalanceStatus(): BalanceStatus | null {
+  const serializedBalance = localStorage.getItem('currentBalance');
+
+  if (!serializedBalance) {
+    return null;
+  }
+
+  const {amount, updatedDate} = JSON.parse(serializedBalance);
+  return {amount: Number(amount), updatedDate: new Date(updatedDate)}
 }

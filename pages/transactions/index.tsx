@@ -2,18 +2,25 @@ import { format } from 'date-fns';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getAllTransactions } from '../../utils/db';
+import { createOrUpdateBalanceStatus, getAllTransactions, getBalanceStatus } from '../../utils/db';
+import { getCurrentBalanceAmount } from '../../utils/transactionsCalculator';
 import { TransactionConfig } from '../../utils/types';
 import styles from './Transactions.module.scss';
 
 function List() {
   const [transactions, setTransactions] = useState<TransactionConfig[]>([]);
+  const [balance, setBalance] = useState<number>();
   const router = useRouter();
 
   useEffect(() => {
     const allTransactions = getAllTransactions();
-    
     setTransactions(allTransactions);
+
+    const balanceStats = getBalanceStatus();
+    if (balanceStats) {
+      const currentBalanceAmount = getCurrentBalanceAmount(allTransactions, balanceStats);
+      setBalance(currentBalanceAmount);
+    }
   }, []);
   
   return (
@@ -22,7 +29,7 @@ function List() {
         <Link href="/timeline">
           <a>Timeline</a>
         </Link>
-        <Link href="/transaction/new">
+        <Link href="/transactions/new">
           <a>New Transaction</a>
         </Link>
       </div>
@@ -53,8 +60,10 @@ function List() {
           <span>
             Current Balance: 
           </span>
-          <input value={40000}/>
-          <button>Update Balance</button>
+          <input value={balance || ''} type="number" onChange={(e) => setBalance(Number(e.target.value))}/>
+          <button disabled={!balance} onClick={() => {
+            createOrUpdateBalanceStatus(balance!);
+          }}>Update Balance</button>
         </div>
       </div>
     </div>
