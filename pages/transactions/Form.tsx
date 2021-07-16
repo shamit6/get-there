@@ -21,8 +21,8 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
     router.push('/transactions');
   };
   
-  const isRepeated = watch("repeated", !!transactionConfig?.interval);
-  
+  const isRepeated = watch("repeated", !!transactionConfig?.interval?.amount);
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       <div className={styles.field}>
@@ -40,6 +40,7 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           control={control}
           name="date"
           rules={{required: true}}
+          defaultValue={transactionConfig?.date}
           render={({ field: { onChange, onBlur, value } }) => {
             return (
             <ReactDatePicker
@@ -61,7 +62,10 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           />
       </div>
       <div className={styles.field}>
-          <input type="checkbox" id="repeated" {...register("repeated", { required: isRepeated})}/>
+          <input 
+          type="checkbox" 
+          id="repeated" 
+          defaultChecked={!!(transactionConfig?.interval?.amount)} {...register("repeated", { required: isRepeated})}/>
           <label htmlFor="repeated">Repeated</label>
       </div>
       <div className={styles.field}>
