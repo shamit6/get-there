@@ -1,27 +1,36 @@
-import React, {FunctionComponent} from "react";
-import { useForm, Controller } from "react-hook-form";
-import styles from './Form.module.scss';
-import type {TransactionConfig} from '../../utils/types';
-import {createOrUpdateTransaction} from '../../utils/db';
-import { useRouter } from 'next/router';
-import ReactDatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
+import React, { FunctionComponent } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { useRouter } from 'next/router'
+import ReactDatePicker from 'react-datepicker'
+import styles from './Form.module.scss'
+import type { TransactionConfig } from '../../utils/types'
+import { createOrUpdateTransaction } from '../../utils/db'
+import 'react-datepicker/dist/react-datepicker.css'
 
-export default function Form({transactionConfig} : {transactionConfig?: TransactionConfig}) {
-  const { register, handleSubmit, watch, control} = useForm({shouldUseNativeValidation: false});
+export default function Form({
+  transactionConfig,
+}: {
+  transactionConfig?: TransactionConfig
+}) {
+  const { register, handleSubmit, watch, control } = useForm({
+    shouldUseNativeValidation: false,
+  })
   const router = useRouter()
-  const onSubmit = (data: TransactionConfig & {repeated: boolean}) => {
-    const {repeated, interval, ...rest} = data;
-    
-    const newTransaction: TransactionConfig = {...rest, id: transactionConfig?.id};
-    if (repeated) {
-      newTransaction.interval = interval;
+  const onSubmit = (data: TransactionConfig & { repeated: boolean }) => {
+    const { repeated, interval, ...rest } = data
+
+    const newTransaction: TransactionConfig = {
+      ...rest,
+      id: transactionConfig?.id,
     }
-    createOrUpdateTransaction(newTransaction);
-    router.push('/transactions');
-  };
-  
-  const isRepeated = watch("repeated", !!transactionConfig?.interval?.amount);
+    if (repeated) {
+      newTransaction.interval = interval
+    }
+    createOrUpdateTransaction(newTransaction)
+    router.push('/transactions')
+  }
+
+  const isRepeated = watch('repeated', !!transactionConfig?.interval?.amount)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -31,24 +40,23 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           type="number"
           placeholder="10,000"
           defaultValue={transactionConfig?.amount}
-          {...register("amount", { required: true})}
+          {...register('amount', { required: true })}
         />
       </div>
       <div className={styles.field}>
         <label>Date: </label>
-        <Controller 
+        <Controller
           control={control}
           name="date"
-          rules={{required: true}}
+          rules={{ required: true }}
           defaultValue={transactionConfig?.date}
-          render={({ field: { onChange, onBlur, value } }) => {
-            return (
+          render={({ field: { onChange, onBlur, value } }) => (
             <ReactDatePicker
               onChange={onChange}
               onBlur={onBlur}
               selected={value || transactionConfig?.date}
             />
-          )}}
+          )}
         />
       </div>
       <div className={styles.field}>
@@ -58,15 +66,17 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           type="text"
           placeholder="Salary"
           defaultValue={transactionConfig?.type}
-          {...register("type", { required: true})}
-          />
+          {...register('type', { required: true })}
+        />
       </div>
       <div className={styles.field}>
-          <input 
-          type="checkbox" 
-          id="repeated" 
-          defaultChecked={!!(transactionConfig?.interval?.amount)} {...register("repeated", { required: isRepeated})}/>
-          <label htmlFor="repeated">Repeated</label>
+        <input
+          type="checkbox"
+          id="repeated"
+          defaultChecked={!!transactionConfig?.interval?.amount}
+          {...register('repeated', { required: isRepeated })}
+        />
+        <label htmlFor="repeated">Repeated</label>
       </div>
       <div className={styles.field}>
         <label>In: </label>
@@ -74,12 +84,12 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           type="number"
           defaultValue={transactionConfig?.interval?.amount || 1}
           disabled={!isRepeated}
-          style={{width: '4 em', marginRight: '.7em'}}
-          {...register("interval.amount", { required: isRepeated})}
+          style={{ width: '4 em', marginRight: '.7em' }}
+          {...register('interval.amount', { required: isRepeated })}
         />
-        <select 
-          {...register("interval.timePeriod")} 
-          defaultValue={transactionConfig?.interval?.timePeriod || "month"}
+        <select
+          {...register('interval.timePeriod')}
+          defaultValue={transactionConfig?.interval?.timePeriod || 'month'}
           disabled={!isRepeated}
         >
           <option value="week">weeks</option>
@@ -89,21 +99,20 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
       </div>
       <div className={styles.field}>
         <label>End Date: </label>
-          <Controller 
-            control={control}
-            name="interval.endDate"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <ReactDatePicker
-                onChange={onChange}
-                onBlur={onBlur}
-                selected={value || transactionConfig?.interval?.endDate}
-                popperPlacement="top"
-              />
-            )}
-          />
+        <Controller
+          control={control}
+          name="interval.endDate"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <ReactDatePicker
+              onChange={onChange}
+              onBlur={onBlur}
+              selected={value || transactionConfig?.interval?.endDate}
+              popperPlacement="top"
+            />
+          )}
+        />
       </div>
-      <input type="submit"/>
+      <input type="submit" />
     </form>
-  );
+  )
 }
-
