@@ -8,11 +8,16 @@ import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
 export default function Form({transactionConfig} : {transactionConfig?: TransactionConfig}) {
-  const { register, handleSubmit, watch, control} = useForm();
+  const { register, handleSubmit, watch, control} = useForm({shouldUseNativeValidation: false});
   const router = useRouter()
   const onSubmit = (data: TransactionConfig & {repeated: boolean}) => {
     const {repeated, interval, ...rest} = data;
-    createOrUpdateTransaction(repeated? {interval, ...rest} : rest);
+    
+    const newTransaction: TransactionConfig = {...rest, id: transactionConfig?.id};
+    if (repeated) {
+      newTransaction.interval = interval;
+    }
+    createOrUpdateTransaction(newTransaction);
     router.push('/transactions');
   };
   
@@ -70,7 +75,7 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
         />
         <select 
           {...register("interval.timePeriod")} 
-          defaultValue={transactionConfig?.interval?.timePeriod}
+          defaultValue={transactionConfig?.interval?.timePeriod || "month"}
           disabled={!isRepeated}
         >
           <option value="week">weeks</option>
@@ -83,12 +88,12 @@ export default function Form({transactionConfig} : {transactionConfig?: Transact
           <Controller 
             control={control}
             name="interval.endDate"
-            rules={{required: isRepeated}}
             render={({ field: { onChange, onBlur, value } }) => (
               <ReactDatePicker
                 onChange={onChange}
                 onBlur={onBlur}
                 selected={value || transactionConfig?.interval?.endDate}
+                popperPlacement="top"
               />
             )}
           />
