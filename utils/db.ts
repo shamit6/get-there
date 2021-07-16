@@ -34,13 +34,15 @@ function diserialize(transactions: string) {
 
 export function createOrUpdateTransaction(transaction: TransactionConfig){
   const transactions = diserialize(localStorage.getItem('transactions') || '[]') as Array<TransactionConfig>;
+  let updateransactionsList = [];
+
   if (transaction.id) {
-    transactions.push(...transactions.filter(({id}) => id !== transaction.id), transaction);
+    updateransactionsList = [...transactions.filter(({id}) => id !== transaction.id), transaction];
   } else {
     const newId =  Math.max(0, ...transactions.map(({id}) => id!)) + 1;
-    transactions.push({...transaction, id: newId})
+    updateransactionsList = [...transactions, {...transaction, id: newId}];
   }
-  localStorage.setItem('transactions', serialize(transactions));
+  localStorage.setItem('transactions', serialize(updateransactionsList));
 }
 
 export function getAllTransactions(){
