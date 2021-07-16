@@ -15,6 +15,7 @@ import {
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
+  getCurrentBalanceAmount,
 } from '../../utils/transactionsCalculator'
 import { getAllTransactions, getBalanceStatus } from '../../utils/db'
 
@@ -26,11 +27,12 @@ function Timeline() {
   useEffect(() => {
     const allTransactions = generateTransactionConfigsOccurances(
       getAllTransactions(),
-      new Date(2023, 1, 1)
+      new Date(2035, 1, 1)
     )
+    const currentBalance = getBalanceStatus()
     const transactionToView = addBalanaceToSortTransaction(
       allTransactions.filter(({ date }) => date.getTime() >= Date.now()),
-      { amount: 30000, updatedDate: new Date(2021, 6, 3) }
+      currentBalance!
     )
 
     setTransactions(transactionToView)
@@ -88,9 +90,9 @@ function Timeline() {
           >
             <span>{`${transaction.type}:  `}</span>
             <span style={{ color: transaction.amount > 0 ? 'green' : 'red' }}>
-              {transaction.amount}
+              {transaction.amount.toLocaleString('he')}
             </span>
-            <div>{`balance: ${transaction.balance}`}</div>
+            <div>{`balance: ${transaction.balance!.toLocaleString('he')}`}</div>
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>

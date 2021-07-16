@@ -39,7 +39,7 @@ export default function Form({
         <input
           type="number"
           placeholder="10,000"
-          defaultValue={transactionConfig?.amount}
+          defaultValue={transactionConfig?.amount.toLocaleString('he')}
           {...register('amount', { required: true })}
         />
       </div>

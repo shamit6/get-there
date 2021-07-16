@@ -58,7 +58,7 @@ function List() {
                 onClick={() => router.push(`/transactions/${transaction.id}`)}
               >
                 <td>{transaction.type}</td>
-                <td>{transaction.amount}</td>
+                <td>{transaction.amount.toLocaleString('he')}</td>
                 <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
                 <td>
                   {transaction.interval &&
