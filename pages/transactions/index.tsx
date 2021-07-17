@@ -30,6 +30,15 @@ function List() {
     }
   }, [])
 
+  const onUpdateBalance = async () => {
+    const data = await fetch(`/api/balance-statuses`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({amount: balance}),
+    })
+    console.log('data', data);
+  }
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -77,9 +86,7 @@ function List() {
           />
           <button
             disabled={!balance}
-            onClick={() => {
-              createOrUpdateBalanceStatus(balance!)
-            }}
+            onClick={() => onUpdateBalance()}
           >
             Update Balance
           </button>
