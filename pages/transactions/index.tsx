@@ -2,32 +2,61 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import {
-  createOrUpdateBalanceStatus,
-  getAllTransactions,
-  getBalanceStatus,
-} from '../../utils/db'
-import { getCurrentBalanceAmount } from '../../utils/transactionsCalculator'
-import { TransactionConfig } from '../../utils/types'
+import { getAllTransactions } from '../../utils/db'
+import useSWR, { mutate } from 'swr'
+import { BalanceStatus, TransactionConfig } from '../../utils/types'
 import styles from './Transactions.module.scss'
+
+function CurrentBalancePanel({
+  balanceStatus,
+}: {
+  balanceStatus?: BalanceStatus
+}) {
+  const [editedAmount, setEditedAmount] = useState(balanceStatus?.amount || 0)
+
+  const updateBalanceStatus = async (amount: number) => {
+    mutate(
+      '/api/balance-statuses?last=true',
+      { amount, createdAt: new Date() },
+      false
+    )
+    const data = await fetch(`/api/balance-statuses`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount }),
+    })
+  }
+
+  return (
+    <div className={styles.balancePanel}>
+      <span>Current Balance:</span>
+      <input
+        defaultValue={editedAmount}
+        type="number"
+        onChange={(e) => setEditedAmount(Number(e.target.value))}
+      />
+      <button
+        disabled={!editedAmount}
+        onClick={() => updateBalanceStatus(editedAmount!)}
+      >
+        Update Balance
+      </button>
+      <div>
+        Last updated at: {new Date(balanceStatus?.createdAt!).toLocaleString()}
+      </div>
+    </div>
+  )
+}
 
 function List() {
   const [transactions, setTransactions] = useState<TransactionConfig[]>([])
-  const [balance, setBalance] = useState<number>()
   const router = useRouter()
+
+  const balanceStatus = useSWR('/api/balance-statuses?last=true')
 
   useEffect(() => {
     const allTransactions = getAllTransactions()
     setTransactions(allTransactions)
-
-    const balanceStats = getBalanceStatus()
-    if (balanceStats) {
-      const currentBalanceAmount = getCurrentBalanceAmount(
-        allTransactions,
-        balanceStats
-      )
-      setBalance(currentBalanceAmount)
-    }
   }, [])
 
   return (
@@ -68,22 +97,9 @@ function List() {
             ))}
           </tbody>
         </table>
-        <div className={styles.balancePanel}>
-          <span>Current Balance:</span>
-          <input
-            value={balance || ''}
-            type="number"
-            onChange={(e) => setBalance(Number(e.target.value))}
-          />
-          <button
-            disabled={!balance}
-            onClick={() => {
-              createOrUpdateBalanceStatus(balance!)
-            }}
-          >
-            Update Balance
-          </button>
-        </div>
+        {balanceStatus.data && !balanceStatus.error && (
+          <CurrentBalancePanel balanceStatus={balanceStatus.data} />
+        )}{' '}
       </div>
     </div>
   )

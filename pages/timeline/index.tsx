@@ -53,7 +53,7 @@ function Timeline() {
             className="vertical-timeline-element--work"
             contentStyle={{}}
             contentArrowStyle={{ borderRight: '7px solid #fff' }}
-            date={format(balanceStatus.updatedDate, 'dd/MM/yyyy')}
+            date={format(balanceStatus.createdAt, 'dd/MM/yyyy')}
             iconStyle={{
               background: 'rgb(255, 255, 255)',
               color: '#fff',
