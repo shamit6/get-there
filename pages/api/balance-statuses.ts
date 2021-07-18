@@ -1,21 +1,20 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient, BalanceStatus } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { BalanceStatus, prismaClient } from '../../utils/prisma'
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<BalanceStatus | null>
+  res: NextApiResponse<BalanceStatus | {}>
   ) {
     try {
-      await prisma.$connect()
-      let response: BalanceStatus | null;
+      await prismaClient.$connect()
+      let response: BalanceStatus | {};
       if (req.method === 'GET') {
-        response = await prisma.balanceStatus.findFirst();
+        response = await prismaClient.balanceStatus.findFirst() || {};
       } else if (req.method === 'PUT') {
         const { amount } = req.body
-        response = await prisma.balanceStatus.create({
+
+        response = await prismaClient.balanceStatus.create({
           data: {
             amount: Number(amount),
           },
@@ -26,6 +25,6 @@ export default async function handler(
     } catch (e) {
       res.status(500).send(e.message)
     } finally {
-      await prisma.$disconnect()
+      await prismaClient.$disconnect()
     }
 }
