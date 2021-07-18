@@ -64,5 +64,5 @@ export function getBalanceStatus(): BalanceStatus | null {
   }
 
   const {amount, updatedDate} = JSON.parse(serializedBalance);
-  return {amount: Number(amount), updatedDate: new Date(updatedDate)}
+  return {amount: Number(amount), createdAt: new Date(updatedDate)}
 }

@@ -43,11 +43,11 @@ export function generateTransactionConfigsOccurances(transactionConfigs: Transac
 
 export function addBalanaceToSortTransaction(transactions: Transaction[], balanceStatus: BalanceStatus) {
   const transactionsWithBalance: TimelineTransaction[] = [];
-  const {updatedDate, amount}  = balanceStatus;
+  const {createdAt, amount}  = balanceStatus;
   let currentAmount = amount;
   
   transactions.forEach(transaction => {    
-    if (!isAfter(transaction.date, updatedDate)) {      
+    if (!isAfter(transaction.date, createdAt)) {      
       transactionsWithBalance.push(transaction);
     } else {      
       currentAmount += transaction.amount;

@@ -6,23 +6,25 @@ const prisma = new PrismaClient()
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<BalanceStatus>
+  res: NextApiResponse<BalanceStatus | null>
   ) {
     try {
       await prisma.$connect()
-      console.log('req.body', req.body);
-      
-      const { amount } = req.body
-      const respose = await prisma.balanceStatus.create({
-        data: {
-          amount,
-        },
-      })
-      console.log(respose);
-      res.status(200).json(respose)
+      let response: BalanceStatus | null;
+      if (req.method === 'GET') {
+        response = await prisma.balanceStatus.findFirst();
+      } else if (req.method === 'PUT') {
+        const { amount } = req.body
+        response = await prisma.balanceStatus.create({
+          data: {
+            amount: Number(amount),
+          },
+        });
+      }
+ 
+      res.status(200).json(response!)
     } catch (e) {
-      console.log(e);
-      throw e
+      res.status(500).send(e.message)
     } finally {
       await prisma.$disconnect()
     }

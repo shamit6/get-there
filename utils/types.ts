@@ -27,7 +27,7 @@ export interface TimelineTransaction extends Transaction{
   balance?: number;
 }
 export interface BalanceStatus {
-  updatedDate: Date;
+  createdAt: Date;
   amount: number;
 }
 
