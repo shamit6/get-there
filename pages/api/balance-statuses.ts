@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { BalanceStatus, prismaClient } from '../../utils/prisma'
-
+import _ from 'lodash'
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<BalanceStatus | {}>
@@ -10,7 +10,12 @@ export default async function handler(
     await prismaClient.$connect()
     let response: BalanceStatus | {}
     if (req.method === 'GET') {
-      response = (await prismaClient.balanceStatus.findFirst()) || {}
+      const userBlanceStatuses = await prismaClient.balanceStatus.findMany({})
+      if (req.query.last) {
+        response = _.maxBy(userBlanceStatuses, 'createdAt') || {}
+      } else {
+        response = userBlanceStatuses
+      }
     } else if (req.method === 'PUT') {
       const { amount } = req.body
 

@@ -52,7 +52,14 @@ function List() {
   const [transactions, setTransactions] = useState<TransactionConfig[]>([])
   const router = useRouter()
 
-  const balanceStatus = useSWR('/api/balance-statuses?last=true')
+  const balanceStatus = useSWR('/api/balance-statuses?last=true', (url) =>
+    fetch(url)
+      .then((r) => r.json())
+      .then(({ createdAt, amount }) => ({
+        createdAt: new Date(createdAt),
+        amount,
+      }))
+  )
 
   useEffect(() => {
     const allTransactions = getAllTransactions()

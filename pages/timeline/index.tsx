@@ -7,43 +7,46 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
-import {
-  BalanceStatus,
-  TimelineTransaction,
-  TimePeriod,
-} from '../../utils/types'
+import { TimelineTransaction } from '../../utils/types'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
-  getCurrentBalanceAmount,
 } from '../../utils/transactionsCalculator'
 import { getAllTransactions, getBalanceStatus } from '../../utils/db'
+import useSWR from 'swr'
 
 function Timeline() {
   const [transactions, setTransactions] = useState<TimelineTransaction[]>([])
-  const [balanceStatus, setBalanceStatus] = useState<BalanceStatus>()
   const router = useRouter()
+  const { error, data: balanceStatus } = useSWR(
+    '/api/balance-statuses?last=true',
+    (url) =>
+      fetch(url)
+        .then((r) => r.json())
+        .then(({ createdAt, amount }) => ({
+          createdAt: new Date(createdAt),
+          amount,
+        }))
+  )
 
   useEffect(() => {
-    const allTransactions = generateTransactionConfigsOccurances(
-      getAllTransactions(),
-      new Date(2035, 1, 1)
-    )
-    const currentBalance = getBalanceStatus()
-    const transactionToView = addBalanaceToSortTransaction(
-      allTransactions.filter(({ date }) => date.getTime() >= Date.now()),
-      currentBalance!
-    )
+    if (balanceStatus) {
+      const allTransactions = generateTransactionConfigsOccurances(
+        getAllTransactions(),
+        new Date(2030, 1, 1)
+      )
 
-    setTransactions(transactionToView)
+      const transactionToView = addBalanaceToSortTransaction(
+        allTransactions.filter(({ date }) => date.getTime() >= Date.now()),
+        balanceStatus
+      )
 
-    const balanceStatus = getBalanceStatus()
-    if (!balanceStatus) {
-      router.replace('/transactions')
-    } else {
-      setBalanceStatus(balanceStatus)
+      setTransactions(transactionToView)
     }
-  }, [router])
+  }, [router, balanceStatus])
+  if (!error && !balanceStatus) {
+    return 'loading'
+  }
 
   return (
     <div>
