@@ -1,16 +1,26 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { getSession } from 'next-auth/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { BalanceStatus, prismaClient } from '../../utils/prisma'
 import _ from 'lodash'
+import { BalanceStatus, prismaClient } from '../../utils/prisma'
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<BalanceStatus | {}>
 ) {
+  const session = await getSession({ req })
+  const userEmail = session?.user?.email
+
+  if (!userEmail) {
+    return res.status(401)
+  }
+
   try {
     await prismaClient.$connect()
     let response: BalanceStatus | {}
     if (req.method === 'GET') {
-      const userBlanceStatuses = await prismaClient.balanceStatus.findMany({})
+      const userBlanceStatuses = await prismaClient.balanceStatus.findMany({
+        where: { userEmail },
+      })
       if (req.query.last) {
         response = _.maxBy(userBlanceStatuses, 'createdAt') || {}
       } else {
@@ -21,6 +31,7 @@ export default async function handler(
 
       response = await prismaClient.balanceStatus.create({
         data: {
+          userEmail: session?.user?.email!,
           amount: Number(amount),
         },
       })
