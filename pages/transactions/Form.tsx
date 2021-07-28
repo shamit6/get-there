@@ -1,36 +1,86 @@
-import React, { FunctionComponent } from 'react'
+import React, { useCallback } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import ReactDatePicker from 'react-datepicker'
 import styles from './Form.module.scss'
-import type { TransactionConfig } from '../../utils/types'
-import { createOrUpdateTransaction } from '../../utils/db'
 import 'react-datepicker/dist/react-datepicker.css'
+import { mutate } from 'swr'
+import { TransactionConfig } from '../../utils/prisma'
+
+function upsertToTrasactioList(
+  list: TransactionConfig[],
+  transaction: TransactionConfig
+) {
+  if (!transaction.id) {
+    return [...list, transaction]
+  } else {
+    const a = list.reduce<TransactionConfig[]>((acc, curr) => {
+      if (curr.id === transaction.id) {
+        return [...acc, transaction]
+      } else {
+        return [...acc, curr]
+      }
+    }, [])
+    console.log(a)
+
+    return a
+  }
+}
 
 export default function Form({
   transactionConfig,
 }: {
-  transactionConfig?: TransactionConfig
+  transactionConfig?: Partial<TransactionConfig>
 }) {
   const { register, handleSubmit, watch, control } = useForm({
     shouldUseNativeValidation: false,
   })
   const router = useRouter()
-  const onSubmit = (data: TransactionConfig & { repeated: boolean }) => {
-    const { repeated, interval, ...rest } = data
+  const onSubmit = useCallback(
+    async (data: TransactionConfig & { repeated: boolean }) => {
+      const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
+        data
 
-    const newTransaction: TransactionConfig = {
-      ...rest,
-      id: transactionConfig?.id,
-    }
-    if (repeated) {
-      newTransaction.interval = interval
-    }
-    createOrUpdateTransaction(newTransaction)
-    router.push('/transactions')
-  }
 
-  const isRepeated = watch('repeated', !!transactionConfig?.interval?.amount)
+      const newTransactionData: Partial<TransactionConfig> = {
+        ...rest,
+        amount: Number(amount),
+      }
+      if (repeated) {
+        newTransactionData.timePeriod = timePeriod
+        newTransactionData.periodAmount = Number(periodAmount)
+        if (!!endDate) {
+          newTransactionData.endDate = endDate
+        }
+      }
+      await mutate(
+        '/api/transaction-configs',
+        (transactionConfigs: TransactionConfig[]) => {
+          upsertToTrasactioList(transactionConfigs, {
+            ...newTransactionData,
+            // @ts-ignore
+            id: transactionConfig?.id,
+          })
+        }
+      )
+      router.push('/transactions')
+
+      const isNewTransaction = !transactionConfig?.id
+      const url = isNewTransaction
+        ? '/api/transaction-configs'
+        : `/api/transaction-configs/${transactionConfig!.id}`
+      fetch(url, {
+        method: isNewTransaction ? 'POST' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTransactionData),
+      }).then(() => {
+        return mutate('/api/transaction-configs')
+      })
+    },
+    [transactionConfig]
+  )
+
+  const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -73,7 +123,7 @@ export default function Form({
         <input
           type="checkbox"
           id="repeated"
-          defaultChecked={!!transactionConfig?.interval?.amount}
+          defaultChecked={!!transactionConfig?.timePeriod}
           {...register('repeated', { required: isRepeated })}
         />
         <label htmlFor="repeated">Repeated</label>
@@ -82,14 +132,14 @@ export default function Form({
         <label>In: </label>
         <input
           type="number"
-          defaultValue={transactionConfig?.interval?.amount || 1}
+          defaultValue={transactionConfig?.periodAmount || 1}
           disabled={!isRepeated}
           style={{ width: '4 em', marginRight: '.7em' }}
-          {...register('interval.amount', { required: isRepeated })}
+          {...register('periodAmount', { required: isRepeated })}
         />
         <select
-          {...register('interval.timePeriod')}
-          defaultValue={transactionConfig?.interval?.timePeriod || 'month'}
+          {...register('timePeriod')}
+          defaultValue={transactionConfig?.timePeriod || 'month'}
           disabled={!isRepeated}
         >
           <option value="week">weeks</option>
@@ -101,12 +151,12 @@ export default function Form({
         <label>End Date: </label>
         <Controller
           control={control}
-          name="interval.endDate"
+          name="endDate"
           render={({ field: { onChange, onBlur, value } }) => (
             <ReactDatePicker
               onChange={onChange}
               onBlur={onBlur}
-              selected={value || transactionConfig?.interval?.endDate}
+              selected={value || transactionConfig?.endDate}
               popperPlacement="top"
             />
           )}

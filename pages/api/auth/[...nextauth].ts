@@ -18,8 +18,8 @@ export default NextAuth({
           await prismaClient.$connect()
           await prismaClient.user.upsert({
             where: { email: email! },
-            create: { email: email!, name, picture: image },
-            update: { name, picture: image },
+            create: { email: email!, name, image },
+            update: { name, image },
           })
         } catch (e) {
           throw e

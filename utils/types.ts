@@ -1,33 +1,34 @@
 export enum TimePeriod {
-  WEEK = "week",
-  MONTH = "month",
-  YEAR = "year"
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year',
 }
 
 export interface TransactionnInetrval {
-  timePeriod: TimePeriod;
-  amount: number;
-  endDate?: Date;
+  timePeriod: TimePeriod
+  amount: number
+  endDate?: Date
 }
 
 export interface TransactionConfig {
-  id?: number;
-  type: string;
-  date: Date;
-  amount: number;
-  interval?: TransactionnInetrval;
+  id?: string
+  type: string
+  date: Date
+  amount: number
+  timePeriod?: TimePeriod
+  periodAmount?: number
+  endDate?: Date
 }
 
 export interface Transaction {
-  type: string;
-  date: Date;
-  amount: number;
+  type: string
+  date: Date
+  amount: number
 }
-export interface TimelineTransaction extends Transaction{
-  balance?: number;
+export interface TimelineTransaction extends Transaction {
+  balance?: number
 }
 export interface BalanceStatus {
-  createdAt: Date;
-  amount: number;
+  createdAt: Date
+  amount: number
 }
-

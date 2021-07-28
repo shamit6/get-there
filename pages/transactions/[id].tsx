@@ -1,23 +1,28 @@
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import Form from './Form'
 import { TransactionConfig } from '../../utils/types'
-import { getTransactionById } from '../../utils/db'
+import useSWR from 'swr'
 
 function New2() {
-  const [transaction, setTransaction] = useState<TransactionConfig>()
-  const [loaded, isLoaded] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    const id = Number(router.query.id)
-    if (id) {
-      const transaction = getTransactionById(id)
-      setTransaction(transaction)
-      isLoaded(true)
-    }
-  }, [router])
+  const { data: transactions } = useSWR<TransactionConfig[]>(
+    '/api/transaction-configs',
+    (url) =>
+      fetch(url)
+        .then((r) => r.json())
+        .then((transactionConfigs: TransactionConfig[]) => {
+          return transactionConfigs.map(({ date, endDate, ...rest }) => ({
+            ...rest,
+            date: new Date(date),
+            endDate: endDate ? new Date(endDate) : undefined,
+          }))
+        }),
+    {}
+  )
 
-  return loaded && <Form transactionConfig={transaction} />
+  const transaction = transactions?.find(({ id }) => router.query.id === id)
+
+  return !transaction ? 'Loading' : <Form transactionConfig={transaction!} />
 }
 export default New2

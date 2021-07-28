@@ -4,19 +4,16 @@ import {
 } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
-import { TimelineTransaction } from '../../utils/types'
+import useSWR from 'swr'
+import { TransactionConfig } from '../../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
 } from '../../utils/transactionsCalculator'
-import { getAllTransactions, getBalanceStatus } from '../../utils/db'
-import useSWR from 'swr'
 
 function Timeline() {
-  const [transactions, setTransactions] = useState<TimelineTransaction[]>([])
   const router = useRouter()
   const { error, data: balanceStatus } = useSWR(
     '/api/balance-statuses?last=true',
@@ -29,44 +26,54 @@ function Timeline() {
         }))
   )
 
-  useEffect(() => {
-    if (balanceStatus) {
-      const allTransactions = generateTransactionConfigsOccurances(
-        getAllTransactions(),
-        new Date(2030, 1, 1)
-      )
+  const { data: transactions } = useSWR(
+    '/api/transaction-configs',
+    (url) =>
+      fetch(url)
+        .then((r) => r.json())
+        .then((transactionConfigs: TransactionConfig[]) => {
+          return transactionConfigs.map(({ date, endDate, ...rest }) => ({
+            ...rest,
+            date: new Date(date),
+            endDate: endDate ? new Date(endDate) : undefined,
+          }))
+        }),
+    {}
+  )
 
-      const transactionToView = addBalanaceToSortTransaction(
-        allTransactions.filter(({ date }) => date.getTime() >= Date.now()),
-        balanceStatus
-      )
-
-      setTransactions(transactionToView)
-    }
-  }, [router, balanceStatus])
-  if (!error && !balanceStatus) {
+  if (!transactions || !balanceStatus) {
     return 'loading'
   }
+
+  const allTransactionsOccurances = generateTransactionConfigsOccurances(
+    //@ts-ignore
+    transactions,
+    new Date(2025, 1, 1)
+  )
+  const transactionToView = addBalanaceToSortTransaction(
+    allTransactionsOccurances.filter(
+      ({ date }) => date.getTime() >= Date.now()
+    ),
+    balanceStatus!
+  )
 
   return (
     <div>
       <VerticalTimeline animate={false}>
-        {balanceStatus && (
-          <VerticalTimelineElement
-            className="vertical-timeline-element--work"
-            contentStyle={{}}
-            contentArrowStyle={{ borderRight: '7px solid #fff' }}
-            date={format(balanceStatus.createdAt, 'dd/MM/yyyy')}
-            iconStyle={{
-              background: 'rgb(255, 255, 255)',
-              color: '#fff',
-              padding: '10px',
-            }}
-          >
-            <div>{`balance was updated tp: ${balanceStatus.amount}`}</div>
-          </VerticalTimelineElement>
-        )}
-        {transactions.map((transaction, index) => (
+        <VerticalTimelineElement
+          className="vertical-timeline-element--work"
+          contentStyle={{}}
+          contentArrowStyle={{ borderRight: '7px solid #fff' }}
+          date={format(balanceStatus.createdAt, 'dd/MM/yyyy')}
+          iconStyle={{
+            background: 'rgb(255, 255, 255)',
+            color: '#fff',
+            padding: '10px',
+          }}
+        >
+          <div>{`balance was updated tp: ${balanceStatus.amount}`}</div>
+        </VerticalTimelineElement>
+        {transactionToView.map((transaction, index) => (
           <VerticalTimelineElement
             key={index}
             className="vertical-timeline-element--work"
@@ -95,7 +102,7 @@ function Timeline() {
             <span style={{ color: transaction.amount > 0 ? 'green' : 'red' }}>
               {transaction.amount.toLocaleString('he')}
             </span>
-            <div>{`balance: ${transaction.balance!.toLocaleString('he')}`}</div>
+            <div>{`balance: ${transaction.amount!.toLocaleString('he')}`}</div>
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>

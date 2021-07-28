@@ -24,8 +24,22 @@ model User {
   id      String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
   email   String   @unique
   name    String?
-  picture String?
-  balanceStatus BalanceStatus[]
+  image   String?
+  balanceStatus     BalanceStatus[]
+  transactionConfig TransactionConfig[]
   @@map("users")
+}
+
+model TransactionConfig {
+  id            String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  type          String
+  date          DateTime
+  amount        Int
+  timePeriod    String?
+  periodAmount  Int?
+  endDate       DateTime?
+  userEmail     String   
+  user          User     @relation(fields: [userEmail], references: [email])
+  @@map("transactionConfigs")
 }
   

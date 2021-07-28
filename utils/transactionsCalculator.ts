@@ -1,5 +1,6 @@
-import type {TransactionConfig, Transaction, TimePeriod, BalanceStatus, TimelineTransaction} from "./types";
+import type {Transaction, TimePeriod, BalanceStatus, TimelineTransaction} from "./types";
 import {addWeeks, addMonths, addYears, isAfter, min} from "date-fns";
+import { TransactionConfig } from "@prisma/client";
 
 function getNextIntervalTimeFunc(timePeriod: TimePeriod): (date: Date | number, amount: number) => Date {
   switch (timePeriod) {
@@ -13,19 +14,19 @@ function getNextIntervalTimeFunc(timePeriod: TimePeriod): (date: Date | number, 
 } 
 
 function generateTransactionConfigOccurances(transactionConfig: TransactionConfig, untilDate: Date): Transaction[] {
-  const {date, interval, type, amount} = transactionConfig;
+  const {date, type, amount, ...interval} = transactionConfig;
   const transactionOccurances: Transaction[] = [{amount, type, date}];
   
-  if (!interval) {
+  if (!interval?.timePeriod) {
     return transactionOccurances;
   }
 
   let currentDate = date;
-  const getNextIntervalTime = getNextIntervalTimeFunc(interval!.timePeriod);
+  const getNextIntervalTime = getNextIntervalTimeFunc(interval!.timePeriod as TimePeriod);
   const generateUntilDate = interval!.endDate? min([untilDate, interval!.endDate]) : untilDate;
 
   while (!isAfter(currentDate, generateUntilDate)) {
-    currentDate = getNextIntervalTime(currentDate, interval!.amount);
+    currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!);
     transactionOccurances.push({amount, type, date: currentDate});
   }
 

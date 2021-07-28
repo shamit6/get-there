@@ -2,7 +2,6 @@ import { format } from 'date-fns'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { getAllTransactions } from '../../utils/db'
 import useSWR, { mutate } from 'swr'
 import { BalanceStatus, TransactionConfig } from '../../utils/types'
 import styles from './Transactions.module.scss'
@@ -49,7 +48,6 @@ function CurrentBalancePanel({
 }
 
 function List() {
-  const [transactions, setTransactions] = useState<TransactionConfig[]>([])
   const router = useRouter()
 
   const balanceStatus = useSWR('/api/balance-statuses?last=true', (url) =>
@@ -61,11 +59,21 @@ function List() {
       }))
   )
 
-  useEffect(() => {
-    const allTransactions = getAllTransactions()
-    setTransactions(allTransactions)
-  }, [])
-
+  const { data: transactions } = useSWR<TransactionConfig[]>(
+    '/api/transaction-configs',
+    (url) =>
+      fetch(url)
+        .then((r) => r.json())
+        .then((transactionConfigs: TransactionConfig[]) => {
+          return transactionConfigs.map(({ date, endDate, ...rest }) => ({
+            ...rest,
+            date: new Date(date),
+            endDate: endDate ? new Date(endDate) : undefined,
+          }))
+        }),
+  )
+  console.log('transactions', transactions);
+  
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
@@ -87,21 +95,22 @@ function List() {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
-              <tr
-                key={transaction.id}
-                className={styles.tableRow}
-                onClick={() => router.push(`/transactions/${transaction.id}`)}
-              >
-                <td>{transaction.type}</td>
-                <td>{transaction.amount.toLocaleString('he')}</td>
-                <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
-                <td>
-                  {transaction.interval &&
-                    `every ${transaction.interval.amount} ${transaction.interval.timePeriod}`}
-                </td>
-              </tr>
-            ))}
+            {transactions &&
+              transactions.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className={styles.tableRow}
+                  onClick={() => router.push(`/transactions/${transaction.id}`)}
+                >
+                  <td>{transaction.type}</td>
+                  <td>{transaction.amount.toLocaleString('he')}</td>
+                  <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
+                  <td>
+                    {transaction.timePeriod &&
+                      `every ${transaction.periodAmount} ${transaction.timePeriod}`}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         {balanceStatus.data && !balanceStatus.error && (

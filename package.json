@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^2.27.0",
+    "axios": "^0.21.1",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
     "next": "11.0.1",
