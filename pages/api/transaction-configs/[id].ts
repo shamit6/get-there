@@ -27,10 +27,12 @@ export default async function handler(
         where: { id: id as string },
       })
     } else if (method === 'PUT') {
-      const a = await prismaClient.transactionConfig.findUnique({where: {id: id as string }})
+      const a = await prismaClient.transactionConfig.findUnique({
+        where: { id: id as string },
+      })
 
       response = await prismaClient.transactionConfig.update({
-        where: { id: id as string},
+        where: { id: id as string },
         data: body,
       })
     }

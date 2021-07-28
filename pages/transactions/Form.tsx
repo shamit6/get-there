@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 import ReactDatePicker from 'react-datepicker'
 import styles from './Form.module.scss'
 import 'react-datepicker/dist/react-datepicker.css'
-import { mutate } from 'swr'
-import { TransactionConfig } from '../../utils/prisma'
+import useTransaction from '../hooks/useTransactions'
+import { TransactionConfig } from '../../utils/types'
 
 function upsertToTrasactioList(
   list: TransactionConfig[],
@@ -21,8 +21,6 @@ function upsertToTrasactioList(
         return [...acc, curr]
       }
     }, [])
-    console.log(a)
-
     return a
   }
 }
@@ -30,19 +28,19 @@ function upsertToTrasactioList(
 export default function Form({
   transactionConfig,
 }: {
-  transactionConfig?: Partial<TransactionConfig>
+  transactionConfig?: TransactionConfig
 }) {
   const { register, handleSubmit, watch, control } = useForm({
     shouldUseNativeValidation: false,
   })
   const router = useRouter()
+  const { mutate } = useTransaction()
   const onSubmit = useCallback(
     async (data: TransactionConfig & { repeated: boolean }) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
 
-
-      const newTransactionData: Partial<TransactionConfig> = {
+      const newTransactionData: TransactionConfig = {
         ...rest,
         amount: Number(amount),
       }
@@ -53,17 +51,15 @@ export default function Form({
           newTransactionData.endDate = endDate
         }
       }
-      await mutate(
-        '/api/transaction-configs',
-        (transactionConfigs: TransactionConfig[]) => {
-          upsertToTrasactioList(transactionConfigs, {
-            ...newTransactionData,
-            // @ts-ignore
-            id: transactionConfig?.id,
-          })
-        }
-      )
-      router.push('/transactions')
+
+      await router.push('/transactions')
+
+      await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
+        return upsertToTrasactioList(transactionConfigs || [], {
+          ...newTransactionData,
+          id: transactionConfig?.id,
+        })
+      }, false)
 
       const isNewTransaction = !transactionConfig?.id
       const url = isNewTransaction
@@ -74,7 +70,7 @@ export default function Form({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newTransactionData),
       }).then(() => {
-        return mutate('/api/transaction-configs')
+        return mutate()
       })
     },
     [transactionConfig]
