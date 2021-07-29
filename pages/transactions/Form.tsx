@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import ReactDatePicker from 'react-datepicker'
 import styles from './Form.module.scss'
 import 'react-datepicker/dist/react-datepicker.css'
-import useTransaction from '../hooks/useTransactions'
+import useTransaction from '../../hooks/useTransactions'
 import { TransactionConfig } from '../../utils/types'
 
 function upsertToTrasactioList(
@@ -73,7 +73,7 @@ export default function Form({
         return mutate()
       })
     },
-    [transactionConfig]
+    [transactionConfig, mutate, router]
   )
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)

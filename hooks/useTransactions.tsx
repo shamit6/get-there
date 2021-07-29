@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { TransactionConfig } from '../../utils/types'
+import { TransactionConfig } from '../utils/types'
 
 export default function useTransaction() {
   const { data, error, mutate } = useSWR<TransactionConfig[]>(

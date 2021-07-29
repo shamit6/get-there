@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import Form from './Form'
-import useTransaction from '../hooks/useTransactions'
+import useTransaction from '../../hooks/useTransactions'
 
 function New2() {
   const router = useRouter()

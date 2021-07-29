@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { BalanceStatus } from '../../utils/types'
-import useTransaction from '../hooks/useTransactions'
+import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
 
 function CurrentBalancePanel({
