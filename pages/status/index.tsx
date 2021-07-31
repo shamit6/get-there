@@ -3,7 +3,7 @@ import { format, add } from 'date-fns'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import useTransaction from '../../hooks/useTransactions'
-import { TransactionConfig, BalanceStatus } from '../../utils/prisma'
+import { BalanceStatus } from '../../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
@@ -29,7 +29,7 @@ function Status() {
     y: amount,
   }))
 
-  const { transactions } = useTransaction();
+  const { transactions } = useTransaction()
   if (!transactions || !balanceStatus) {
     return 'loading'
   }
