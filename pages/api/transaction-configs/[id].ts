@@ -1,7 +1,6 @@
 import { getSession } from 'next-auth/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prismaClient, TransactionConfig } from '../../../utils/prisma'
-import { addAbortSignal } from 'stream'
 
 export default async function handler(
   req: NextApiRequest,

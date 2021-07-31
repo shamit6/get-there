@@ -1,6 +1,5 @@
 import { getSession } from 'next-auth/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import _ from 'lodash'
 import { BalanceStatus, prismaClient } from '../../utils/prisma'
 
 export default async function handler(
@@ -20,9 +19,11 @@ export default async function handler(
     if (req.method === 'GET') {
       const userBlanceStatuses = await prismaClient.balanceStatus.findMany({
         where: { userEmail },
+        orderBy: [{ createdAt: 'asc' }],
+        take: req.query.last ? 1 : undefined,
       })
       if (req.query.last) {
-        response = _.maxBy(userBlanceStatuses, 'createdAt') || {}
+        response = userBlanceStatuses[0]
       } else {
         response = userBlanceStatuses
       }
