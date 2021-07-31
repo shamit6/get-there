@@ -2,6 +2,7 @@ import { ResponsiveLine } from '@nivo/line'
 import { format, add } from 'date-fns'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
+import useTransaction from '../../hooks/useTransactions'
 import { TransactionConfig, BalanceStatus } from '../../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
@@ -28,21 +29,7 @@ function Status() {
     y: amount,
   }))
 
-  const { data: transactions } = useSWR<TransactionConfig[]>(
-    '/api/transaction-configs',
-    (url) =>
-      fetch(url)
-        .then((r) => r.json())
-        .then((transactionConfigs: TransactionConfig[]) =>
-          transactionConfigs.map(({ date, endDate, ...rest }) => ({
-            ...rest,
-            date: new Date(date),
-            endDate: endDate ? new Date(endDate) : null,
-          }))
-        ),
-    {}
-  )
-
+  const { transactions } = useTransaction();
   if (!transactions || !balanceStatus) {
     return 'loading'
   }

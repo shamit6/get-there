@@ -20,9 +20,15 @@ module.exports = {
     plugins: [
         "react",
         "@typescript-eslint",
+        "unused-imports",
         "prettier",
     ],
     rules: {
-        "prettier/prettier": "warn"
+        "prettier/prettier": "warn",
+		"unused-imports/no-unused-imports": "error",
+		// "unused-imports/no-unused-vars": [
+		// 	"warn",
+		// 	{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+		// ]
     }
 };

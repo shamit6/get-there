@@ -1,6 +1,5 @@
 import { getSession } from 'next-auth/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import _ from 'lodash'
 import { BalanceStatus, prismaClient } from '../../utils/prisma'
 
 export default async function handler(
