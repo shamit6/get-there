@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import Form from './Form'
+import Form from '../../components/form'
 import useTransaction from '../../hooks/useTransactions'
 
 function New2() {
