@@ -1,11 +1,11 @@
 import { format } from 'date-fns'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { BalanceStatus } from '../../utils/types'
 import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
+import Layout from '../../components/layout'
 
 function CurrentBalancePanel({
   balanceStatus,
@@ -62,53 +62,45 @@ function List() {
 
   const { transactions, isLoading } = useTransaction()
 
-  if (isLoading) {
-    return 'loading'
-  }
-
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.header}>
-        <Link href="/timeline">
-          <a>Timeline</a>
-        </Link>
-        <Link href="/transactions/new">
-          <a>New Transaction</a>
-        </Link>
-      </div>
-      <div className={styles.content}>
-        <table className={styles.transactionTable}>
-          <thead>
-            <tr className={styles.tableHeader}>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>When</th>
-              <th>Interval</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transactions!.map((transaction) => (
-              <tr
-                key={transaction.id}
-                className={styles.tableRow}
-                onClick={() => router.push(`/transactions/${transaction.id}`)}
-              >
-                <td>{transaction.type}</td>
-                <td>{transaction.amount.toLocaleString('he')}</td>
-                <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
-                <td>
-                  {transaction.timePeriod &&
-                    `every ${transaction.periodAmount} ${transaction.timePeriod}`}
-                </td>
+    <Layout>
+      {isLoading ? (
+        'loading'
+      ) : (
+        <div className={styles.content}>
+          <table className={styles.transactionTable}>
+            <thead>
+              <tr className={styles.tableHeader}>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>When</th>
+                <th>Interval</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {balanceStatus.data && !balanceStatus.error && (
-          <CurrentBalancePanel balanceStatus={balanceStatus.data} />
-        )}{' '}
-      </div>
-    </div>
+            </thead>
+            <tbody>
+              {transactions!.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className={styles.tableRow}
+                  onClick={() => router.push(`/transactions/${transaction.id}`)}
+                >
+                  <td>{transaction.type}</td>
+                  <td>{transaction.amount.toLocaleString('he')}</td>
+                  <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
+                  <td>
+                    {transaction.timePeriod &&
+                      `every ${transaction.periodAmount} ${transaction.timePeriod}`}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {balanceStatus.data && !balanceStatus.error && (
+            <CurrentBalancePanel balanceStatus={balanceStatus.data} />
+          )}{' '}
+        </div>
+      )}
+    </Layout>
   )
 }
 export default List

@@ -12,6 +12,7 @@ import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
 } from '../../utils/transactionsCalculator'
+import Layout from '../../components/layout'
 
 function Timeline() {
   const router = useRouter()
@@ -58,7 +59,7 @@ function Timeline() {
   )
 
   return (
-    <div>
+    <Layout>
       <VerticalTimeline animate={false}>
         <VerticalTimelineElement
           className="vertical-timeline-element--work"
@@ -106,7 +107,7 @@ function Timeline() {
           </VerticalTimelineElement>
         ))}
       </VerticalTimeline>
-    </div>
+    </Layout>
   )
 }
 export default Timeline
