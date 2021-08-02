@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import ReactDatePicker from 'react-datepicker'
 import styles from './Form.module.scss'
-import 'react-datepicker/dist/react-datepicker.css'
+import NumberFormat from 'react-number-format'
 import useTransaction from '../../hooks/useTransactions'
 import { TransactionConfig } from '../../utils/types'
+import { format } from 'date-fns'
 
 function upsertToTrasactioList(
   list: TransactionConfig[],
@@ -82,11 +82,21 @@ export default function Form({
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       <div className={styles.field}>
         <label>Amount: </label>
-        <input
-          type="number"
-          placeholder="10,000"
+        <Controller
+          control={control}
+          name="amount"
+          rules={{ required: true }}
           defaultValue={transactionConfig?.amount}
-          {...register('amount', { required: true })}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <NumberFormat
+              onValueChange={({ value }) => onChange(value)}
+              onBlur={onBlur}
+              value={value}
+              placeholder="₪40,000"
+              thousandSeparator={true}
+              prefix={'₪'}
+            />
+          )}
         />
       </div>
       <div className={styles.field}>
@@ -96,11 +106,13 @@ export default function Form({
           name="date"
           rules={{ required: true }}
           defaultValue={transactionConfig?.date}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <ReactDatePicker
-              onChange={onChange}
-              onBlur={onBlur}
-              selected={value || transactionConfig?.date}
+          render={({ field: { onChange, value } }) => (
+            <input
+              type="date"
+              onChange={(e) => {
+                onChange(e.target.valueAsDate)
+              }}
+              value={value && format(value, 'yyyy-MM-dd')}
             />
           )}
         />
@@ -148,12 +160,14 @@ export default function Form({
         <Controller
           control={control}
           name="endDate"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <ReactDatePicker
-              onChange={onChange}
-              onBlur={onBlur}
-              selected={value || transactionConfig?.endDate}
-              popperPlacement="top"
+          defaultValue={transactionConfig?.endDate}
+          render={({ field: { onChange, value } }) => (
+            <input
+              type="date"
+              onChange={(e) => {
+                onChange(e.target.valueAsDate)
+              }}
+              value={value && format(value, 'yyyy-MM-dd')}
             />
           )}
         />

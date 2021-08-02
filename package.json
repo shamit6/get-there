@@ -19,9 +19,9 @@
     "next": "11.0.1",
     "next-auth": "^3.27.3",
     "react": "17.0.2",
-    "react-datepicker": "^4.1.1",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.10.1",
+    "react-number-format": "^4.6.4",
     "react-vertical-timeline-component": "^3.3.3",
     "sass": "^1.35.2",
     "swr": "^0.5.6"
@@ -29,7 +29,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.171",
     "@types/react": "17.0.14",
-    "@types/react-datepicker": "^4.1.3",
     "@types/react-vertical-timeline-component": "^3.0.1",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "eslint": "^7.30.0",

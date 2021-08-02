@@ -1,11 +1,12 @@
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import useSWR, { mutate } from 'swr'
 import { BalanceStatus } from '../../utils/types'
 import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
 import Layout from '../../components/layout'
+import Link from 'next/link'
 
 function CurrentBalancePanel({
   balanceStatus,
@@ -95,9 +96,16 @@ function List() {
               ))}
             </tbody>
           </table>
-          {balanceStatus.data && !balanceStatus.error && (
-            <CurrentBalancePanel balanceStatus={balanceStatus.data} />
-          )}{' '}
+          <div>
+            <Link href="/transactions/new">
+              <a>New transaction</a>
+            </Link>
+          </div>
+          <div>
+            {balanceStatus.data && !balanceStatus.error && (
+              <CurrentBalancePanel balanceStatus={balanceStatus.data} />
+            )}{' '}
+          </div>
         </div>
       )}
     </Layout>

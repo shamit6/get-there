@@ -32,7 +32,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                   width={30}
                   height={30}
                   alt={user?.email!}
-                  />
+                />
                 <span className={styles.name}>{user!.name}</span>
               </div>
               <button className={styles.linkButton} onClick={() => signOut()}>
