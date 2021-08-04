@@ -32,7 +32,7 @@ export default async function handler(
       })
     } else if (method === 'DELETE') {
       response = await prismaClient.transactionConfig.delete({
-        where: { id: id as string }
+        where: { id: id as string },
       })
     }
 

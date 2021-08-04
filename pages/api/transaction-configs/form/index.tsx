@@ -3,8 +3,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import styles from './Form.module.scss'
 import NumberFormat from 'react-number-format'
-import useTransaction from '../../hooks/useTransactions'
-import { TransactionConfig } from '../../utils/types'
+import useTransaction from '../../../../hooks/useTransactions'
+import { TransactionConfig } from '../../../../utils/types'
 import { format } from 'date-fns'
 
 function upsertToTrasactioList(
