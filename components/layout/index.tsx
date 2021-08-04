@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './Layout.module.scss'
 import { ReactNode } from 'react'
-import classnames from 'classnames'
+import Button from '../../components/button'
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [session, loading] = useSession()
@@ -15,14 +15,12 @@ export default function Layout({ children }: { children: ReactNode }) {
       <header className={styles.header}>
         <div className={styles.login}>
           {!session ? (
-            <>
-              <button
-                className={classnames(styles.linkButton, styles.bordered)}
-                onClick={() => signIn()}
-              >
-                Sign in
-              </button>
-            </>
+            <Button
+              text="Sign in"
+              onClick={() => signIn()}
+              linkTheme
+              bordered
+            />
           ) : (
             <>
               <div className={styles.user}>
@@ -35,9 +33,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 />
                 <span className={styles.name}>{user!.name}</span>
               </div>
-              <button className={styles.linkButton} onClick={() => signOut()}>
-                Sign out
-              </button>
+              <Button text="Sign out" onClick={() => signOut()} linkTheme />
             </>
           )}
         </div>
