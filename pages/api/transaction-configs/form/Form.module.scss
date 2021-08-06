@@ -3,13 +3,31 @@
   flex-direction: column;
   max-width: 20em;
   margin: auto;
+  font-size: 1.3em;
 
   .field {
     margin-top: 1em;
+
+    label {
+      width: 5em;
+      display: inline-block;
+      text-align: end;
+      margin-right: .7em;
+    }
+
+    input[type="date"], input[type="text"] , input[type="number"]{
+      width: 10em;
+    }
   }
 
   input[type="submit"] {
-    height: 2em;
-    margin-top: 2em;
+    height: 1.5em;
+    border-radius: 1em;
+    background-color: darkolivegreen;
+    color: white;
+    width: 50%;
+    margin: 1.5em auto;
+    cursor: pointer;
+    font-size: 1.1em;
   }
 }

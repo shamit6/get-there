@@ -27,8 +27,8 @@ export default function Layout({ children }: { children: ReactNode }) {
                 <Image
                   src={user?.image!}
                   className={styles.avatar}
-                  width={30}
-                  height={30}
+                  width={'20'}
+                  height={'20'}
                   alt={user?.email!}
                 />
                 <span className={styles.name}>{user!.name}</span>

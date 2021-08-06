@@ -128,13 +128,13 @@ export default function Form({
         />
       </div>
       <div className={styles.field}>
+        <label htmlFor="repeated">Repeated:</label>
         <input
           type="checkbox"
           id="repeated"
           defaultChecked={!!transactionConfig?.timePeriod}
           {...register('repeated', { required: isRepeated })}
         />
-        <label htmlFor="repeated">Repeated</label>
       </div>
       <div className={styles.field}>
         <label>In: </label>
@@ -167,6 +167,7 @@ export default function Form({
               onChange={(e) => {
                 onChange(e.target.valueAsDate)
               }}
+              disabled={!isRepeated}
               value={value && format(value, 'yyyy-MM-dd')}
             />
           )}

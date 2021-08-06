@@ -7,6 +7,7 @@ import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
 import Layout from '../../components/layout'
 import Link from 'next/link'
+import Loader from '../../components/loader'
 
 function CurrentBalancePanel({
   balanceStatus,
@@ -66,7 +67,7 @@ function List() {
   return (
     <Layout>
       {isLoading ? (
-        'loading'
+        <Loader />
       ) : (
         <div className={styles.content}>
           <table className={styles.transactionTable}>
