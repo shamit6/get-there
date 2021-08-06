@@ -35,8 +35,8 @@ function Status() {
   }
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
-    //@ts-ignore
     transactions,
+    new Date(),
     add(Date.now(), { years: 1 })
   )
   const transactionToView = addBalanaceToSortTransaction(

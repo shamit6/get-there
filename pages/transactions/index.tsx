@@ -1,13 +1,13 @@
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import useSWR, { mutate } from 'swr'
 import { BalanceStatus } from '../../utils/types'
 import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
 import Layout from '../../components/layout'
 import Link from 'next/link'
 import Loader from '../../components/loader'
+import useBalanceStatus from '../../hooks/useBalanceStatus'
 
 function CurrentBalancePanel({
   balanceStatus,
@@ -15,14 +15,11 @@ function CurrentBalancePanel({
   balanceStatus?: BalanceStatus
 }) {
   const [editedAmount, setEditedAmount] = useState(balanceStatus?.amount || 0)
+  const { mutate } = useBalanceStatus(true)
 
   const updateBalanceStatus = async (amount: number) => {
-    mutate(
-      '/api/balance-statuses?last=true',
-      { amount, createdAt: new Date() },
-      false
-    )
-    const data = await fetch(`/api/balance-statuses`, {
+    mutate({ amount, createdAt: new Date() }, false)
+    await fetch(`/api/balance-statuses`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ amount }),
@@ -52,16 +49,7 @@ function CurrentBalancePanel({
 
 function List() {
   const router = useRouter()
-
-  const balanceStatus = useSWR('/api/balance-statuses?last=true', (url) =>
-    fetch(url)
-      .then((r) => r.json())
-      .then(({ createdAt, amount }) => ({
-        createdAt: new Date(createdAt),
-        amount,
-      }))
-  )
-
+  const { balanceStatuses } = useBalanceStatus(true)
   const { transactions, isLoading } = useTransaction()
 
   return (
@@ -103,8 +91,8 @@ function List() {
             </Link>
           </div>
           <div>
-            {balanceStatus.data && !balanceStatus.error && (
-              <CurrentBalancePanel balanceStatus={balanceStatus.data} />
+            {balanceStatuses && (
+              <CurrentBalancePanel balanceStatus={balanceStatuses} />
             )}{' '}
           </div>
         </div>

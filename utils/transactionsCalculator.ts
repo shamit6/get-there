@@ -4,8 +4,9 @@ import type {
   BalanceStatus,
   TimelineTransaction,
 } from './types'
-import { addWeeks, addMonths, addYears, isAfter, min } from 'date-fns'
-import { TransactionConfig } from '@prisma/client'
+import { addWeeks, addMonths, addYears, isAfter, min, isBefore } from 'date-fns'
+import { TransactionConfig as TransactionConfigPrisma} from '@prisma/client'
+import { TransactionConfig } from './types'
 
 function getNextIntervalTimeFunc(
   timePeriod: TimePeriod
@@ -22,13 +23,14 @@ function getNextIntervalTimeFunc(
 
 function generateTransactionConfigOccurances(
   transactionConfig: TransactionConfig,
+  fromDate: Date,
   untilDate: Date
 ): Transaction[] {
   const { date, type, amount, ...interval } = transactionConfig
-  const transactionOccurances: Transaction[] = [{ amount, type, date }]
+  const transactionOccurances: Transaction[] = []
 
-  if (!interval?.timePeriod) {
-    return transactionOccurances
+  if (!interval?.timePeriod && !isBefore(date, fromDate) && !isAfter(date, untilDate)) {
+    return [{ amount, type, date }]
   }
 
   let currentDate = date
@@ -38,10 +40,12 @@ function generateTransactionConfigOccurances(
   const generateUntilDate = interval!.endDate
     ? min([untilDate, interval!.endDate])
     : untilDate
-
+  
   while (!isAfter(currentDate, generateUntilDate)) {
+    if (!isBefore(currentDate, fromDate)) {
+      transactionOccurances.push({ amount, type, date: currentDate })
+    }
     currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
-    transactionOccurances.push({ amount, type, date: currentDate })
   }
 
   return transactionOccurances
@@ -49,11 +53,12 @@ function generateTransactionConfigOccurances(
 
 export function generateTransactionConfigsOccurances(
   transactionConfigs: TransactionConfig[],
+  fromDate: Date,
   untilDate: Date
 ): Transaction[] {
   const transactionConfigsOccurances = transactionConfigs.flatMap(
     (transactionConfig) =>
-      generateTransactionConfigOccurances(transactionConfig, untilDate)
+      generateTransactionConfigOccurances(transactionConfig, fromDate, untilDate)
   )
   return transactionConfigsOccurances.sort(function compare(t1, t2) {
     return t1.date.getTime() - t2.date.getTime()
@@ -80,22 +85,25 @@ export function addBalanaceToSortTransaction(
   return transactionsWithBalance
 }
 
-export function getCurrentBalanceAmount(
+export function calcCurrentBalanceAmount(
   transactionConfigs: TransactionConfig[],
-  balanceStatus: BalanceStatus
-) {
+  lastBalanceStatus: BalanceStatus
+): number {
   if (transactionConfigs.length === 0) {
-    return balanceStatus.amount
+    return lastBalanceStatus.amount
   }
 
   const transactionsUntilNow = generateTransactionConfigsOccurances(
     transactionConfigs,
+    lastBalanceStatus.createdAt,
     new Date()
   )
+  
+  
   const transactionsWithBlance = addBalanaceToSortTransaction(
     transactionsUntilNow,
-    balanceStatus
-  )
+    lastBalanceStatus
+    )
 
-  return transactionsWithBlance[transactionsWithBlance.length - 1].balance
+  return transactionsWithBlance[transactionsWithBlance.length - 1].balance!
 }
