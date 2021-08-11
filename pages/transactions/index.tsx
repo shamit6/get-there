@@ -40,9 +40,11 @@ function CurrentBalancePanel({
       >
         Update Balance
       </button>
-      <div>
-        Last updated at: {new Date(balanceStatus?.createdAt!).toLocaleString()}
-      </div>
+      {balanceStatus?.createdAt && (
+        <div>
+          Last updated at: {new Date(balanceStatus?.createdAt).toLocaleString()}
+        </div>
+      )}
     </div>
   )
 }
@@ -90,11 +92,7 @@ function List() {
               <a>New transaction</a>
             </Link>
           </div>
-          <div>
-            {balanceStatuses && (
-              <CurrentBalancePanel balanceStatus={balanceStatuses} />
-            )}{' '}
-          </div>
+          <div>{<CurrentBalancePanel balanceStatus={balanceStatuses} />} </div>
         </div>
       )}
     </Layout>

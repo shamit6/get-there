@@ -118,6 +118,10 @@ export function calcCurrentBalanceAmount(
     new Date()
   )
 
+  if (transactionsUntilNow.length === 0) {
+    return lastBalanceStatus.amount
+  }
+
   const transactionsWithBlance = addBalanaceToSortTransaction(
     transactionsUntilNow,
     lastBalanceStatus
