@@ -11,12 +11,9 @@ import useBalanceStatus from '../../hooks/useBalanceStatus'
 import { TimePeriod } from '../../utils/types'
 import { format } from 'date-fns'
 import styles from './Timeline.module.scss'
-import classnames from 'classnames'
-import { useState } from 'react'
-
-function Arrow({ className }: { className: string }) {
-  return <div className={classnames(styles.arrow, styles.right, className)} />
-}
+import React, { useState } from 'react'
+import Arrow, { Direction } from '../../components/arrow'
+import TextNumber from '../../components/textNumber'
 
 function TransactionsSummery({
   transaction,
@@ -27,34 +24,57 @@ function TransactionsSummery({
 
   return (
     <div>
-      <dt className={styles.periodTitle}>{transaction.time.year}</dt>
+      <dt className={styles.periodTitle}>
+        {transaction.time.month != undefined
+          ? `${transaction.time.month + 1} - `
+          : ''}
+        {transaction.time.year}
+      </dt>
       <dd className={styles.periodContent}>
-        <table>
-          <tbody>
+        <table className={styles.periodTransactionAmounts}>
+          <thead>
             <tr
               onClick={() => setOpen(!isOpen)}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
-              <td>
-                <Arrow className={styles.collapseIcon} /> total income:
-              </td>
-              <td style={{ textAlign: 'right' }}>{transaction.totalAmount}</td>
+              <th style={{ textAlign: 'left' }}>
+                <Arrow
+                  className={styles.collapseIcon}
+                  direction={isOpen ? Direction.DOWN : Direction.RIGHT}
+                />{' '}
+                total income
+              </th>
+              <th style={{ textAlign: 'right' }}>
+                <TextNumber value={transaction.totalAmount} />
+              </th>
             </tr>
+          </thead>
+          <tbody>
             {isOpen &&
               transaction.transaction.map((spesificTransaction) => (
                 <tr key={spesificTransaction.type}>
-                  <td>{spesificTransaction.type}:</td>
+                  <td>{spesificTransaction.type}</td>
                   <td style={{ textAlign: 'right' }}>
-                    {spesificTransaction.amount}
+                    <TextNumber value={spesificTransaction.amount} />
                   </td>
                 </tr>
               ))}
           </tbody>
+          <tfoot style={{ margin: '.3em 0' }}>
+            <tr>
+              <td style={{ padding: '.5em 0' }}>
+                Expected Balance on{' '}
+                {format(
+                  getLastDayOfPeriod(transaction.time, TimePeriod.YEAR),
+                  'dd/MM/yyyy'
+                )}
+              </td>
+              <td style={{ textAlign: 'right', padding: '.5em 0' }}>
+                <TextNumber value={transaction.amountWithBalance} />
+              </td>
+            </tr>
+          </tfoot>
         </table>
-        {`On ${format(
-          getLastDayOfPeriod(transaction.time, TimePeriod.YEAR),
-          'dd/MM/yyyy'
-        )}, expected balance: ${transaction.amountWithBalance}`}
       </dd>
     </div>
   )
@@ -76,7 +96,7 @@ function Timeline() {
   const transactionsSummery = getTransactionsSummeryByPeriod(
     transactions!,
     TimePeriod.YEAR,
-    3,
+    6,
     new Date()
   )
   const transactionsWithBalanceSummery = addBalanaceAmountToTransactionsSummery(
