@@ -17,9 +17,7 @@ import {
   lastDayOfYear,
   lastDayOfMonth,
 } from 'date-fns'
-import { TransactionConfig as TransactionConfigPrisma } from '@prisma/client'
 import { TransactionConfig } from './types'
-import { rest } from 'lodash'
 
 function getNextIntervalTimeFunc(
   timePeriod: TimePeriod
@@ -141,7 +139,8 @@ interface SummerizedTransacrionsPeriod {
   transaction: { type: string; amount: number }[]
 }
 
-export interface TimelineSummerizedTransacrionsPeriod extends SummerizedTransacrionsPeriod{
+export interface TimelineSummerizedTransacrionsPeriod
+  extends SummerizedTransacrionsPeriod {
   amountWithBalance?: number
 }
 
@@ -293,7 +292,6 @@ export function getTransactionsSummeryByPeriod(
   }, [] as SummerizedTransacrionsPeriod[])
 }
 
-
 export function addBalanaceAmountToTransactionsSummery(
   transactions: SummerizedTransacrionsPeriod[],
   balanceAmount: number
@@ -302,14 +300,20 @@ export function addBalanaceAmountToTransactionsSummery(
   let currentAmount = balanceAmount
 
   transactions.forEach((transaction) => {
-      currentAmount += transaction.totalAmount
-      transactionsWithBalance.push({ ...transaction, amountWithBalance: currentAmount })
+    currentAmount += transaction.totalAmount
+    transactionsWithBalance.push({
+      ...transaction,
+      amountWithBalance: currentAmount,
+    })
   })
 
   return transactionsWithBalance
 }
 
-export function getLastDayOfPeriod(time: { year: number; month?: number }, periodResolution: TimePeriod): Date{
+export function getLastDayOfPeriod(
+  time: { year: number; month?: number },
+  periodResolution: TimePeriod
+): Date {
   switch (periodResolution) {
     case 'year':
       return lastDayOfYear(new Date(time.year, 0, 0))
