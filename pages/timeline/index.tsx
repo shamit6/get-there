@@ -42,7 +42,7 @@ function TransactionsSummery({
                   className={styles.collapseIcon}
                   direction={isOpen ? Direction.DOWN : Direction.RIGHT}
                 />{' '}
-                total income
+                Total income
               </th>
               <th style={{ textAlign: 'right' }}>
                 <TextNumber value={transaction.totalAmount} />
@@ -106,7 +106,9 @@ function Timeline() {
 
   return (
     <Layout>
-      {`current balance amount ${currentBalanceAmount}`}
+      <span>
+        current balance amount <TextNumber value={currentBalanceAmount} />
+      </span>
       <dl className={styles.timeline}>
         {transactionsWithBalanceSummery.map((transaction, index) => {
           return <TransactionsSummery key={index} transaction={transaction} />

@@ -320,8 +320,8 @@ export function getLastDayOfPeriod(
 ): Date {
   switch (periodResolution) {
     case 'year':
-      return lastDayOfYear(new Date(time.year, 0, 0))
+      return lastDayOfYear(new Date(time.year, 0))
     default:
-      return lastDayOfMonth(new Date(time.year, time.month!, 0))
+      return lastDayOfMonth(new Date(time.year, time.month!))
   }
 }
