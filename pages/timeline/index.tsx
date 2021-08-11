@@ -1,112 +1,97 @@
 import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from 'react-vertical-timeline-component'
-import 'react-vertical-timeline-component/style.min.css'
-import Image from 'next/image'
-import { format } from 'date-fns'
-import { useRouter } from 'next/router'
-import useSWR from 'swr'
-import { TransactionConfig } from '../../utils/prisma'
-import {
-  generateTransactionConfigsOccurances,
-  addBalanaceToSortTransaction,
+  addBalanaceAmountToTransactionsSummery,
+  calcCurrentBalanceAmount,
+  getLastDayOfPeriod,
+  getTransactionsSummeryByPeriod,
+  TimelineSummerizedTransacrionsPeriod,
 } from '../../utils/transactionsCalculator'
 import Layout from '../../components/layout'
+import useTransaction from '../../hooks/useTransactions'
+import useBalanceStatus from '../../hooks/useBalanceStatus'
+import { TimePeriod } from '../../utils/types'
+import { format } from 'date-fns'
+import styles from './Timeline.module.scss'
+import classnames from 'classnames'
+import { useState } from 'react'
+
+function Arrow({ className }: { className: string }) {
+  return <div className={classnames(styles.arrow, styles.right, className)} />
+}
+
+function TransactionsSummery({
+  transaction,
+}: {
+  transaction: TimelineSummerizedTransacrionsPeriod
+}) {
+  const [isOpen, setOpen] = useState(false)
+
+  return (
+    <div>
+      <dt className={styles.periodTitle}>{transaction.time.year}</dt>
+      <dd className={styles.periodContent}>
+        <table>
+          <tbody>
+            <tr
+              onClick={() => setOpen(!isOpen)}
+              style={{ cursor: 'pointer', userSelect: 'none' }}
+            >
+              <td>
+                <Arrow className={styles.collapseIcon} /> total income:
+              </td>
+              <td style={{ textAlign: 'right' }}>{transaction.totalAmount}</td>
+            </tr>
+            {isOpen &&
+              transaction.transaction.map((spesificTransaction) => (
+                <tr key={spesificTransaction.type}>
+                  <td>{spesificTransaction.type}:</td>
+                  <td style={{ textAlign: 'right' }}>
+                    {spesificTransaction.amount}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+        {`On ${format(
+          getLastDayOfPeriod(transaction.time, TimePeriod.YEAR),
+          'dd/MM/yyyy'
+        )}, expected balance: ${transaction.amountWithBalance}`}
+      </dd>
+    </div>
+  )
+}
 
 function Timeline() {
-  const router = useRouter()
-  const { error, data: balanceStatus } = useSWR(
-    '/api/balance-statuses?last=true',
-    (url) =>
-      fetch(url)
-        .then((r) => r.json())
-        .then(({ createdAt, amount }) => ({
-          createdAt: new Date(createdAt),
-          amount,
-        }))
-  )
+  const { balanceStatuses, isLoading: isLoadingBalance } =
+    useBalanceStatus(true)
 
-  const { data: transactions } = useSWR(
-    '/api/transaction-configs',
-    (url) =>
-      fetch(url)
-        .then((r) => r.json())
-        .then((transactionConfigs: TransactionConfig[]) => {
-          return transactionConfigs.map(({ date, endDate, ...rest }) => ({
-            ...rest,
-            date: new Date(date),
-            endDate: endDate ? new Date(endDate) : undefined,
-          }))
-        }),
-    {}
-  )
+  const { transactions, isLoading: isLoadingTransactions } = useTransaction()
 
-  if (!transactions || !balanceStatus) {
+  if (isLoadingBalance || isLoadingTransactions) {
     return 'loading'
   }
-
-  const allTransactionsOccurances = generateTransactionConfigsOccurances(
-    //@ts-ignore
-    transactions,
-    new Date(2025, 1, 1)
+  const currentBalanceAmount = calcCurrentBalanceAmount(
+    transactions!,
+    balanceStatuses!
   )
-  const transactionToView = addBalanaceToSortTransaction(
-    allTransactionsOccurances.filter(
-      ({ date }) => date.getTime() >= Date.now()
-    ),
-    balanceStatus!
+  const transactionsSummery = getTransactionsSummeryByPeriod(
+    transactions!,
+    TimePeriod.YEAR,
+    3,
+    new Date()
+  )
+  const transactionsWithBalanceSummery = addBalanaceAmountToTransactionsSummery(
+    transactionsSummery,
+    currentBalanceAmount
   )
 
   return (
     <Layout>
-      <VerticalTimeline animate={false}>
-        <VerticalTimelineElement
-          className="vertical-timeline-element--work"
-          contentStyle={{}}
-          contentArrowStyle={{ borderRight: '7px solid #fff' }}
-          date={format(balanceStatus.createdAt, 'dd/MM/yyyy')}
-          iconStyle={{
-            background: 'rgb(255, 255, 255)',
-            color: '#fff',
-            padding: '10px',
-          }}
-        >
-          <div>{`balance was updated tp: ${balanceStatus.amount}`}</div>
-        </VerticalTimelineElement>
-        {transactionToView.map((transaction, index) => (
-          <VerticalTimelineElement
-            key={index}
-            className="vertical-timeline-element--work"
-            contentStyle={{}}
-            contentArrowStyle={{ borderRight: '7px solid #fff' }}
-            date={transaction.date.toDateString()}
-            iconStyle={{
-              background: 'rgb(255, 255, 255)',
-              color: '#fff',
-              padding: '10px',
-            }}
-            icon={
-              <Image
-                src={
-                  transaction.amount > 0
-                    ? '/financial-profit.png'
-                    : '/recession.png'
-                }
-                alt="Vercel Logo"
-                width={50}
-                height={50}
-              />
-            }
-          >
-            <span>{`${transaction.type}:  `}</span>
-            <span style={{ color: transaction.amount > 0 ? 'green' : 'red' }}>
-              {transaction.amount.toLocaleString('he')}
-            </span>
-            <div>{`balance: ${transaction.amount!.toLocaleString('he')}`}</div>
-          </VerticalTimelineElement>
-        ))}
-      </VerticalTimeline>
+      {`current balance amount ${currentBalanceAmount}`}
+      <dl className={styles.timeline}>
+        {transactionsWithBalanceSummery.map((transaction, index) => {
+          return <TransactionsSummery key={index} transaction={transaction} />
+        })}
+      </dl>
     </Layout>
   )
 }

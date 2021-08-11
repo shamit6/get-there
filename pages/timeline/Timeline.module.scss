@@ -1,0 +1,58 @@
+.timeline {
+  width: min(100%, 20em);
+}
+
+.periodTitle {
+  background-color: #9999e9;
+  text-align: center;
+  padding: .2em;
+}
+
+.periodContent {
+  width: 100%;
+  position: relative;
+
+  .collapseIcon {
+    position: absolute;
+    top: .5em;
+    left: -1em;
+  }
+}
+
+// .periodContent::before {
+//   content: " ";
+//   height: min-content;
+//   position: absolute;
+//   width: 5px;
+//   background-color: lightgrey;
+//   margin-right: 2em;
+//   box-sizing: border-box;
+//   margin-top: .4em;
+// }
+
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
