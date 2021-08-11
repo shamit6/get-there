@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import Button from '../../components/button'
-import Form from '../api/transaction-configs/form'
+import Form from './form'
 import Layout from '../../components/layout'
 import useTransaction from '../../hooks/useTransactions'
 import _ from 'lodash'

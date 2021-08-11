@@ -1,4 +1,4 @@
-import Form from '../../api/transaction-configs/form'
+import Form from '../form'
 
 function New() {
   return <Form />
