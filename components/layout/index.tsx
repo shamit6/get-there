@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: ReactNode }) {
                 />
                 <span className={styles.name}>{user!.name}</span>
               </div>
-              <Button text="Sign out" onClick={() => signOut()} linkTheme />
+              <Button text="Sign out" onClick={() => signOut({callbackUrl:'/'})} linkTheme />
             </>
           )}
         </div>

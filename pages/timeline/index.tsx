@@ -11,14 +11,18 @@ import useBalanceStatus from '../../hooks/useBalanceStatus'
 import { TimePeriod } from '../../utils/types'
 import { format } from 'date-fns'
 import styles from './Timeline.module.scss'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Arrow, { Direction } from '../../components/arrow'
 import TextNumber from '../../components/textNumber'
+import Loader from '../../components/loader'
+import InfiniteScroll from 'react-infinite-scroller'
 
 function TransactionsSummery({
   transaction,
+  periodResolution,
 }: {
   transaction: TimelineSummerizedTransacrionsPeriod
+  periodResolution: TimePeriod
 }) {
   const [isOpen, setOpen] = useState(false)
 
@@ -65,7 +69,7 @@ function TransactionsSummery({
               <td style={{ padding: '.5em 0' }}>
                 Expected Balance on{' '}
                 {format(
-                  getLastDayOfPeriod(transaction.time, TimePeriod.YEAR),
+                  getLastDayOfPeriod(transaction.time, periodResolution),
                   'dd/MM/yyyy'
                 )}
               </td>
@@ -85,34 +89,92 @@ function Timeline() {
     useBalanceStatus(true)
 
   const { transactions, isLoading: isLoadingTransactions } = useTransaction()
+  const [periodResolution, setPeriodResolution] = useState(TimePeriod.YEAR)
+  const [timelineTransactions, setTimelineTransactions] = useState<
+    TimelineSummerizedTransacrionsPeriod[]
+  >([])
+  const [currentBalanceAmount, setCurrentBalanceAmount] = useState(0)
+  const [numberOFitems, setNumberOFitems] = useState(5)
+
+  useEffect(() => {
+    if (isLoadingBalance || isLoadingTransactions) {
+      return
+    }
+
+    const currentBalanceAmount = calcCurrentBalanceAmount(
+      transactions!,
+      balanceStatuses!
+    )
+
+    setCurrentBalanceAmount(currentBalanceAmount)
+
+    const transactionsSummery = getTransactionsSummeryByPeriod(
+      transactions!,
+      periodResolution,
+      numberOFitems,
+      new Date()
+    )
+    const transactionsWithBalanceSummery =
+      addBalanaceAmountToTransactionsSummery(
+        transactionsSummery,
+        currentBalanceAmount
+      )
+
+    setTimelineTransactions(transactionsWithBalanceSummery)
+  }, [
+    balanceStatuses,
+    transactions,
+    currentBalanceAmount,
+    numberOFitems,
+    periodResolution,
+  ])
+
+  const loadmore = () => {
+    setNumberOFitems(numberOFitems + 5)
+  }
 
   if (isLoadingBalance || isLoadingTransactions) {
-    return 'loading'
+    return <Loader />
   }
-  const currentBalanceAmount = calcCurrentBalanceAmount(
-    transactions!,
-    balanceStatuses!
-  )
-  const transactionsSummery = getTransactionsSummeryByPeriod(
-    transactions!,
-    TimePeriod.YEAR,
-    6,
-    new Date()
-  )
-  const transactionsWithBalanceSummery = addBalanaceAmountToTransactionsSummery(
-    transactionsSummery,
-    currentBalanceAmount
-  )
 
   return (
     <Layout>
-      <span>
-        current balance amount <TextNumber value={currentBalanceAmount} />
-      </span>
+      <div style={{ display: 'flex', width: 'min(100%, 40em)' }}>
+        <span style={{ flex: '1' }}>
+          current balance amount <TextNumber value={currentBalanceAmount} />
+        </span>
+        <select
+          defaultValue={TimePeriod.YEAR}
+          onChange={(e) => {
+            setTimelineTransactions([])
+            setPeriodResolution(e.target.value as TimePeriod)
+          }}
+        >
+          <option value={TimePeriod.MONTH}>month</option>
+          <option value={TimePeriod.YEAR}>year</option>
+        </select>
+      </div>
       <dl className={styles.timeline}>
-        {transactionsWithBalanceSummery.map((transaction, index) => {
-          return <TransactionsSummery key={index} transaction={transaction} />
-        })}
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={loadmore}
+          hasMore={true}
+          loader={
+            <div className="loader" key={0}>
+              Loading ...
+            </div>
+          }
+        >
+          {timelineTransactions.map((transaction, index) => {
+            return (
+              <TransactionsSummery
+                key={index}
+                transaction={transaction}
+                periodResolution={periodResolution}
+              />
+            )
+          })}
+        </InfiniteScroll>
       </dl>
     </Layout>
   )
