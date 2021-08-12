@@ -218,6 +218,7 @@ function getTransactionSummery(
     totalAmout: 0,
     type,
   }
+  let isAnythingToPush = false
 
   const getNextIntervalTime = getNextIntervalTimeFunc(
     interval!.timePeriod as TimePeriod
@@ -233,6 +234,7 @@ function getTransactionSummery(
         JSON.stringify(extractTimeByPeriod(currentDate, periodResolution))
       ) {
         currentTransactionSummrey.totalAmout += amount
+        isAnythingToPush = true
       } else {
         transactionOccurances.push(currentTransactionSummrey)
         currentTransactionSummrey = {
@@ -240,9 +242,19 @@ function getTransactionSummery(
           totalAmout: amount,
           type,
         }
+        isAnythingToPush = false
       }
     }
     currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
+  }
+
+  if (isAnythingToPush) {
+    transactionOccurances.push(currentTransactionSummrey)
+    currentTransactionSummrey = {
+      time: extractTimeByPeriod(currentDate, periodResolution),
+      totalAmout: amount,
+      type,
+    }
   }
 
   return transactionOccurances
