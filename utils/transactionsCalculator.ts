@@ -11,11 +11,11 @@ import {
   isAfter,
   min,
   isBefore,
-  startOfMonth,
   getYear,
   getMonth,
   lastDayOfYear,
   lastDayOfMonth,
+  lastDayOfWeek,
 } from 'date-fns'
 import { TransactionConfig } from './types'
 
@@ -148,16 +148,18 @@ export interface TimelineSummerizedTransacrionsPeriod
   amountWithBalance?: number
 }
 
-function getPreiodTimeFunc(
-  timePeriod: TimePeriod
-): (date: Date | number, amount: number) => Date {
+function getLastDayOfPreiod(
+  timePeriod: TimePeriod,
+  amountOfPeriods: number,
+  fromDate: Date
+): Date {
   switch (timePeriod) {
     case 'week':
-      return addWeeks
+      return lastDayOfWeek(addWeeks(fromDate, amountOfPeriods))
     case 'month':
-      return addMonths
+      return lastDayOfMonth(addMonths(fromDate, amountOfPeriods))
     default:
-      return addYears
+      return lastDayOfYear(addYears(fromDate, amountOfPeriods))
   }
 }
 
@@ -242,7 +244,7 @@ function getTransactionSummery(
           totalAmout: amount,
           type,
         }
-        isAnythingToPush = false
+        isAnythingToPush = !isAfter(currentDate, generateUntilDate)
       }
     }
     currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
@@ -250,11 +252,6 @@ function getTransactionSummery(
 
   if (isAnythingToPush) {
     transactionOccurances.push(currentTransactionSummrey)
-    currentTransactionSummrey = {
-      time: extractTimeByPeriod(currentDate, periodResolution),
-      totalAmout: amount,
-      type,
-    }
   }
 
   return transactionOccurances
@@ -266,8 +263,11 @@ export function getTransactionsSummeryByPeriod(
   itemsToGenerate: number,
   fromDate: Date = new Date()
 ): SummerizedTransacrionsPeriod[] {
-  const addPriodTimeFunc = getPreiodTimeFunc(periodResolution)
-  const untillDate = startOfMonth(addPriodTimeFunc(fromDate, itemsToGenerate))
+  const untillDate = getLastDayOfPreiod(
+    periodResolution,
+    itemsToGenerate,
+    fromDate
+  )
 
   const transactionConfigsOccurances = transactionConfigs.flatMap(
     (transactionConfig) =>
