@@ -1099,6 +1099,23 @@
     d3-time "^1.0.11"
     d3-time-format "^3.0.0"
 
+"@nivo/bar@^0.73.1":
+  version "0.73.1"
+  resolved "https://registry.npmjs.org/@nivo/bar/-/bar-0.73.1.tgz#86e59e25af151ead0c09298ec9caf133f38e957e"
+  integrity sha512-sBltCxCEgFV7kErW4K14OSUjsU1cmYAWWvKoelVI1NTJ0MWhH/Z4UVip6+Zk7/TOzdZntT0x3SE6cAc9Ov7rxg==
+  dependencies:
+    "@nivo/annotations" "0.73.0"
+    "@nivo/axes" "0.73.0"
+    "@nivo/colors" "0.73.0"
+    "@nivo/legends" "0.73.0"
+    "@nivo/recompose" "0.73.0"
+    "@nivo/scales" "0.73.0"
+    "@nivo/tooltip" "0.73.0"
+    "@react-spring/web" "9.2.4"
+    d3-scale "^3.2.3"
+    d3-shape "^1.2.2"
+    lodash "^4.17.21"
+
 "@nivo/colors@0.73.0":
   version "0.73.0"
   resolved "https://registry.npmjs.org/@nivo/colors/-/colors-0.73.0.tgz#fb22ec0d000b1b471cfa4a7156a787190be45bbe"
@@ -2207,6 +2224,11 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+countup.js@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.npmjs.org/countup.js/-/countup.js-2.0.8.tgz#eca0c31c9db3f7769cba494d9315cd52dbaaf1b9"
+  integrity sha512-pW3xwwD+hB+xmtI16xFcuLS0D5hSQqPQWkZOdgpKQyzxCquDNo2VCFPkRw12vmvdpnicXVTcjmYiakG6biwINg==
+
 create-ecdh@^4.0.0:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/create-ecdh/-/create-ecdh-4.0.4.tgz#d6e7f4bffa66736085a0762fd3a632684dabcc4e"
@@ -2396,7 +2418,7 @@ d3-scale@^3.2.3:
     d3-time "^2.1.1"
     d3-time-format "2 - 3"
 
-d3-shape@^1.3.5:
+d3-shape@^1.2.2, d3-shape@^1.3.5:
   version "1.3.7"
   resolved "https://registry.npmjs.org/d3-shape/-/d3-shape-1.3.7.tgz#df63801be07bc986bc54f63789b4fe502992b5d7"
   integrity sha512-EUkvKjqPFUAZyOlhY5gzCxCeI0Aep04LwIRpsZ/mLFelJiUfnK56jo5JMDSE7yyP2kLSb6LtF+S5chMk7uqPqw==
@@ -4548,6 +4570,13 @@ raw-body@2.4.1:
     http-errors "1.7.3"
     iconv-lite "0.4.24"
     unpipe "1.0.0"
+
+react-countup@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/react-countup/-/react-countup-5.2.0.tgz#58be5d97acebf767d5c61df5c3a3417b95c45a16"
+  integrity sha512-R6+FIrW8ypwoAe0Q0CZ16OhrgAntnnnch7HrnRAy9miXFKk8jQzVADjNtGSoNUuJeq/ZFiiXCGJCJIAmRJ5fLg==
+  dependencies:
+    countup.js "^2.0.8"
 
 react-dom@17.0.2:
   version "17.0.2"

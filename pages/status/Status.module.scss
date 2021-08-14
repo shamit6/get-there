@@ -1,0 +1,22 @@
+.status {
+  height: 85vh;
+  display: grid;
+  grid-template-rows: 10% 35% 25% 25%;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.first {
+  grid-column: 2 / span 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lineChart {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+}
+.barChart {
+  grid-column: 3 / span 2;
+  grid-row: 2;
+}
