@@ -70,7 +70,7 @@ function List() {
               </tr>
             </thead>
             <tbody>
-              {transactions!.map((transaction) => (
+              {(transactions ?? []).map((transaction) => (
                 <tr
                   key={transaction.id}
                   className={styles.tableRow}
