@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import styles from './Form.module.scss'
@@ -30,7 +30,7 @@ export default function Form({
 }: {
   transactionConfig?: TransactionConfig
 }) {
-  const { register, handleSubmit, watch, control } = useForm({
+  const { register, handleSubmit, watch, control, setValue } = useForm({
     shouldUseNativeValidation: false,
   })
   const router = useRouter()
@@ -39,6 +39,7 @@ export default function Form({
     async (data: TransactionConfig & { repeated: boolean }) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
+      console.log(data)
 
       const newTransactionData: TransactionConfig = {
         ...rest,
@@ -47,14 +48,13 @@ export default function Form({
       if (repeated) {
         newTransactionData.timePeriod = timePeriod
         newTransactionData.periodAmount = Number(periodAmount)
-        if (!!endDate) {
-          newTransactionData.endDate = endDate
-        }
+        newTransactionData.endDate = endDate
       }
 
       await router.push('/transactions')
 
       await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
+        'mutatemutate'
         return upsertToTrasactioList(transactionConfigs || [], {
           ...newTransactionData,
           id: transactionConfig?.id,
@@ -77,6 +77,7 @@ export default function Form({
   )
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
+  const endDateEl = useRef<HTMLInputElement>(null)
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
@@ -162,14 +163,26 @@ export default function Form({
           name="endDate"
           defaultValue={transactionConfig?.endDate}
           render={({ field: { onChange, value } }) => (
-            <input
-              type="date"
-              onChange={(e) => {
-                onChange(e.target.valueAsDate)
-              }}
-              disabled={!isRepeated}
-              value={value && format(value, 'yyyy-MM-dd')}
-            />
+            <>
+              <input
+                ref={endDateEl}
+                type="date"
+                onChange={(e) => {
+                  onChange(e.target.valueAsDate)
+                }}
+                disabled={!isRepeated}
+                value={value ? format(value, 'yyyy-MM-dd') : undefined}
+              />
+              <div
+                className={styles.clearInput}
+                onClick={() => {
+                  onChange(null)
+                  endDateEl.current!.value = ''
+                }}
+              >
+                X
+              </div>
+            </>
           )}
         />
       </div>
