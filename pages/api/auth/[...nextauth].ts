@@ -31,6 +31,12 @@ export default NextAuth({
 
       return true
     },
+    async redirect(url, baseUrl) {
+      return baseUrl
+    },
+  },
+  pages: {
+    signIn: '/auth/signin',
   },
   theme: 'light',
 })
