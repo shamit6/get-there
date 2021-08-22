@@ -105,15 +105,17 @@ function Status() {
         <div className={styles.first}>
           <Ticker number={balanceStatus[balanceStatus.length - 1].amount} />
         </div>
-        <div className={styles.lineChart}>
-          <LineChart data={lineChartData} />
-        </div>
-        <div className={styles.barChart}>
-          <BarChart
-            data={barChartData}
-            indexBy="type"
-            keys={transactions.map((cur) => cur.type)}
-          />
+        <div className={styles.graphs}>
+          <div className={styles.lineChart}>
+            <LineChart data={lineChartData} />
+          </div>
+          <div className={styles.barChart}>
+            <BarChart
+              data={barChartData}
+              indexBy="type"
+              keys={transactions.map((cur) => cur.type)}
+            />
+          </div>
         </div>
       </div>
     </Layout>
