@@ -1,22 +1,24 @@
 .status {
   height: 85vh;
-  display: grid;
-  grid-template-rows: 10% 35% 25% 25%;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
 }
 
 .first {
-  grid-column: 2 / span 2;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.graphs {
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(6, 320px);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-gap: 0.5em;
+}
+
 .lineChart {
-  grid-column: 1 / span 2;
-  grid-row: 2;
 }
 .barChart {
-  grid-column: 3 / span 2;
-  grid-row: 2;
 }

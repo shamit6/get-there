@@ -37,7 +37,7 @@ export function LineChart({ data }: any) {
       useMesh={true}
       legends={[
         {
-          anchor: 'bottom-right',
+          anchor: 'top-left',
           direction: 'column',
           justify: false,
           translateX: 100,
