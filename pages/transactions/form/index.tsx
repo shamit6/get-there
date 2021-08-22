@@ -39,7 +39,6 @@ export default function Form({
     async (data: TransactionConfig & { repeated: boolean }) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
-      console.log(data)
 
       const newTransactionData: TransactionConfig = {
         ...rest,

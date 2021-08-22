@@ -4,6 +4,19 @@ import { prismaClient } from '../../../utils/prisma'
 
 export default NextAuth({
   providers: [
+    Providers.Credentials({
+      id: 'demo',
+      name: 'Credentials',
+      async authorize() {
+        const user = {
+          email: 'demo@dummy.com',
+          name: 'Dummy Demo',
+          image:
+            'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/V8BNOaftJmYSAdW0ROdfRQw4cuWPEXxKwCLcDEAEiGQoBRBD___________8BGJ6i0f_______wE/s72-c-k-no/photo.jpg',
+        }
+        return user
+      },
+    }),
     Providers.Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -36,7 +49,7 @@ export default NextAuth({
     },
   },
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/signin',
   },
   theme: 'light',
 })
