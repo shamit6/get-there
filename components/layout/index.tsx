@@ -35,7 +35,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
               <Button
                 text="Sign out"
-                onClick={() => signOut({ callbackUrl: '/signin' })}
+                onClick={() => signOut({ callbackUrl: '/login' })}
                 linkTheme
               />
             </>

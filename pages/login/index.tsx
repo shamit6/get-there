@@ -1,9 +1,9 @@
 import { ClientSafeProvider, getProviders, signIn } from 'next-auth/client'
 import Layout from '../../components/layout'
-import styles from './Signin.module.scss'
+import styles from './Login.module.scss'
 import GoogleIcon from './google-logo.svg'
 
-export default function SignIn({
+export default function Login({
   providers,
 }: {
   providers: Record<string, ClientSafeProvider>
