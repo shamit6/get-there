@@ -102,7 +102,10 @@ export default function Home() {
     <Layout>
       <div className={styles.status}>
         <div className={styles.first}>
-          <Ticker number={balanceStatuses[balanceStatuses.length - 1].amount} />
+          <Ticker
+            label="Current Balance"
+            number={balanceStatuses[balanceStatuses.length - 1].amount}
+          />
         </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>
