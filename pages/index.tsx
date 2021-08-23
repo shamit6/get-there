@@ -2,9 +2,9 @@ import { useRouter } from 'next/router'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
 import { format, add } from 'date-fns'
-import useSWR from 'swr'
 import useTransaction from '../hooks/useTransactions'
-import { BalanceStatus, TransactionConfig } from '../utils/prisma'
+import useBalancesStatus from '../hooks/useBalanceStatus'
+import { TransactionConfig } from '../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
@@ -24,26 +24,15 @@ export default function Home() {
     }
   }, [user, loading])
 
-  const { error, data: balanceStatus } = useSWR<BalanceStatus[]>(
-    '/api/balance-statuses',
-    (url) =>
-      fetch(url)
-        .then((r) => r.json())
-        .then((r: BalanceStatus[]) =>
-          r.map(({ createdAt, ...rest }) => ({
-            createdAt: new Date(createdAt),
-            ...rest,
-          }))
-        )
-  )
+  const { error, balanceStatuses } = useBalancesStatus()
 
-  const balanceGraphData = balanceStatus?.map(({ amount, createdAt }) => ({
+  const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
     x: format(createdAt, 'dd/MM/yyyy hh:mm'),
     y: amount,
   }))
 
   const { transactions } = useTransaction()
-  if (!transactions || !balanceStatus) {
+  if (!transactions || !balanceStatuses) {
     return 'loading'
   }
 
@@ -56,9 +45,9 @@ export default function Home() {
     allTransactionsOccurances.filter(
       ({ date }) =>
         date.getTime() >=
-        balanceStatus[balanceStatus.length - 1].createdAt.getTime()
+        balanceStatuses[balanceStatuses.length - 1].createdAt.getTime()
     ),
-    balanceStatus[balanceStatus.length - 1]
+    balanceStatuses[balanceStatuses.length - 1]
   )
 
   const transactionsGraphData = [
@@ -113,7 +102,7 @@ export default function Home() {
     <Layout>
       <div className={styles.status}>
         <div className={styles.first}>
-          <Ticker number={balanceStatus[balanceStatus.length - 1].amount} />
+          <Ticker number={balanceStatuses[balanceStatuses.length - 1].amount} />
         </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>

@@ -18,7 +18,7 @@ function CurrentBalancePanel({
   const { mutate } = useBalanceStatus(true)
 
   const updateBalanceStatus = async (amount: number) => {
-    mutate({ amount, createdAt: new Date() }, false)
+    mutate([{ amount, createdAt: new Date() }], false)
     await fetch(`/api/balance-statuses`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -92,7 +92,9 @@ function List() {
               <a>New transaction</a>
             </Link>
           </div>
-          <div>{<CurrentBalancePanel balanceStatus={balanceStatuses} />} </div>
+          <div>
+            {<CurrentBalancePanel balanceStatus={balanceStatuses?.[0]} />}{' '}
+          </div>
         </div>
       )}
     </Layout>
