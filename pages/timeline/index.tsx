@@ -103,7 +103,7 @@ function Timeline() {
 
     const currentBalanceAmount = calcCurrentBalanceAmount(
       transactions!,
-      balanceStatuses!
+      balanceStatuses?.[0]!
     )
 
     setCurrentBalanceAmount(currentBalanceAmount)
