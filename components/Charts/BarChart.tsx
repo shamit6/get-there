@@ -60,7 +60,7 @@ export function BarChart({
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'country',
+        legend: '',
         legendPosition: 'middle',
         legendOffset: 32,
       }}
@@ -68,7 +68,7 @@ export function BarChart({
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'food',
+        legend: '',
         legendPosition: 'middle',
         legendOffset: -40,
       }}
