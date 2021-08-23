@@ -5,7 +5,7 @@ export function LineChart({ data }: any) {
     <ResponsiveLine
       colors={(d) => d.color}
       data={data}
-      margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+      margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{
         type: 'linear',
@@ -13,22 +13,15 @@ export function LineChart({ data }: any) {
         max: 'auto',
       }}
       yFormat=" >-.2f"
-      axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: 'Updated',
-        legendOffset: 36,
-        legendPosition: 'middle',
-      }}
+      axisBottom={null}
       axisLeft={{
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'Amount',
         legendOffset: -40,
         legendPosition: 'middle',
       }}
+      enablePoints={false}
       pointSize={10}
       pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
