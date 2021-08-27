@@ -9,6 +9,7 @@ import { TransactionConfig } from '../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
+  calcCurrentBalanceAmount,
 } from '../utils/transactionsCalculator'
 import Layout from '../components/layout'
 import styles from './Status.module.scss'
@@ -100,14 +101,16 @@ export default function Home() {
     }
   })
 
+  const currentBalanceAmount = calcCurrentBalanceAmount(
+    transactions,
+    balanceStatuses[balanceStatuses.length - 1]
+  )
+
   return (
     <Layout>
       <div className={styles.status}>
         <div className={styles.first}>
-          <Ticker
-            label="Current Balance"
-            number={balanceStatuses[balanceStatuses.length - 1].amount}
-          />
+          <Ticker label="Current Balance" number={currentBalanceAmount} />
           <Link href="/balance">
             <div className={styles.balanceDisclaimer}>Not your balance?</div>
           </Link>
