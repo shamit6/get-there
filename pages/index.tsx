@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
 import { format, add } from 'date-fns'
@@ -8,11 +9,13 @@ import { TransactionConfig } from '../utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
+  calcCurrentBalanceAmount,
 } from '../utils/transactionsCalculator'
 import Layout from '../components/layout'
 import styles from './Status.module.scss'
 import { LineChart, BarChart } from '../components/Charts'
 import Ticker from '../components/Ticker'
+import Loader from '../components/loader'
 
 export default function Home() {
   const { user, loading } = useUser()
@@ -33,7 +36,7 @@ export default function Home() {
 
   const { transactions } = useTransaction()
   if (!transactions || !balanceStatuses) {
-    return 'loading'
+    return <Loader />
   }
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
@@ -98,14 +101,19 @@ export default function Home() {
     }
   })
 
+  const currentBalanceAmount = calcCurrentBalanceAmount(
+    transactions,
+    balanceStatuses[balanceStatuses.length - 1]
+  )
+
   return (
     <Layout>
       <div className={styles.status}>
         <div className={styles.first}>
-          <Ticker
-            label="Current Balance"
-            number={balanceStatuses[balanceStatuses.length - 1].amount}
-          />
+          <Ticker label="Current Balance" number={currentBalanceAmount} />
+          <Link href="/balance">
+            <div className={styles.balanceDisclaimer}>Not your balance?</div>
+          </Link>
         </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>
