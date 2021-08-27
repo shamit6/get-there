@@ -6,24 +6,7 @@ import NumberFormat from 'react-number-format'
 import useTransaction from '../../../hooks/useTransactions'
 import { TransactionConfig } from '../../../utils/types'
 import { format } from 'date-fns'
-
-function upsertToTrasactioList(
-  list: TransactionConfig[],
-  transaction: TransactionConfig
-) {
-  if (!transaction.id) {
-    return [...list, transaction]
-  } else {
-    const a = list.reduce<TransactionConfig[]>((acc, curr) => {
-      if (curr.id === transaction.id) {
-        return [...acc, transaction]
-      } else {
-        return [...acc, curr]
-      }
-    }, [])
-    return a
-  }
-}
+import Button from '../../../components/button'
 
 export default function Form({
   transactionConfig,
@@ -34,7 +17,7 @@ export default function Form({
     shouldUseNativeValidation: false,
   })
   const router = useRouter()
-  const { mutate } = useTransaction()
+  const { upsertTrasaction } = useTransaction()
   const onSubmit = useCallback(
     async (data: TransactionConfig & { repeated: boolean }) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
@@ -50,28 +33,11 @@ export default function Form({
         newTransactionData.endDate = endDate
       }
 
+      upsertTrasaction(newTransactionData)
+
       await router.push('/transactions')
-
-      await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
-        return upsertToTrasactioList(transactionConfigs || [], {
-          ...newTransactionData,
-          id: transactionConfig?.id,
-        })
-      }, false)
-
-      const isNewTransaction = !transactionConfig?.id
-      const url = isNewTransaction
-        ? '/api/transaction-configs'
-        : `/api/transaction-configs/${transactionConfig!.id}`
-      fetch(url, {
-        method: isNewTransaction ? 'POST' : 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTransactionData),
-      }).then(() => {
-        return mutate()
-      })
     },
-    [transactionConfig, mutate, router]
+    [upsertTrasaction, router]
   )
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
@@ -184,7 +150,7 @@ export default function Form({
           )}
         />
       </div>
-      <input type="submit" />
+      <Button text="submit" primary className={styles.submitButton} />
     </form>
   )
 }

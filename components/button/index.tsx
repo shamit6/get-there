@@ -7,20 +7,29 @@ export default function Button({
   onClick,
   linkTheme,
   bordered,
+  primary,
   icon,
+  className,
 }: {
   text: string
-  onClick: MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
   linkTheme?: boolean
   bordered?: boolean
+  primary?: boolean
   icon?: React.ReactNode
+  className?: string
 }) {
   return (
     <button
-      className={classnames(styles.container, {
-        [styles.linkButton]: linkTheme,
-        [styles.bordered]: bordered,
-      })}
+      className={classnames(
+        styles.container,
+        {
+          [styles.linkButton]: linkTheme,
+          [styles.bordered]: bordered,
+          [styles.primary]: primary,
+        },
+        className
+      )}
       onClick={onClick}
     >
       {icon && <div className={styles.icon}>{icon}</div>}

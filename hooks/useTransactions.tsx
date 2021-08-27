@@ -1,7 +1,27 @@
+import _ from 'lodash'
+import { useCallback } from 'react'
 import useSWR from 'swr'
 import { TransactionConfig } from '../utils/types'
 
-export default function useTransaction() {
+function upsertToTrasactioList(
+  list: TransactionConfig[],
+  transaction: TransactionConfig
+) {
+  if (!transaction.id) {
+    return [...list, transaction]
+  } else {
+    const a = list.reduce<TransactionConfig[]>((acc, curr) => {
+      if (curr.id === transaction.id) {
+        return [...acc, transaction]
+      } else {
+        return [...acc, curr]
+      }
+    }, [])
+    return a
+  }
+}
+
+export default function useTransactions() {
   const { data, error, mutate } = useSWR<TransactionConfig[]>(
     '/api/transaction-configs',
     (url) =>
@@ -14,13 +34,49 @@ export default function useTransaction() {
             endDate: endDate ? new Date(endDate) : undefined,
           }))
         }),
-    { refreshInterval: 0 }
+    { refreshInterval: 5000 }
   )
+
+  const deleteTrasaction = useCallback(async (transactionId: string) => {
+    await mutate((transactionConfigs: TransactionConfig[] = []) => {
+      return _.remove(
+        transactionConfigs,
+        (transaction) => transaction.id !== transactionId
+      )
+    }, false)
+
+    fetch(`/api/transaction-configs/${transactionId}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    }).then(() => {
+      return mutate()
+    })
+  }, [mutate])
+
+  const upsertTrasaction = useCallback(async (transactionConfig: TransactionConfig) => {
+    await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
+      return upsertToTrasactioList(transactionConfigs || [], transactionConfig)
+    }, false)
+
+    const isNewTransaction = !transactionConfig.id
+    const url = isNewTransaction
+      ? '/api/transaction-configs'
+      : `/api/transaction-configs/${transactionConfig.id}`
+    fetch(url, {
+      method: isNewTransaction ? 'POST' : 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(transactionConfig),
+    }).then(() => {
+      return mutate()
+    })
+  }, [])
 
   return {
     transactions: data,
     isLoading: !error && !data,
     isError: error,
     mutate,
+    deleteTrasaction,
+    upsertTrasaction,
   }
 }

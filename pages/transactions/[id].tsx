@@ -3,44 +3,36 @@ import { useCallback } from 'react'
 import Button from '../../components/button'
 import Form from './form'
 import Layout from '../../components/layout'
-import useTransaction from '../../hooks/useTransactions'
-import _ from 'lodash'
-import { TransactionConfig } from '../../utils/types'
+import useTransactions from '../../hooks/useTransactions'
+import Loader from '../../components/loader'
+import Delete from './delete.svg'
 
-function New2() {
+function PersistTransactionForm() {
   const router = useRouter()
-  const { transactions, isLoading, mutate } = useTransaction()
+  const { transactions, isLoading, deleteTrasaction } = useTransactions()
   const transaction = transactions?.find(({ id }) => router.query.id === id)
 
   const onDelete = useCallback(async () => {
-    await mutate((transactionConfigs: TransactionConfig[] = []) => {
-      return _.remove(
-        transactionConfigs,
-        (transaction) => transaction.id !== router.query.id
-      )
-    }, false)
-
-    router.push('/transactions')
-
-    fetch(`/api/transaction-configs/${router.query.id}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    }).then(() => {
-      return mutate()
-    })
-  }, [mutate, router])
+    deleteTrasaction(transaction?.id!)
+    await router.push('/transactions')
+  }, [deleteTrasaction, transaction, router])
 
   return (
     <Layout>
       {isLoading ? (
-        'Loading'
+        <Loader />
       ) : (
         <>
-          <Button text="delete" onClick={() => onDelete()} />
+          <Button
+            text="delete"
+            bordered
+            onClick={() => onDelete()}
+            icon={<Delete />}
+          />
           <Form transactionConfig={transaction!} />
         </>
       )}
     </Layout>
   )
 }
-export default New2
+export default PersistTransactionForm

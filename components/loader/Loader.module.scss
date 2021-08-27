@@ -6,7 +6,7 @@
   height: 120px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
   animation: spin 1.5s linear infinite;
-  margin: 25vh auto;
+  margin: calc(50% - 60px);
 }
 
 /* Safari */

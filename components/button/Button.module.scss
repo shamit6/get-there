@@ -1,11 +1,12 @@
 .container {
   display: flex;
-}
-
-.linkButton {
-  margin-left: .5em;
+  border-radius: .7em;
   background-color: inherit;
-  border: 0;
+  padding: .6em;
+
+  &.primary {
+    background-color: darkseagreen;
+  }
 
   &:hover {
     cursor: pointer;
@@ -14,8 +15,12 @@
 
   &.bordered {
     border: solid 1px;
-    border-radius: 1em;
-    padding: .6em;
+  }
+
+  &.linkButton {
+    margin-left: .5em;
+    background-color: inherit;
+    border: 0;
   }
 
   .icon {

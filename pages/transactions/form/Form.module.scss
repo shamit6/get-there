@@ -20,15 +20,10 @@
     }
   }
 
-  input[type="submit"] {
-    height: 1.5em;
-    border-radius: 1em;
-    background-color: darkolivegreen;
-    color: white;
-    width: 50%;
-    margin: 1.5em auto;
-    cursor: pointer;
-    font-size: 1.1em;
+  .submitButton {
+    align-self: center;
+    margin-top: 1em;
+    font-size: 1em;
   }
 
   .clearInput {
