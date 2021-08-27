@@ -24,6 +24,18 @@
 
   .periodTransactionAmounts {
     width: inherit;
+
+    th {
+      font-weight: 500;
+    }
+
+    tbody {
+      opacity: 0.8;
+    }
+
+    tfoot {
+      font-weight: 500;
+    }
   }
 }
 

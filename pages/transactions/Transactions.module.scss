@@ -23,6 +23,17 @@
   grid-row-start: 4;
 }
 
+.pageHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: .6em;
+
+  .title {
+    flex: 1;
+    font-size: 1.5em;
+  }
+}
+
 .balancePanel {
   margin-top: 2em;
 

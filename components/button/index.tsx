@@ -7,20 +7,24 @@ export default function Button({
   onClick,
   linkTheme,
   bordered,
+  icon,
 }: {
   text: string
   onClick: MouseEventHandler<HTMLButtonElement>
   linkTheme?: boolean
   bordered?: boolean
+  icon?: React.ReactNode
 }) {
   return (
     <button
-      className={classnames({
+      className={classnames(styles.container, {
         [styles.linkButton]: linkTheme,
         [styles.bordered]: bordered,
       })}
       onClick={onClick}
     >
+      {icon && <div className={styles.icon}>{icon}</div>}
+
       {text}
     </button>
   )

@@ -5,9 +5,10 @@ import { BalanceStatus } from '../../utils/types'
 import useTransaction from '../../hooks/useTransactions'
 import styles from './Transactions.module.scss'
 import Layout from '../../components/layout'
-import Link from 'next/link'
 import Loader from '../../components/loader'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
+import Add from './plus.svg'
+import Button from '../../components/button'
 
 function CurrentBalancePanel({
   balanceStatus,
@@ -51,15 +52,26 @@ function CurrentBalancePanel({
 
 function List() {
   const router = useRouter()
-  const { balanceStatuses } = useBalanceStatus(true)
+  const { balanceStatuses, isLoading: isLoadingBalance } =
+    useBalanceStatus(true)
   const { transactions, isLoading } = useTransaction()
 
   return (
     <Layout>
-      {isLoading ? (
+      {isLoading || isLoadingBalance ? (
         <Loader />
       ) : (
         <div className={styles.content}>
+          <div className={styles.pageHeader}>
+            <div className={styles.title}>Transactions</div>
+            <Button
+              text="New transaction"
+              onClick={() => router.push('/transactions/new')}
+              bordered
+              linkTheme
+              icon={<Add />}
+            />
+          </div>
           <table className={styles.transactionTable}>
             <thead>
               <tr className={styles.tableHeader}>
@@ -87,11 +99,6 @@ function List() {
               ))}
             </tbody>
           </table>
-          <div>
-            <Link href="/transactions/new">
-              <a>New transaction</a>
-            </Link>
-          </div>
           <div>
             {<CurrentBalancePanel balanceStatus={balanceStatuses?.[0]} />}{' '}
           </div>

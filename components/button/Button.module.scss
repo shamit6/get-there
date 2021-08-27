@@ -1,3 +1,7 @@
+.container {
+  display: flex;
+}
+
 .linkButton {
   margin-left: .5em;
   background-color: inherit;
@@ -12,5 +16,11 @@
     border: solid 1px;
     border-radius: 1em;
     padding: .6em;
+  }
+
+  .icon {
+    height: 1em;
+    width: 1em;
+    margin-right: .4em;
   }
 }

@@ -2,6 +2,8 @@ import { ClientSafeProvider, getProviders, signIn } from 'next-auth/client'
 import Layout from '../../components/layout'
 import styles from './Login.module.scss'
 import GoogleIcon from './google-logo.svg'
+import Image from 'next/image'
+import DemoUser from './demo-user.png'
 
 export default function Login({
   providers,
@@ -24,7 +26,9 @@ export default function Login({
           className={styles.googleButton}
           onClick={() => signIn(providers.demo.id)}
         >
-          <div className={styles.icon}></div>
+          <div className={styles.icon}>
+            <Image src={DemoUser} height={24} width={24} />
+          </div>
           Sign in with demo user
         </button>
       </div>

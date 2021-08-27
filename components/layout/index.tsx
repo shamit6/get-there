@@ -43,9 +43,6 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
       <nav className={styles.nav}>
-        <Link href="/status">
-          <a>Status</a>
-        </Link>
         <Link href="/timeline">
           <a>Timeline</a>
         </Link>

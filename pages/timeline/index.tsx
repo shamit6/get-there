@@ -127,6 +127,8 @@ function Timeline() {
     currentBalanceAmount,
     numberOFitems,
     periodResolution,
+    isLoadingBalance,
+    isLoadingTransactions,
   ])
 
   const loadmore = () => {
