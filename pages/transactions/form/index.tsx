@@ -53,7 +53,6 @@ export default function Form({
       await router.push('/transactions')
 
       await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
-        'mutatemutate'
         return upsertToTrasactioList(transactionConfigs || [], {
           ...newTransactionData,
           id: transactionConfig?.id,

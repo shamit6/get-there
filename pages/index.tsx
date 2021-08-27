@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'
+import Link from 'next/link'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
 import { format, add } from 'date-fns'
@@ -13,6 +14,7 @@ import Layout from '../components/layout'
 import styles from './Status.module.scss'
 import { LineChart, BarChart } from '../components/Charts'
 import Ticker from '../components/Ticker'
+import Loader from '../components/loader'
 
 export default function Home() {
   const { user, loading } = useUser()
@@ -33,7 +35,7 @@ export default function Home() {
 
   const { transactions } = useTransaction()
   if (!transactions || !balanceStatuses) {
-    return 'loading'
+    return <Loader />
   }
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
@@ -106,6 +108,9 @@ export default function Home() {
             label="Current Balance"
             number={balanceStatuses[balanceStatuses.length - 1].amount}
           />
+          <Link href="/balance">
+            <div className={styles.balanceDisclaimer}>Not your balance?</div>
+          </Link>
         </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>
