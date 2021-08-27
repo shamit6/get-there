@@ -40,12 +40,12 @@ function generateTransactionConfigOccurances(
   const { date, type, amount, ...interval } = transactionConfig
   const transactionOccurances: Transaction[] = []
 
-  if (
-    !interval?.timePeriod &&
-    !isBefore(date, fromDate) &&
-    !isAfter(date, untilDate)
-  ) {
-    return [{ amount, type, date }]
+  if (!interval?.timePeriod) {
+    if (!isBefore(date, fromDate) && !isAfter(date, untilDate)) {
+      return []
+    } else {
+      return [{ amount, type, date }]
+    }
   }
 
   let currentDate = date
@@ -200,18 +200,18 @@ function getTransactionSummery(
   const { date, type, amount, ...interval } = transactionConfig
   const transactionOccurances: SummerizedTransacrionPeriod[] = []
 
-  if (
-    !interval?.timePeriod &&
-    !isBefore(date, fromDate) &&
-    !isAfter(date, untilDate)
-  ) {
-    return [
-      {
-        time: extractTimeByPeriod(date, periodResolution),
-        totalAmout: amount,
-        type,
-      },
-    ]
+  if (!interval?.timePeriod) {
+    if (!isBefore(date, fromDate) && !isAfter(date, untilDate)) {
+      return []
+    } else {
+      return [
+        {
+          time: extractTimeByPeriod(date, periodResolution),
+          totalAmout: amount,
+          type,
+        },
+      ]
+    }
   }
 
   let currentDate = getFirstOccuranceNotBefore(transactionConfig, fromDate)
