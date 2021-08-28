@@ -16,6 +16,10 @@ import {
   lastDayOfYear,
   lastDayOfMonth,
   lastDayOfWeek,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
 } from 'date-fns'
 import { TransactionConfig } from './types'
 
@@ -336,4 +340,42 @@ export function getLastDayOfPeriod(
     default:
       return lastDayOfMonth(new Date(time.year, time.month!))
   }
+}
+
+export function getCurrentMonthBalanceAmount(
+  transactions: Transaction[],
+  currentDate: Date = new Date()
+) {
+  const monthStartDate = startOfMonth(currentDate)
+  const monthEndDate = endOfMonth(currentDate)
+  const currentMonthOccurences = generateTransactionConfigsOccurances(
+    transactions,
+    monthStartDate,
+    monthEndDate
+  )
+  const currentMonthBalanceAmount = currentMonthOccurences.reduce(
+    (res, cur) => {
+      return res + cur.amount
+    },
+    0
+  )
+  return currentMonthBalanceAmount
+}
+
+export function getCurrentYearBalanceAmount(
+  transactions: Transaction[],
+  currentDate: Date = new Date()
+) {
+  const yearStartDate = startOfYear(currentDate)
+  const yearEndDate = endOfYear(currentDate)
+  const currentYearOccurences = generateTransactionConfigsOccurances(
+    transactions,
+    yearStartDate,
+    yearEndDate
+  )
+
+  const currentYearBalanceAmount = currentYearOccurences.reduce((res, cur) => {
+    return res + cur.amount
+  }, 0)
+  return currentYearBalanceAmount
 }

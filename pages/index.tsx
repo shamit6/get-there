@@ -1,14 +1,7 @@
 import { useRouter } from 'next/router'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
-import {
-  format,
-  add,
-  startOfMonth,
-  endOfMonth,
-  startOfYear,
-  endOfYear,
-} from 'date-fns'
+import { format, add } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
 import { TransactionConfig } from '../utils/prisma'
@@ -16,6 +9,8 @@ import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
   calcCurrentBalanceAmount,
+  getCurrentMonthBalanceAmount,
+  getCurrentYearBalanceAmount,
 } from '../utils/transactionsCalculator'
 import Layout from '../components/layout'
 import styles from './Status.module.scss'
@@ -114,30 +109,13 @@ export default function Home() {
     balanceStatuses[balanceStatuses.length - 1]
   )
 
-  const monthStartDate = startOfMonth(currentDate)
-  const monthEndDate = endOfMonth(currentDate)
-  const currentMonthOccurences = generateTransactionConfigsOccurances(
+  const currentYearBalanceAmount = getCurrentYearBalanceAmount(
     transactions,
-    monthStartDate,
-    monthEndDate
+    currentDate
   )
-
-  const yearStartDate = startOfYear(currentDate)
-  const yearEndDate = endOfYear(currentDate)
-  const currentYearOccurences = generateTransactionConfigsOccurances(
+  const currentMonthBalanceAmount = getCurrentMonthBalanceAmount(
     transactions,
-    yearStartDate,
-    yearEndDate
-  )
-
-  const currentYearBalanceAmount = currentYearOccurences.reduce((res, cur) => {
-    return res + cur.amount
-  }, 0)
-  const currentMonthBalanceAmount = currentMonthOccurences.reduce(
-    (res, cur) => {
-      return res + cur.amount
-    },
-    0
+    currentDate
   )
 
   return (
