@@ -2,7 +2,9 @@
   display: grid;
   height: 100vh;
   grid-template-rows: [col1-start] max(2em, 5%) [col2-start] 5% [col3-start] 1fr [col4-start] 20% [col5-start] 5% [col5-end];
-  grid-template-columns: [col1-start] max(1em, 5%) [col2-start] auto [col3-start] max(1em, 5%) [col3-end];
+  grid-template-columns:
+    [col1-start] max(1em, 5%) [col2-start] auto [col3-start] max(1em, 5%)
+    [col3-end];
 }
 
 .header {
@@ -18,14 +20,14 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .user {
   border-width: 2px;
   border-radius: 3em;
   border: solid 1px gray;
-  padding: .2em;
+  padding: 0.2em;
   display: flex;
   align-items: center;
 
@@ -35,15 +37,22 @@
   }
 
   .name {
-    margin: auto .2em
+    margin: auto 0.2em;
   }
 }
 
 .nav {
   grid-row-start: 2;
   grid-column-start: 2;
-  a {
-    margin-right: 2em;
+  display: flex;
+  align-items: center;
+  column-gap: 2em;
+  flex-wrap: wrap;
+
+  .balanceDisclaimer {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-left: auto;
   }
 }
 

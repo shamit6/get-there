@@ -2,7 +2,14 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
-import { format, add } from 'date-fns'
+import {
+  format,
+  add,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+} from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
 import { TransactionConfig } from '../utils/prisma'
@@ -29,6 +36,8 @@ export default function Home() {
 
   const { error, balanceStatuses } = useBalancesStatus()
 
+  const currentDate = new Date()
+
   const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
     x: format(createdAt, 'dd/MM/yyyy hh:mm'),
     y: amount,
@@ -41,7 +50,7 @@ export default function Home() {
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
     transactions,
-    new Date(),
+    currentDate,
     add(Date.now(), { months: 6 })
   )
   const transactionToView = addBalanaceToSortTransaction(
@@ -106,14 +115,60 @@ export default function Home() {
     balanceStatuses[balanceStatuses.length - 1]
   )
 
+  const monthStartDate = startOfMonth(currentDate)
+  const monthEndDate = endOfMonth(currentDate)
+  const currentMonthOccurences = generateTransactionConfigsOccurances(
+    transactions,
+    monthStartDate,
+    monthEndDate
+  )
+
+  const yearStartDate = startOfYear(currentDate)
+  const yearEndDate = endOfYear(currentDate)
+  const currentYearOccurences = generateTransactionConfigsOccurances(
+    transactions,
+    yearStartDate,
+    yearEndDate
+  )
+
+  const currentYearBalanceAmount = currentYearOccurences.reduce((res, cur) => {
+    return res + cur.amount
+  }, 0)
+  const currentMonthBalanceAmount = currentMonthOccurences.reduce(
+    (res, cur) => {
+      return res + cur.amount
+    },
+    0
+  )
+
   return (
     <Layout>
       <div className={styles.status}>
         <div className={styles.first}>
-          <Ticker label="Current Balance" number={currentBalanceAmount} />
-          <Link href="/balance">
-            <div className={styles.balanceDisclaimer}>Not your balance?</div>
-          </Link>
+          <Ticker label="Balance" number={currentBalanceAmount} />
+          <div className={styles.smallTickers}>
+            <Ticker
+              small
+              label="This Year"
+              prefix={currentYearBalanceAmount < 0 ? '-' : '+'}
+              number={currentYearBalanceAmount}
+              duration={4}
+            />
+            <Ticker
+              small
+              label="This Month"
+              prefix={currentMonthBalanceAmount < 0 ? '-' : '+'}
+              number={currentMonthBalanceAmount}
+              duration={4}
+            />
+            <Ticker
+              small
+              label="Month AVG"
+              prefix={currentYearBalanceAmount < 0 ? '-' : '+'}
+              number={currentYearBalanceAmount / 12}
+              duration={4}
+            />
+          </div>
         </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>
@@ -123,7 +178,7 @@ export default function Home() {
             <BarChart
               data={barChartData}
               indexBy="type"
-              keys={transactions.map((cur) => cur.type)}
+              keys={Array.from(new Set(transactions.map((cur) => cur.type)))}
             />
           </div>
         </div>
