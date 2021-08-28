@@ -1,9 +1,18 @@
 .ticker {
   font-size: 2em;
-  font-weight: bold;
-  color: #240046;
+  color: #03045e;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.small {
+  font-weight: normal;
+  font-size: 1.2em;
+  flex: 1;
+}
+
+.amount {
+  font-weight: bold;
 }

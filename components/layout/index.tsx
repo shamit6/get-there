@@ -49,6 +49,10 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Link href="/transactions">
           <a>Transactions</a>
         </Link>
+        {/* TODO: show only if balance not updated today */}
+        <Link href="/balance">
+          <a className={styles.balanceDisclaimer}>Balance not updated?</a>
+        </Link>
       </nav>
       <Head>
         <title>Get-There</title>
