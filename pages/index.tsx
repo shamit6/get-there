@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import useUser from '../hooks/useUser'
 import { useEffect } from 'react'
 import {
