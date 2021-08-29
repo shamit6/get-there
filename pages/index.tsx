@@ -33,7 +33,7 @@ export default function Home() {
   const currentDate = new Date()
 
   const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
-    x: format(createdAt, 'dd/MM/yyyy hh:mm'),
+    x: format(createdAt, 'dd/MM/yyyy'),
     y: amount,
   }))
 
@@ -60,7 +60,7 @@ export default function Home() {
     balanceGraphData![balanceGraphData!.length - 1],
   ].concat(
     transactionToView.map(({ balance, date }) => ({
-      x: format(date, 'dd/MM/yyyy hh:mm'),
+      x: format(date, 'dd/MM/yyyy'),
       y: balance!,
     }))
   )
