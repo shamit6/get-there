@@ -22,7 +22,13 @@ function PersistTransactionForm() {
       {isLoading ? (
         <Loader />
       ) : (
-        <>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-end',
+          }}
+        >
           <Button
             text="delete"
             bordered
@@ -30,7 +36,7 @@ function PersistTransactionForm() {
             icon={<Delete />}
           />
           <Form transactionConfig={transaction!} />
-        </>
+        </div>
       )}
     </Layout>
   )

@@ -37,39 +37,50 @@ export default function useTransactions() {
     { refreshInterval: 5000 }
   )
 
-  const deleteTrasaction = useCallback(async (transactionId: string) => {
-    await mutate((transactionConfigs: TransactionConfig[] = []) => {
-      return _.remove(
-        transactionConfigs,
-        (transaction) => transaction.id !== transactionId
-      )
-    }, false)
+  const deleteTrasaction = useCallback(
+    async (transactionId: string) => {
+      await mutate((transactionConfigs: TransactionConfig[] = []) => {
+        return _.remove(
+          transactionConfigs,
+          (transaction) => transaction.id !== transactionId
+        )
+      }, false)
 
-    fetch(`/api/transaction-configs/${transactionId}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    }).then(() => {
-      return mutate()
-    })
-  }, [mutate])
+      fetch(`/api/transaction-configs/${transactionId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+      }).then(() => {
+        return mutate()
+      })
+    },
+    [mutate]
+  )
 
-  const upsertTrasaction = useCallback(async (transactionConfig: TransactionConfig) => {
-    await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
-      return upsertToTrasactioList(transactionConfigs || [], transactionConfig)
-    }, false)
+  const upsertTrasaction = useCallback(
+    async (transactionConfig: TransactionConfig) => {
+      await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
+        return upsertToTrasactioList(
+          transactionConfigs || [],
+          transactionConfig
+        )
+      }, false)
 
-    const isNewTransaction = !transactionConfig.id
-    const url = isNewTransaction
-      ? '/api/transaction-configs'
-      : `/api/transaction-configs/${transactionConfig.id}`
-    fetch(url, {
-      method: isNewTransaction ? 'POST' : 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(transactionConfig),
-    }).then(() => {
-      return mutate()
-    })
-  }, [])
+      const { id, ...transactionData } = transactionConfig
+      const isNewTransaction = !id
+      const url = isNewTransaction
+        ? '/api/transaction-configs'
+        : `/api/transaction-configs/${id}`
+
+      fetch(url, {
+        method: isNewTransaction ? 'POST' : 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(transactionData),
+      }).then(() => {
+        return mutate()
+      })
+    },
+    []
+  )
 
   return {
     transactions: data,

@@ -7,15 +7,17 @@ import useTransaction from '../../../hooks/useTransactions'
 import { TransactionConfig } from '../../../utils/types'
 import { format } from 'date-fns'
 import Button from '../../../components/button'
+import classNames from 'classnames'
 
 export default function Form({
   transactionConfig,
 }: {
   transactionConfig?: TransactionConfig
 }) {
-  const { register, handleSubmit, watch, control, setValue } = useForm({
+  const { register, handleSubmit, watch, control, formState } = useForm({
     shouldUseNativeValidation: false,
   })
+
   const router = useRouter()
   const { upsertTrasaction } = useTransaction()
   const onSubmit = useCallback(
@@ -26,6 +28,7 @@ export default function Form({
       const newTransactionData: TransactionConfig = {
         ...rest,
         amount: Number(amount),
+        id: transactionConfig?.id,
       }
       if (repeated) {
         newTransactionData.timePeriod = timePeriod
@@ -42,58 +45,75 @@ export default function Form({
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
   const endDateEl = useRef<HTMLInputElement>(null)
+  console.log(formState)
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={classNames(styles.form, {
+        [styles.submitted]: formState.isSubmitted,
+      })}
+      noValidate
+    >
       <div className={styles.field}>
-        <label>Amount: </label>
+        <label>Amount</label>
         <Controller
           control={control}
           name="amount"
           rules={{ required: true }}
           defaultValue={transactionConfig?.amount}
           render={({ field: { onChange, onBlur, value } }) => (
-            <NumberFormat
-              onValueChange={({ value }) => onChange(value)}
-              onBlur={onBlur}
-              value={value}
-              placeholder="₪40,000"
-              thousandSeparator={true}
-              prefix={'₪'}
-            />
+            <>
+              <NumberFormat
+                onValueChange={({ value }) => onChange(value)}
+                onBlur={onBlur}
+                value={value}
+                placeholder="₪40,000"
+                thousandSeparator={true}
+                prefix={'₪'}
+                required
+              />
+              <span />
+            </>
           )}
         />
       </div>
       <div className={styles.field}>
-        <label>Date: </label>
+        <label>Date</label>
         <Controller
           control={control}
           name="date"
           rules={{ required: true }}
           defaultValue={transactionConfig?.date}
           render={({ field: { onChange, value } }) => (
-            <input
-              type="date"
-              onChange={(e) => {
-                onChange(e.target.valueAsDate)
-              }}
-              value={value && format(value, 'yyyy-MM-dd')}
-            />
+            <>
+              <input
+                type="date"
+                onChange={(e) => {
+                  onChange(e.target.valueAsDate)
+                }}
+                value={value && format(value, 'yyyy-MM-dd')}
+                required
+              />
+              <span />
+            </>
           )}
         />
       </div>
       <div className={styles.field}>
-        <label>Type: </label>
+        <label>Type</label>
         <input
           id="type"
           type="text"
           placeholder="Salary"
           defaultValue={transactionConfig?.type}
-          {...register('type', { required: true })}
+          {...register('type', { required: 'error message' })}
+          required
         />
+        <span />
       </div>
-      <div className={styles.field}>
-        <label htmlFor="repeated">Repeated:</label>
+      <div className={styles.repeatedField}>
+        <label htmlFor="repeated">Repeated</label>
         <input
           type="checkbox"
           id="repeated"
@@ -102,18 +122,20 @@ export default function Form({
         />
       </div>
       <div className={styles.field}>
-        <label>In: </label>
+        <label>In</label>
         <input
           type="number"
           defaultValue={transactionConfig?.periodAmount || 1}
           disabled={!isRepeated}
-          style={{ width: '4 em', marginRight: '.7em' }}
           {...register('periodAmount', { required: isRepeated })}
+          required={isRepeated}
         />
+        <span />
         <select
           {...register('timePeriod')}
           defaultValue={transactionConfig?.timePeriod || 'month'}
           disabled={!isRepeated}
+          style={{ marginLeft: '1em' }}
         >
           <option value="week">weeks</option>
           <option value="month">months</option>
@@ -121,7 +143,7 @@ export default function Form({
         </select>
       </div>
       <div className={styles.field}>
-        <label>End Date: </label>
+        <label>End Date</label>
         <Controller
           control={control}
           name="endDate"
@@ -150,6 +172,7 @@ export default function Form({
           )}
         />
       </div>
+      <hr />
       <Button text="submit" primary className={styles.submitButton} />
     </form>
   )

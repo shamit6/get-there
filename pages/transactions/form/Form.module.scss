@@ -1,34 +1,92 @@
 .form {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   max-width: 20em;
   margin: auto;
-  font-size: 1.3em;
+
+  hr {
+    width: 100%;
+    border: 0;
+  }
+
+  &.submitted {
+    input:required:invalid {
+      outline: none;
+      border-color: #c00000;
+      box-shadow: inset 0px 0px 0px 1px #c00000;
+    }
+
+    input:required:invalid + span {
+      position: absolute;
+    }
+
+    input:required:invalid + span::after {
+      content: "required";
+      top: -0.75rem;
+      position: absolute;
+      right: 0.5rem;
+      color: #c00000;
+      font-size: 0.6em;
+    }
+  }
 
   .field {
     margin-top: 1em;
+    margin-right: 1em;
 
-    label {
+   label {
       width: 5em;
-      display: inline-block;
-      text-align: end;
-      margin-right: .7em;
+      margin-left: 0.3em;
+      margin-bottom: 0.2em;
+      display: block;
     }
 
-    input[type="date"], input[type="text"] , input[type="number"]{
-      width: 10em;
+    input {
+      outline: none;
     }
+
+    input[type='date'],
+    input[type='text'],
+    input[type='number'],
+    select {
+      width: 10em;
+      padding: 0.6em;
+      border: 1px solid;
+      border-radius: 0.7em;
+    }
+
+    input[type='date'] {
+      padding: 0.525em;
+
+      &::-webkit-calendar-picker-indicator {
+        width: 1em;
+        padding: 0px;
+        margin: 0px;
+        margin-top: 0px;
+      }
+    }
+    select {
+      padding: 0.525em;
+    }
+  }
+
+  .repeatedField {
+    margin-top: 1em;
+    margin-right: 1em;
+    width: 100%;
+    display: inline-block;
   }
 
   .submitButton {
     align-self: center;
     margin-top: 1em;
     font-size: 1em;
+    margin: auto;
   }
 
   .clearInput {
     display: inline-block;
-    margin-left: .2em;
+    margin-left: 0.2em;
     vertical-align: middle;
     color: rgb(251 131 131);
     cursor: pointer;
