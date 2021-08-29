@@ -1,4 +1,5 @@
 import { ResponsiveLine } from '@nivo/line'
+import style from './LineChart.module.scss'
 
 export function LineChart({ data }: any) {
   return (
@@ -6,13 +7,19 @@ export function LineChart({ data }: any) {
       colors={(d) => d.color}
       data={data}
       margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
-      xScale={{ type: 'point' }}
+      xScale={{
+        type: 'time',
+        format: '%d/%m/%Y',
+        useUTC: false,
+        precision: 'day',
+      }}
+      xFormat="time:%d/%m/%Y"
       yScale={{
         type: 'linear',
         min: 'auto',
         max: 'auto',
       }}
-      yFormat=" >-.2f"
+      yFormat={(value) => `${value.toLocaleString('he')}`}
       axisBottom={null}
       axisLeft={{
         tickSize: 5,
@@ -22,6 +29,23 @@ export function LineChart({ data }: any) {
         legendPosition: 'middle',
       }}
       enablePoints={false}
+      enableSlices="y"
+      sliceTooltip={({ slice }) => {
+        return (
+          <div
+            className={style.tooltip}
+            style={{
+              color: slice.points[0].serieColor,
+            }}
+          >
+            {slice.points[0].data.xFormatted}
+
+            <div key={slice.points[0].id}>
+              <strong>{slice.points[0].data.yFormatted}</strong>
+            </div>
+          </div>
+        )
+      }}
       pointSize={10}
       pointColor={{ theme: 'background' }}
       pointBorderWidth={2}
