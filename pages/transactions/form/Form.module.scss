@@ -1,7 +1,7 @@
 .form {
   display: flex;
   flex-wrap: wrap;
-  max-width: 20em;
+  max-width: 21em;
   margin: auto;
 
   hr {
@@ -21,12 +21,16 @@
     }
 
     input:required:invalid + span::after {
-      content: "required";
-      top: -0.75rem;
+      content: "!";
+      top: 0.4em;
       position: absolute;
-      right: 0.5rem;
+      right: 1.5em;
       color: #c00000;
-      font-size: 0.6em;
+      border: #c00000 solid 1px;
+      border-radius: 50%;
+      padding: 0 0.4em;
+      font-size: 1em;
+      font-weight: 700;
     }
   }
 
@@ -49,10 +53,16 @@
     input[type='text'],
     input[type='number'],
     select {
-      width: 10em;
+      width: 11em;
       padding: 0.6em;
       border: 1px solid;
       border-radius: 0.7em;
+      background-color: white;
+
+      &:disabled {
+        background-color: rgba(59, 59, 59, 0.3);
+        opacity: 1;
+      }
     }
 
     input[type='date'] {
