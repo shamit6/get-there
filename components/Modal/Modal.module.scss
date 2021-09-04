@@ -1,0 +1,18 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 12;
+  background-color: rgba(150,150,150,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  background-color: white;
+  border-radius: 1em;
+  padding: 1.5em;
+}
