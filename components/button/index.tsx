@@ -10,6 +10,7 @@ export default function Button({
   primary,
   icon,
   className,
+  disabled,
 }: {
   text: string
   onClick?: MouseEventHandler<HTMLButtonElement>
@@ -18,6 +19,7 @@ export default function Button({
   primary?: boolean
   icon?: React.ReactNode
   className?: string
+  disabled?: boolean
 }) {
   return (
     <button
@@ -31,6 +33,7 @@ export default function Button({
         className
       )}
       onClick={onClick}
+      disabled={disabled}
     >
       {icon && <div className={styles.icon}>{icon}</div>}
 
