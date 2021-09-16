@@ -17,6 +17,8 @@ import styles from './Status.module.scss'
 import { LineChart, BarChart } from '../components/Charts'
 import Ticker from '../components/Ticker'
 import Loader from '../components/loader'
+import ScrollToTopButton from '../components/ScrollToTopButton'
+import Timeline from './timeline'
 
 export default function Home() {
   const { user, loading } = useUser()
@@ -159,6 +161,8 @@ export default function Home() {
             />
           </div>
         </div>
+        <Timeline />
+        <ScrollToTopButton />
       </div>
     </Layout>
   )

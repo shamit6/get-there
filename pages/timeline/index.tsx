@@ -5,7 +5,6 @@ import {
   getTransactionsSummeryByPeriod,
   TimelineSummerizedTransacrionsPeriod,
 } from '../../utils/transactionsCalculator'
-import Layout from '../../components/layout'
 import useTransaction from '../../hooks/useTransactions'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
 import { TimePeriod } from '../../utils/types'
@@ -140,8 +139,8 @@ function Timeline() {
   }
 
   return (
-    <Layout>
-      <div style={{ display: 'flex', width: 'min(100%, 40em)' }}>
+    <div className={styles.timeline}>
+      <div style={{ display: 'flex' }}>
         <span style={{ flex: '1' }}>
           current balance amount <TextNumber value={currentBalanceAmount} />
         </span>
@@ -156,7 +155,7 @@ function Timeline() {
           <option value={TimePeriod.YEAR}>year</option>
         </select>
       </div>
-      <dl className={styles.timeline}>
+      <dl>
         <InfiniteScroll
           pageStart={0}
           loadMore={loadmore}
@@ -178,7 +177,7 @@ function Timeline() {
           })}
         </InfiniteScroll>
       </dl>
-    </Layout>
+    </div>
   )
 }
 export default Timeline
