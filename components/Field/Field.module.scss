@@ -1,0 +1,45 @@
+.field {
+  margin-top: 1em;
+  margin-right: 1em;
+
+ label {
+    width: 5em;
+    margin-left: 0.3em;
+    margin-bottom: 0.2em;
+    display: block;
+  }
+
+  input {
+    outline: none;
+  }
+
+  input[type='date'],
+  input[type='text'],
+  input[type='number'],
+  select {
+    width: 11em;
+    padding: 0.6em;
+    border: 1px solid;
+    border-radius: 0.7em;
+    background-color: white;
+
+    &:disabled {
+      background-color: rgba(59, 59, 59, 0.3);
+      opacity: 1;
+    }
+  }
+
+  input[type='date'] {
+    padding: 0.525em;
+
+    &::-webkit-calendar-picker-indicator {
+      width: 1em;
+      padding: 0px;
+      margin: 0px;
+      margin-top: 0px;
+    }
+  }
+  select {
+    padding: 0.525em;
+  }
+}

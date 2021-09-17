@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router'
 import useUser from '../hooks/useUser'
-import { useEffect } from 'react'
-import { format, add } from 'date-fns'
+import { useEffect, useState } from 'react'
+import { format, startOfDay, addYears } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
 import { TransactionConfig } from '../utils/prisma'
@@ -11,18 +11,23 @@ import {
   calcCurrentBalanceAmount,
   getCurrentMonthBalanceAmount,
   getCurrentYearBalanceAmount,
+  getTransactionConfigsAmounts,
 } from '../utils/transactionsCalculator'
 import Layout from '../components/layout'
 import styles from './Status.module.scss'
 import { LineChart, BarChart } from '../components/Charts'
 import Ticker from '../components/Ticker'
 import Loader from '../components/loader'
+import Field from '../components/Field'
 import ScrollToTopButton from '../components/ScrollToTopButton'
 import Timeline from './timeline'
 
 export default function Home() {
+  const nowDate = new Date()
   const { user, loading } = useUser()
   const router = useRouter()
+  const [startDate, setStartDate] = useState<Date>(startOfDay(nowDate))
+  const [endDate, setEndDate] = useState<Date>(startOfDay(addYears(nowDate, 1)))
 
   useEffect(() => {
     if (!(user || loading)) {
@@ -31,8 +36,6 @@ export default function Home() {
   }, [user, loading])
 
   const { error, balanceStatuses } = useBalancesStatus()
-
-  const currentDate = new Date()
 
   const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
     x: format(createdAt, 'dd/MM/yyyy'),
@@ -46,8 +49,8 @@ export default function Home() {
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
     transactions,
-    currentDate,
-    add(Date.now(), { months: 6 })
+    startDate,
+    endDate
   )
   const transactionToView = addBalanaceToSortTransaction(
     allTransactionsOccurances.filter(
@@ -80,7 +83,12 @@ export default function Home() {
     },
   ]
 
-  const earningsSpendings = transactions.reduce(
+  const totalTransactioAmounnts = getTransactionConfigsAmounts(
+    transactions,
+    startDate,
+    endDate
+  )
+  const earningsSpendings = totalTransactioAmounnts.reduce(
     (res, cur) => {
       if (cur.amount > 0) {
         // @ts-ignore-next-line
@@ -113,11 +121,11 @@ export default function Home() {
 
   const currentYearBalanceAmount = getCurrentYearBalanceAmount(
     transactions,
-    currentDate
+    nowDate
   )
   const currentMonthBalanceAmount = getCurrentMonthBalanceAmount(
     transactions,
-    currentDate
+    nowDate
   )
 
   return (
@@ -149,6 +157,26 @@ export default function Home() {
             />
           </div>
         </div>
+        <div className={styles.filterPanel}>
+          <Field label="From date:">
+            <input
+              type="date"
+              value={format(startDate, 'yyyy-MM-dd')}
+              onChange={(e) => {
+                setStartDate(e.target.valueAsDate!)
+              }}
+            />
+          </Field>
+          <Field label="Until date:">
+            <input
+              type="date"
+              value={format(endDate, 'yyyy-MM-dd')}
+              onChange={(e) => {
+                setEndDate(e.target.valueAsDate!)
+              }}
+            />
+          </Field>
+        </div>
         <div className={styles.graphs}>
           <div className={styles.lineChart}>
             <LineChart data={lineChartData} />
@@ -161,7 +189,7 @@ export default function Home() {
             />
           </div>
         </div>
-        <Timeline />
+        <Timeline fromDate={startDate} untillDate={endDate} />
         <ScrollToTopButton />
       </div>
     </Layout>

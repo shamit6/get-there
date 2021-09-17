@@ -45,8 +45,6 @@ export default function Form({
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
   const endDateEl = useRef<HTMLInputElement>(null)
-  console.log(formState)
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
