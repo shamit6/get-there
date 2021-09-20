@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "svgo public/money.svg -o public/money.svg && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -44,6 +44,7 @@
     "eslint-plugin-unused-imports": "^1.1.2",
     "prettier": "^2.3.2",
     "prisma": "^2.27.0",
+    "svgo": "^2.6.1",
     "typescript": "4.3.5"
   }
 }
