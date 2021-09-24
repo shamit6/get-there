@@ -100,10 +100,12 @@ function Timeline({
   >([])
   const [currentBalanceAmount, setCurrentBalanceAmount] = useState(0)
   const [numberOFitems, setNumberOFitems] = useState(5)
-  const [hasMore, setHasMore] = useState(true)
+  const [hasMore, setHasMore] = useState(false)
 
   useEffect(() => {
-    if (isLoadingBalance || isLoadingTransactions) {
+    console.log('balanceStatuses?.[0]', balanceStatuses?.[0])
+
+    if (isLoadingBalance || isLoadingTransactions || !balanceStatuses?.[0]) {
       return
     }
 
@@ -132,6 +134,7 @@ function Timeline({
         )
 
       setTimelineTransactions(transactionsWithBalanceSummery)
+      setHasMore(true)
     }
   }, [
     balanceStatuses,

@@ -53,16 +53,15 @@ export default function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <nav className={styles.nav}>
-          <Link href="/timeline">
-            <a>Timeline</a>
-          </Link>
-          <Link href="/transactions">
-            <a>Transactions</a>
-          </Link>
-          {/* TODO: show only if balance not updated today */}
-          <UpdateBalance />
-        </nav>
+        {session?.user && (
+          <nav className={styles.nav}>
+            <Link href="/transactions">
+              <a>Transactions</a>
+            </Link>
+            {/* TODO: show only if balance not updated today */}
+            <UpdateBalance />
+          </nav>
+        )}
         <div className={styles.content}>{children}</div>
       </div>
       <div id="modal-root"></div>

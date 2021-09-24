@@ -35,17 +35,19 @@ export default function Home() {
     }
   }, [user, loading])
 
-  const { error, balanceStatuses } = useBalancesStatus()
+  const { balanceStatuses } = useBalancesStatus()
+  const { transactions } = useTransaction()
+
+  if (!transactions || !balanceStatuses) {
+    return <Loader />
+  } else if (balanceStatuses.length === 0) {
+    return <Layout>Empty State</Layout>
+  }
 
   const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
     x: format(createdAt, 'dd/MM/yyyy'),
     y: amount,
   }))
-
-  const { transactions } = useTransaction()
-  if (!transactions || !balanceStatuses) {
-    return <Loader />
-  }
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
     transactions,

@@ -25,35 +25,38 @@ function UpdateBalanceModal({
     return null
   }
 
-  const currentBalanceAmount = calcCurrentBalanceAmount(
-    transactions!,
-    balanceStatuses?.[0]!
-  )
+  const isThereAnyBalance = !!balanceStatuses?.[0]
+
+  const currentBalanceAmount = isThereAnyBalance
+    ? calcCurrentBalanceAmount(transactions!, balanceStatuses?.[0]!)
+    : 0
 
   const currentBalanceStatus = balanceStatuses![0]
 
   return (
     <Modal isOpen={isOpen}>
       <>
-        <p>
-          Current estimted balance is{' '}
-          {currentBalanceAmount.toLocaleString('he', {
-            style: 'currency',
-            currency: 'ILS',
-          })}
-          <br />
-          Last updated was on{' '}
-          {format(currentBalanceStatus!.createdAt, 'dd/MM/yyyy  ')} for{' '}
-          {currentBalanceStatus!.amount.toLocaleString('he', {
-            style: 'currency',
-            currency: 'ILS',
-          })}
-        </p>
+        {isThereAnyBalance && (
+          <p>
+            Current estimted balance is{' '}
+            {currentBalanceAmount.toLocaleString('he', {
+              style: 'currency',
+              currency: 'ILS',
+            })}
+            <br />
+            Last updated was on{' '}
+            {format(currentBalanceStatus!.createdAt, 'dd/MM/yyyy  ')} for{' '}
+            {currentBalanceStatus!.amount.toLocaleString('he', {
+              style: 'currency',
+              currency: 'ILS',
+            })}
+          </p>
+        )}
         <div>
-          <label>New amout: </label>
+          <label>New amount: </label>
           <TextNumber
             displayType="input"
-            placeholder={currentBalanceAmount.toLocaleString('he')}
+            placeholder="40,000"
             onValueChange={(values) => {
               const { floatValue } = values
               setEditedAmount(floatValue!)

@@ -10,7 +10,7 @@ export default async function handler(
   const userEmail = session?.user?.email
 
   if (!userEmail) {
-    return res.status(401)
+    return res.status(401).send({})
   }
 
   try {

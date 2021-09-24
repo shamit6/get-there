@@ -15,7 +15,7 @@ export default async function handler(
     body,
   } = req
   if (!userEmail) {
-    return res.status(401)
+    return res.status(401).send(null)
   }
 
   try {
