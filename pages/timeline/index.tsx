@@ -94,7 +94,7 @@ function Timeline({
     useBalanceStatus(true)
 
   const { transactions, isLoading: isLoadingTransactions } = useTransaction()
-  const [periodResolution, setPeriodResolution] = useState(TimePeriod.MONTH)
+  const [periodResolution, setPeriodResolution] = useState(TimePeriod.YEAR)
   const [timelineTransactions, setTimelineTransactions] = useState<
     TimelineSummerizedTransacrionsPeriod[]
   >([])
