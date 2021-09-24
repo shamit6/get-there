@@ -29,8 +29,10 @@
 }
 
 .lineChart {
+  max-height: 320px;
 }
 .barChart {
+  max-height: 320px;
 }
 .timeline {
   grid-column-start: 1;
