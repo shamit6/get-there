@@ -23,14 +23,18 @@
 .graphs {
   flex: 1;
   display: grid;
-  grid-template-rows: repeat(auto-fit, 320px);
+  grid-template-rows: repeat(auto-fill, 320px);
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  grid-gap: 0.5em;
+  grid-column-gap: 0.5em;
 }
 
 .lineChart {
 }
 .barChart {
+}
+.timeline {
+  grid-column-start: 1;
+  width: calc(100vw - 20%);
 }
 
 .filterPanel {

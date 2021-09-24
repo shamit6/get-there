@@ -188,8 +188,10 @@ export default function Home() {
               keys={Array.from(new Set(transactions.map((cur) => cur.type)))}
             />
           </div>
+          <div className={styles.timeline}>
+            <Timeline fromDate={startDate} untillDate={endDate} />
+          </div>
         </div>
-        <Timeline fromDate={startDate} untillDate={endDate} />
         <ScrollToTopButton />
       </div>
     </Layout>
