@@ -1,4 +1,5 @@
 import CountUp from 'react-countup'
+import { useEffect } from 'react'
 import style from './Ticker.module.scss'
 import classnames from 'classnames'
 
@@ -19,13 +20,19 @@ export default function Ticker({
   duration?: number
   prefix?: string
 }) {
+  useEffect(() => {
+    localStorage.setItem(label, `${number}`)
+  }, [number])
+  const previousValue = Number(localStorage.getItem(label))
+  const valueChanged = previousValue !== number
+
   return (
     <CountUp
       prefix={prefix}
-      start={0}
+      start={previousValue}
       end={number}
-      delay={delay}
-      duration={duration}
+      delay={valueChanged ? delay : 0}
+      duration={valueChanged ? duration : 0}
       formattingFn={(value) =>
         `${prefix ?? ''}${value.toLocaleString('he')}${suffix}`
       }
