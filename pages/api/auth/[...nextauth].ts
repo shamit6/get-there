@@ -3,6 +3,9 @@ import Providers from 'next-auth/providers'
 import { prismaClient } from '../../../utils/prisma'
 
 export default NextAuth({
+  jwt: {
+    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+  },
   providers: [
     Providers.Credentials({
       id: 'demo',
