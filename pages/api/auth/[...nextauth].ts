@@ -62,8 +62,13 @@ export default NextAuth({
     async redirect({ url, baseUrl }) {
       try {
         const structuredUrl = new URL(url)
-        const redirectPath = structuredUrl.searchParams.get('redirect')
-        return redirectPath ? `${baseUrl}${redirectPath}` : baseUrl
+        if (
+          structuredUrl.pathname !== '/' &&
+          structuredUrl.pathname !== '/login'
+        ) {
+          return `${baseUrl}?redirect=${structuredUrl.pathname}`
+        }
+        return baseUrl
       } catch (e) {
         return baseUrl
       }
