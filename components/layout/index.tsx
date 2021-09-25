@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { signIn, signOut, useSession } from 'next-auth/client'
+import { signIn, signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import Image from 'next/image'
 import styles from './Layout.module.scss'
@@ -8,7 +8,7 @@ import Button from '../../components/button'
 import UpdateBalance from '../../components/UpdateBalance'
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [session, loading] = useSession()
+  const { data: session, status } = useSession()
   const user = session?.user
 
   return (

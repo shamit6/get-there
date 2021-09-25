@@ -1,13 +1,14 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-import { prismaClient } from '../../../utils/prisma'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
+import { getEnv } from '../../../utils/envs'
 
 export default NextAuth({
   jwt: {
-    signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    signingKey: getEnv('JWT_SIGNING_PRIVATE_KEY'),
   },
   providers: [
-    Providers.Credentials({
+    CredentialsProvider({
       id: 'demo',
       name: 'Credentials',
       async authorize() {
@@ -19,36 +20,27 @@ export default NextAuth({
         }
         return user
       },
+      credentials: {},
     }),
-    Providers.Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    GoogleProvider({
+      clientId: getEnv('GOOGLE_CLIENT_ID'),
+      clientSecret: getEnv('GOOGLE_CLIENT_SECRET'),
     }),
   ],
   callbacks: {
-    async signIn(user, account, profile) {
-      const { email, name, image } = user
-
-      async function upsertUser() {
-        try {
-          await prismaClient.$connect()
-          await prismaClient.user.upsert({
-            where: { email: email! },
-            create: { email: email!, name, image },
-            update: { name, image },
-          })
-        } catch (e) {
-          throw e
-        } finally {
-          await prismaClient.$disconnect()
+    async redirect({ url, baseUrl }) {
+      try {
+        const structuredUrl = new URL(url)
+        if (
+          structuredUrl.pathname !== '/' &&
+          structuredUrl.pathname !== '/login'
+        ) {
+          return `${baseUrl}?redirect=${structuredUrl.pathname}`
         }
+        return baseUrl
+      } catch (e) {
+        return baseUrl
       }
-      upsertUser()
-
-      return true
-    },
-    async redirect(url, baseUrl) {
-      return baseUrl
     },
   },
   pages: {
