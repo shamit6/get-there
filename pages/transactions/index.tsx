@@ -5,7 +5,7 @@ import styles from './Transactions.module.scss'
 import Layout from '../../components/layout'
 import Loader from '../../components/loader'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
-import Add from './plus.svg'
+import Add from '../../components/button/plus.svg'
 import Button from '../../components/button'
 
 function List() {

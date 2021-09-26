@@ -32,3 +32,11 @@ export interface BalanceStatus {
   createdAt: Date
   amount: number
 }
+
+export interface MortgageProgramData {
+  amount: number
+  type: string
+  returnType: string
+  periodInMonths: number
+  interest: number
+}

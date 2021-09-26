@@ -5,7 +5,7 @@ import Form from './form'
 import Layout from '../../components/layout'
 import useTransactions from '../../hooks/useTransactions'
 import Loader from '../../components/loader'
-import Delete from './delete.svg'
+import Delete from '../../components/delete.svg'
 
 function PersistTransactionForm() {
   const router = useRouter()
