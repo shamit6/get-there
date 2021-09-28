@@ -12,7 +12,7 @@ export default function Arrow({
   className,
   direction = Direction.RIGHT,
 }: {
-  className: string
+  className?: string
   direction?: Direction
 }) {
   return (

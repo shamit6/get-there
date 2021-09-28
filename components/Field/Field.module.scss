@@ -1,12 +1,22 @@
 .field {
   margin-top: 1em;
   margin-right: 1em;
-
- label {
+  
+  label {
     width: 5em;
     margin-left: 0.3em;
     margin-bottom: 0.2em;
     display: block;
+    white-space: nowrap;
+  }
+  
+  &.horizontal {
+    display: flex;
+    align-items: center;
+    label {
+      margin-right: 0.5em;
+      width: auto;
+    }
   }
 
   input {
@@ -41,5 +51,10 @@
   }
   select {
     padding: 0.525em;
+  }
+
+  div {
+    width: 9.1667em;
+    padding: 0.532em;
   }
 }

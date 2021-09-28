@@ -1,6 +1,14 @@
-import { MouseEventHandler } from 'react'
 import classnames from 'classnames'
 import styles from './Button.module.scss'
+
+interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+  text?: string
+  linkTheme?: boolean
+  bordered?: boolean
+  primary?: boolean
+  icon?: React.ReactNode
+  disabled?: boolean
+}
 
 export default function Button({
   text,
@@ -10,17 +18,9 @@ export default function Button({
   primary,
   icon,
   className,
-  disabled,
-}: {
-  text: string
-  onClick?: MouseEventHandler<HTMLButtonElement>
-  linkTheme?: boolean
-  bordered?: boolean
-  primary?: boolean
-  icon?: React.ReactNode
-  className?: string
-  disabled?: boolean
-}) {
+  children,
+  ...props
+}: ButtonProps) {
   return (
     <button
       className={classnames(
@@ -33,11 +33,11 @@ export default function Button({
         className
       )}
       onClick={onClick}
-      disabled={disabled}
+      {...props}
     >
       {icon && <div className={styles.icon}>{icon}</div>}
 
-      {text}
+      {text || children}
     </button>
   )
 }

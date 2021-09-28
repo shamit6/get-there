@@ -1,125 +1,35 @@
-import { sumBy } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import NumberFormat from 'react-number-format'
 import Button from '../../components/button'
 import Add from '../../components/button/plus.svg'
 import Field from '../../components/Field'
 import Layout from '../../components/layout'
-import { calcMonthPayment } from '../../utils/mortgageCalculator'
-import { MortgageProgramData } from '../../utils/types'
+import TextNumber from '../../components/textNumber'
+import { calcTotalSummery } from '../../utils/mortgageCalculator'
+import {
+  CalculatedMortgageProgram,
+  MortgageProgramData,
+  MortgageSummeryCalculation,
+} from '../../utils/types'
+import MortgageProgram from './MortgageProgram'
 
-interface CalculatedMortgageProgram extends MortgageProgramData {
-  montlyPayment: number
-}
-
-function MortgageProgram({
-  programData,
-  onProgramCalc,
-}: {
-  programData: Partial<MortgageProgramData>
-  onProgramCalc(data: CalculatedMortgageProgram): void
-}) {
-  const [mortgageProgram, setMortgageProgram] =
-    useState<Partial<MortgageProgramData>>(programData)
-  const [montlyPayment, setMontlyPayment] = useState(
-    calcMonthPayment(programData)
-  )
-
-  useEffect(() => {
-    const newAmountlyPayment = calcMonthPayment(mortgageProgram)
-    setMontlyPayment(newAmountlyPayment)
-    // @ts-ignore
-    onProgramCalc({ ...mortgageProgram, montlyPayment: newAmountlyPayment })
-  }, [mortgageProgram])
-  return (
-    <div style={{ display: 'flex' }}>
-      <Field label="Amount">
-        <NumberFormat
-          placeholder="amout"
-          value={mortgageProgram.amount || ''}
-          thousandSeparator={true}
-          prefix="₪"
-          onValueChange={({ value }) => {
-            setMortgageProgram({ ...mortgageProgram, amount: Number(value) })
-          }}
-        />
-      </Field>
-      <Field label="Type">
-        <select
-          onChange={(e) => {
-            setMortgageProgram({ ...mortgageProgram, type: e.target.value })
-          }}
-        >
-          <option value={mortgageProgram.type}>non-linked fixed</option>
-        </select>
-      </Field>
-      <Field label="Returns type">
-        <select
-          onChange={(e) => {
-            setMortgageProgram({
-              ...mortgageProgram,
-              returnType: e.target.value,
-            })
-          }}
-        >
-          <option value={mortgageProgram.returnType}>spitzer</option>
-        </select>
-      </Field>
-      <Field label="period in months">
-        <input
-          placeholder="Period in months"
-          value={mortgageProgram.periodInMonths || ''}
-          type="number"
-          onChange={(e) => {
-            setMortgageProgram({
-              ...mortgageProgram,
-              periodInMonths: Number(e.target.value),
-            })
-          }}
-        />
-      </Field>
-      <Field label="Interest">
-        <NumberFormat
-          placeholder="interest"
-          suffix="%"
-          value={mortgageProgram.interest || ''}
-          onValueChange={({ value }) => {
-            setMortgageProgram({
-              ...mortgageProgram,
-              interest: Number(value),
-            })
-          }}
-        />
-      </Field>
-      <Field label="Montly payment">
-        <NumberFormat
-          disabled
-          thousandSeparator={true}
-          prefix="₪"
-          value={montlyPayment?.toFixed(0)}
-          fixedDecimalScale
-        />
-      </Field>
-    </div>
-  )
+const defaultProgramData = {
+  amount: 100000,
+  periodInMonths: 240,
+  interest: 3,
+  returnType: 'spitzer',
+  type: 'non-linked-fixed',
 }
 
 export default function Mortgage() {
-  const [programsData, setProgramsData] = useState<
-    Partial<CalculatedMortgageProgram>[]
-  >([
-    {
-      amount: 100000,
-      periodInMonths: 240,
-      interest: 3,
-      returnType: 'spitzer',
-      type: 'non-linked-fixed',
-    },
-  ])
-  const [totalPayment, setTotalPayment] = useState(0)
+  const [programsData, setProgramsData] = useState<MortgageProgramData[]>(
+    Array(1).fill(defaultProgramData)
+  )
+  const [mortgageSummery, setMortgageSummery] =
+    useState<MortgageSummeryCalculation>()
+  const [programToFocus, setProgramToFocus] = useState(0)
 
   useEffect(() => {
-    setTotalPayment(sumBy(programsData, 'montlyPayment') || 0)
+    setMortgageSummery(calcTotalSummery(programsData))
   }, [programsData])
 
   return (
@@ -127,12 +37,20 @@ export default function Mortgage() {
       {programsData.map((programData, i) => (
         <MortgageProgram
           key={i}
+          isFocus={i === programToFocus}
           programData={programData}
           onProgramCalc={(programData: CalculatedMortgageProgram) => {
-            setProgramsData([
-              ...programsData.slice(0, i),
+            setProgramsData((prevState) => [
+              ...prevState.slice(0, i),
               programData,
-              ...programsData.slice(i + 1),
+              ...prevState.slice(i + 1),
+            ])
+          }}
+          onProgramRemove={() => {
+            setProgramToFocus(Math.min(i, programsData.length - 2))
+            setProgramsData((prevState) => [
+              ...prevState.slice(0, i),
+              ...prevState.slice(i + 1),
             ])
           }}
         />
@@ -141,22 +59,39 @@ export default function Mortgage() {
         <Button
           text="Add program"
           onClick={() => {
-            setProgramsData([...programsData, {}])
+            setProgramsData([...programsData, defaultProgramData])
+            setProgramToFocus(programsData.length)
           }}
           bordered
           linkTheme
           icon={<Add />}
+          tabIndex={1}
         />
       </div>
       <div style={{ display: 'flex' }}>
-        <Field label="Montly payment">
-          <NumberFormat
-            disabled
-            thousandSeparator={true}
-            prefix="₪"
-            value={totalPayment.toFixed(0)}
-            fixedDecimalScale
-          />
+        <Field label="Monthly payment">
+          <div>
+            <TextNumber
+              value={mortgageSummery?.monthlyPayment?.toFixed(2)}
+              prefix="₪"
+            />
+          </div>
+        </Field>
+        <Field label="Interest payment">
+          <div>
+            <TextNumber
+              value={mortgageSummery?.totalInterestPayment?.toFixed(2)}
+              prefix="₪"
+            />
+          </div>
+        </Field>
+        <Field label="Total payment">
+          <div>
+            <TextNumber
+              value={mortgageSummery?.totalPayment?.toFixed(2)}
+              prefix="₪"
+            />
+          </div>
         </Field>
       </div>
     </Layout>

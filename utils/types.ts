@@ -39,4 +39,18 @@ export interface MortgageProgramData {
   returnType: string
   periodInMonths: number
   interest: number
+  earlyPayoffType?: string
+  earlyPayoffMonths?: number
+  earlyPayoffAmount?: number
+}
+
+export interface CalculatedMortgageProgram extends MortgageProgramData {
+  monthlyPayment: number
+  totalPayment: number
+}
+
+export interface MortgageSummeryCalculation {
+  monthlyPayment: number
+  totalInterestPayment: number
+  totalPayment: number
 }
