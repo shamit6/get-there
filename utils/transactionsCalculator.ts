@@ -156,17 +156,24 @@ export function getTransactionConfigsAmounts(
   transactionConfigs: TransactionConfig[],
   fromDate: Date,
   untilDate: Date
-){
-  const occureces = generateTransactionConfigsOccurances(transactionConfigs, fromDate, untilDate)
+) {
+  const occureces = generateTransactionConfigsOccurances(
+    transactionConfigs,
+    fromDate,
+    untilDate
+  )
 
   const amountToType = occureces.reduce((acc, currTransaction) => {
-    const {type, amount} = currTransaction
+    const { type, amount } = currTransaction
     if (!acc[type]) {
-      return {...acc, [type]: amount}
+      return { ...acc, [type]: amount }
     } else {
-      return {...acc, [type]: acc[type] + amount}
+      return { ...acc, [type]: acc[type] + amount }
     }
   }, {} as Record<string, number>)
 
-  return Object.entries(amountToType).map(([type, amount]) => ({type, amount}))
+  return Object.entries(amountToType).map(([type, amount]) => ({
+    type,
+    amount,
+  }))
 }

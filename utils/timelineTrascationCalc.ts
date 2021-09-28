@@ -165,7 +165,7 @@ export function getTransactionsSummeryByPeriod(
     itemsToGenerate,
     fromDate
   )
-  
+
   const untillDate = !maxDate
     ? lastDayOfPreiod
     : min([maxDate, lastDayOfPreiod])
