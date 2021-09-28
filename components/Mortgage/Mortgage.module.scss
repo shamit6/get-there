@@ -3,7 +3,7 @@
   padding: 0 0 0.5em 1em;
   border: 1px #80808080 solid;
   border-radius: 1em;
-  width: max-content;
+  width: fit-content;
 }
 
 .mortgageProgramBasic {
@@ -13,6 +13,10 @@
 
 .mortgageProgramAdvance {
 
+}
+.mortgageSummery {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .advanceOptionCollapse {
@@ -28,6 +32,7 @@
 .mortgageProgramAdvanceOption{
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   margin-left: 2em;
   margin-top: -1em;
 }
@@ -35,6 +40,7 @@
 .removeButtonContainer {
   display: flex;
   align-items: flex-end;
+  justify-content: flex-end;
   flex: 1;
 }
 

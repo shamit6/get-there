@@ -103,8 +103,6 @@ function Timeline({
   const [hasMore, setHasMore] = useState(false)
 
   useEffect(() => {
-    console.log('balanceStatuses?.[0]', balanceStatuses?.[0])
-
     if (isLoadingBalance || isLoadingTransactions || !balanceStatuses?.[0]) {
       return
     }

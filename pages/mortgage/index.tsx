@@ -1,3 +1,3 @@
-import Mortgage from "../../components/Mortgage";
+import Mortgage from '../../components/Mortgage'
 
 export default Mortgage

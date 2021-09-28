@@ -39,8 +39,6 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    console.log('useEffect')
-
     const calculatedMortgageProgram = calcProgram(mortgageProgram)
     setCalculatedMortgageProgram(calculatedMortgageProgram)
     onProgramCalc(calculatedMortgageProgram)
@@ -189,6 +187,24 @@ export default function MortgageProgram({
                 tabIndex={1}
                 getInputRef={inputRef}
               />
+            </Field>
+            <Field>
+              <select
+                value={mortgageProgram.earlyPayoffPurpose}
+                onChange={(e) => {
+                  setMortgageProgram({
+                    ...mortgageProgram,
+                    earlyPayoffPurpose: e.target.value,
+                  })
+                }}
+                disabled={mortgageProgram.earlyPayoffType === 'complete'}
+                tabIndex={1}
+              >
+                <option value="shortening-period">shortening period</option>
+                <option value="reducinng-patmeny">
+                  reducinng monthly payment
+                </option>
+              </select>
             </Field>
           </div>
         )}

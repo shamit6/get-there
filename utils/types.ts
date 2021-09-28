@@ -42,6 +42,7 @@ export interface MortgageProgramData {
   earlyPayoffType?: string
   earlyPayoffMonths?: number
   earlyPayoffAmount?: number
+  earlyPayoffPurpose?: string
 }
 
 export interface CalculatedMortgageProgram extends MortgageProgramData {

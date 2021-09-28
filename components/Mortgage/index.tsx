@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import Button from '../button'
-import Add from '../button/plus.svg'
-import Field from '../Field'
-import Layout from '../layout'
-import TextNumber from '../textNumber'
+import Button from '../../components/button'
+import Add from '../../components/button/plus.svg'
+import Field from '../../components/Field'
+import Layout from '../../components/layout'
+import TextNumber from '../../components/textNumber'
 import { calcTotalSummery } from '../../utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
@@ -11,6 +11,7 @@ import {
   MortgageSummeryCalculation,
 } from '../../utils/types'
 import MortgageProgram from './MortgageProgram'
+import styles from './Mortgage.module.scss'
 
 const defaultProgramData = {
   amount: 100000,
@@ -68,7 +69,7 @@ export default function Mortgage() {
           tabIndex={1}
         />
       </div>
-      <div style={{ display: 'flex' }}>
+      <div className={styles.mortgageSummery}>
         <Field label="Monthly payment">
           <div>
             <TextNumber
