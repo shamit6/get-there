@@ -48,43 +48,75 @@ function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
     : null
 }
 
-function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
+function calcBalanceAfterEarlyPayoff(mortgageProgramData: MortgageProgramData) {
   const {
     interest,
     amount,
     periodInMonths,
     earlyPayoffMonths,
     earlyPayoffType,
-    earlyPayoffAmount,
+    earlyPayoffAmount = 0,
   } = mortgageProgramData
 
-  if (earlyPayoffType === 'partial') {
-    return earlyPayoffAmount
+  if (!earlyPayoffMonths) {
+    return amount
   }
 
-  if (!earlyPayoffMonths) {
-    return 0
-  }
+  const earlyPayoffAmountToReduce =
+    earlyPayoffType === 'partial' ? earlyPayoffAmount : 0
   const normlizedMonthlyInterest = interest / (12 * 100)
 
-  const laonBalanceAfterXMonths = new BigNumber(amount)
-    .multipliedBy(
-      new BigNumber(normlizedMonthlyInterest + 1)
-        .pow(periodInMonths)
-        .minus(
-          new BigNumber(normlizedMonthlyInterest + 1).pow(
-            Math.trunc(earlyPayoffMonths)
+  return (
+    new BigNumber(amount)
+      .multipliedBy(
+        new BigNumber(normlizedMonthlyInterest + 1)
+          .pow(periodInMonths)
+          .minus(
+            new BigNumber(normlizedMonthlyInterest + 1).pow(
+              Math.trunc(earlyPayoffMonths)
+            )
           )
-        )
-    )
-    .dividedBy(
-      new BigNumber(normlizedMonthlyInterest + 1)
-        .pow(Math.trunc(periodInMonths))
-        .minus(1)
-    )
-    .toNumber()
+      )
+      .dividedBy(
+        new BigNumber(normlizedMonthlyInterest + 1)
+          .pow(Math.trunc(periodInMonths))
+          .minus(1)
+      )
+      .toNumber() - earlyPayoffAmountToReduce
+  )
+}
 
-  return laonBalanceAfterXMonths + (calcMonthPayment(mortgageProgramData) || 0)
+function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
+  const { earlyPayoffMonths, earlyPayoffType, earlyPayoffAmount } =
+    mortgageProgramData
+
+  if (earlyPayoffType === 'partial') {
+    return earlyPayoffAmount || 0
+  }
+
+  if (!earlyPayoffMonths || !earlyPayoffType) {
+    return 0
+  }
+
+  return calcBalanceAfterEarlyPayoff(mortgageProgramData)
+}
+
+function calcEarlyPayoffToView(mortgageProgramData: MortgageProgramData) {
+  const { earlyPayoffMonths, earlyPayoffType, earlyPayoffAmount } =
+    mortgageProgramData
+
+  if (earlyPayoffType === 'partial') {
+    return earlyPayoffAmount || 0
+  }
+
+  if (!earlyPayoffMonths || !earlyPayoffType) {
+    return 0
+  }
+
+  return (
+    calcEarlyPayoff(mortgageProgramData) +
+    (calcMonthPayment(mortgageProgramData) || 0)
+  )
 }
 
 function calcTotalPaymentNoEarlyPayoff(
@@ -94,26 +126,42 @@ function calcTotalPaymentNoEarlyPayoff(
   return monthlyPayment * mortgageProgramData.periodInMonths
 }
 
+function calcTotalPaymentUntillAfterEarlyPayoff(
+  mortgageProgramData: MortgageProgramData
+) {
+  const monthPayment = calcMonthPayment(mortgageProgramData) || 0
+  const { earlyPayoffMonths = 0 } = mortgageProgramData
+  return monthPayment * earlyPayoffMonths + calcEarlyPayoff(mortgageProgramData)
+}
+
 function calcTotalPayment(mortgageProgramData: MortgageProgramData): number {
-  const { periodInMonths, type, earlyPayoffMonths, returnType, interest } =
+  const { periodInMonths, earlyPayoffMonths, earlyPayoffType } =
     mortgageProgramData
-  const earlyPayoff = calcEarlyPayoff(mortgageProgramData)
   const tatolPaymentNoEarlyPayoff =
     calcTotalPaymentNoEarlyPayoff(mortgageProgramData)
 
-  if (!earlyPayoff) {
+  if (!earlyPayoffMonths || !earlyPayoffType) {
     return tatolPaymentNoEarlyPayoff
   }
 
-  const theoreticMortgage = {
-    ...mortgageProgramData,
-    amount: earlyPayoff,
-    periodInMonths: periodInMonths - earlyPayoffMonths!,
-  }
-  const theoreticTotalInterest =
-    calcTotalPaymentNoEarlyPayoff(theoreticMortgage) - earlyPayoff
+  if (earlyPayoffType === 'complete') {
+    return calcTotalPaymentUntillAfterEarlyPayoff(mortgageProgramData)
+    //earlyPayoffType === "partial"
+  } else {
+    const amountAfterEarlyPayoff =
+      calcBalanceAfterEarlyPayoff(mortgageProgramData)
 
-  return tatolPaymentNoEarlyPayoff - theoreticTotalInterest
+    const theoreticMortgage = {
+      ...mortgageProgramData,
+      amount: amountAfterEarlyPayoff,
+      periodInMonths: periodInMonths - earlyPayoffMonths!,
+    }
+
+    return (
+      calcTotalPaymentUntillAfterEarlyPayoff(mortgageProgramData) +
+      calcTotalPaymentNoEarlyPayoff(theoreticMortgage)
+    )
+  }
 }
 
 export function calcProgram(
@@ -125,7 +173,7 @@ export function calcProgram(
     ...mortgageProgramData,
     monthlyPayment,
     totalPayment: calcTotalPayment(mortgageProgramData),
-    earlyPayoffAmount: calcEarlyPayoff(mortgageProgramData),
+    earlyPayoffAmount: calcEarlyPayoffToView(mortgageProgramData),
   }
 }
 

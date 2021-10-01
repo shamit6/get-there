@@ -32,7 +32,11 @@
     "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.91",
+    "@swc/jest": "^0.2.4",
+    "@types/jest": "^27.0.2",
     "@types/lodash": "^4.14.171",
+    "@types/node": "^16.10.1",
     "@types/react": "17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/react-infinite-scroller": "^1.2.2",
@@ -43,6 +47,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-unused-imports": "^1.1.2",
+    "jest": "^27.2.3",
     "prettier": "^2.3.2",
     "prisma": "^2.27.0",
     "svgo": "^2.6.1",
