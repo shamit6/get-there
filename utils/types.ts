@@ -54,7 +54,7 @@ export interface MortgageProgramData {
   returnType: string
   periodInMonths: number
   interest: number
-  expectedCpiIndex?: number
+  expectedCpiChange?: number
   earlyPayoffType?: MortgageEarlyPayoffType
   earlyPayoffMonths?: number
   earlyPayoffAmount?: number

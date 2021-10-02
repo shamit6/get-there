@@ -4,7 +4,6 @@ import {
 } from './amortizationScheduleCalculator'
 import {
   MortgageProgramData,
-  CalculatedMortgageProgram,
   MortgageEarlyPayoffType,
   MortgageType,
   MortgageEarlyPayoffPurpose,

@@ -8,7 +8,10 @@ import TextNumber from '../../components/textNumber'
 import { calcProgram } from '../../utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
+  MortgageEarlyPayoffPurpose,
+  MortgageEarlyPayoffType,
   MortgageProgramData,
+  MortgageType,
 } from '../../utils/types'
 import styles from './Mortgage.module.scss'
 
@@ -90,7 +93,10 @@ export default function MortgageProgram({
         <Field label="Type">
           <select
             onChange={(e) => {
-              setMortgageProgram({ ...mortgageProgram, type: e.target.value })
+              setMortgageProgram({
+                ...mortgageProgram,
+                type: e.target.value as MortgageType,
+              })
             }}
             tabIndex={1}
           >
@@ -147,14 +153,16 @@ export default function MortgageProgram({
                 onChange={(e) => {
                   setMortgageProgram({
                     ...mortgageProgram,
-                    earlyPayoffType: e.target.value,
+                    earlyPayoffType: e.target.value as MortgageEarlyPayoffType,
                   })
                 }}
                 tabIndex={1}
               >
                 <option></option>
-                <option value="complete">complete</option>
-                <option value="partial">partial</option>
+                <option value={MortgageEarlyPayoffType.COMPLETE}>
+                  complete
+                </option>
+                <option value={MortgageEarlyPayoffType.PARTIAL}>partial</option>
               </select>
             </Field>
             <Field>
@@ -200,8 +208,10 @@ export default function MortgageProgram({
                 disabled={mortgageProgram.earlyPayoffType === 'complete'}
                 tabIndex={1}
               >
-                <option value="shortening-period">shortening period</option>
-                <option value="reducinng-payment">
+                <option value={MortgageEarlyPayoffPurpose.SHORTENING_DURATION}>
+                  shortening period
+                </option>
+                <option value={MortgageEarlyPayoffPurpose.REDUCINNG_PAYMENT}>
                   reducinng monthly payment
                 </option>
               </select>
