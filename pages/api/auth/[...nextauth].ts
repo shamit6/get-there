@@ -16,8 +16,6 @@ async function upsertUser({
       create: { email, name, image },
       update: { name, image },
     })
-  } catch (e) {
-    throw e
   } finally {
     await prismaClient.$disconnect()
   }
@@ -50,7 +48,7 @@ export default NextAuth({
   callbacks: {
     async signIn({ user }) {
       try {
-        upsertUser({
+        await upsertUser({
           email: user.email!,
           name: user.name!,
           image: user.image!,
