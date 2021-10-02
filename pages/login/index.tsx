@@ -1,4 +1,4 @@
-import { ClientSafeProvider, getProviders, signIn } from 'next-auth/client'
+import { ClientSafeProvider, getProviders, signIn } from 'next-auth/react'
 import Layout from '../../components/layout'
 import styles from './Login.module.scss'
 import GoogleIcon from './google-logo.svg'

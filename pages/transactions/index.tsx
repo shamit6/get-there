@@ -7,8 +7,10 @@ import Loader from '../../components/loader'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
 import Add from '../../components/button/plus.svg'
 import Button from '../../components/button'
+import useEnsureLogin from '../../hooks/useEnsureLogin'
 
 function List() {
+  useEnsureLogin()
   const router = useRouter()
   const { isLoading: isLoadingBalance } = useBalanceStatus(true)
   const { transactions, isLoading } = useTransaction()

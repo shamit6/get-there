@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 import useUser from '../hooks/useUser'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { format, startOfDay, addYears } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
@@ -21,6 +21,7 @@ import Loader from '../components/loader'
 import Field from '../components/Field'
 import ScrollToTopButton from '../components/ScrollToTopButton'
 import Timeline from './timeline'
+import useEnsureLogin from '../hooks/useEnsureLogin'
 
 export default function Home() {
   const nowDate = new Date()
@@ -29,11 +30,7 @@ export default function Home() {
   const [startDate, setStartDate] = useState<Date>(startOfDay(nowDate))
   const [endDate, setEndDate] = useState<Date>(startOfDay(addYears(nowDate, 1)))
 
-  useEffect(() => {
-    if (!(user || loading)) {
-      router.replace('/login')
-    }
-  }, [user, loading])
+  useEnsureLogin()
 
   const { balanceStatuses } = useBalancesStatus()
   const { transactions } = useTransaction()

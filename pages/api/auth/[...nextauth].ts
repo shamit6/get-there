@@ -1,10 +1,32 @@
 import NextAuth from 'next-auth'
-import Providers from 'next-auth/providers'
-import { prismaClient } from '../../../utils/prisma'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import GoogleProvider from 'next-auth/providers/google'
+import { getEnv } from '../../../utils/envs'
+import { prismaClient, User } from '../../../utils/prisma'
+
+async function upsertUser({
+  email,
+  name,
+  image,
+}: Pick<User, 'email' | 'name' | 'image'>) {
+  try {
+    await prismaClient.$connect()
+    await prismaClient.user.upsert({
+      where: { email },
+      create: { email, name, image },
+      update: { name, image },
+    })
+  } finally {
+    await prismaClient.$disconnect()
+  }
+}
 
 export default NextAuth({
+  jwt: {
+    signingKey: getEnv('JWT_SIGNING_PRIVATE_KEY'),
+  },
   providers: [
-    Providers.Credentials({
+    CredentialsProvider({
       id: 'demo',
       name: 'Credentials',
       async authorize() {
@@ -16,36 +38,35 @@ export default NextAuth({
         }
         return user
       },
+      credentials: {},
     }),
-    Providers.Google({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    GoogleProvider({
+      clientId: getEnv('GOOGLE_CLIENT_ID'),
+      clientSecret: getEnv('GOOGLE_CLIENT_SECRET'),
     }),
   ],
   callbacks: {
-    async signIn(user, account, profile) {
-      const { email, name, image } = user
-
-      async function upsertUser() {
-        try {
-          await prismaClient.$connect()
-          await prismaClient.user.upsert({
-            where: { email: email! },
-            create: { email: email!, name, image },
-            update: { name, image },
-          })
-        } catch (e) {
-          throw e
-        } finally {
-          await prismaClient.$disconnect()
-        }
+    async signIn({ user }) {
+      try {
+        await upsertUser({
+          email: user.email!,
+          name: user.name!,
+          image: user.image!,
+        })
+        return true
+      } catch (err) {
+        console.error(err)
+        return false
       }
-      upsertUser()
-
-      return true
     },
-    async redirect(url, baseUrl) {
-      return baseUrl
+    async redirect({ url, baseUrl }) {
+      try {
+        const structuredUrl = new URL(url)
+        const redirectPath = structuredUrl.searchParams.get('redirect')
+        return redirectPath ? `${baseUrl}${redirectPath}` : baseUrl
+      } catch (e) {
+        return baseUrl
+      }
     },
   },
   pages: {

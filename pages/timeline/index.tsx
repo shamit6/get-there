@@ -15,6 +15,7 @@ import Arrow, { Direction } from '../../components/arrow'
 import TextNumber from '../../components/textNumber'
 import Loader from '../../components/loader'
 import InfiniteScroll from 'react-infinite-scroller'
+import useEnsureLogin from '../../hooks/useEnsureLogin'
 
 function TransactionsSummery({
   transaction,
@@ -23,6 +24,7 @@ function TransactionsSummery({
   transaction: TimelineSummerizedTransacrionsPeriod
   periodResolution: TimePeriod
 }) {
+  useEnsureLogin()
   const [isOpen, setOpen] = useState(false)
 
   return (
