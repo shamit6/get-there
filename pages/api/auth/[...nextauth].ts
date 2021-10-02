@@ -2,6 +2,26 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { getEnv } from '../../../utils/envs'
+import { prismaClient, User } from '../../../utils/prisma'
+
+async function upsertUser({
+  email,
+  name,
+  image,
+}: Pick<User, 'email' | 'name' | 'image'>) {
+  try {
+    await prismaClient.$connect()
+    await prismaClient.user.upsert({
+      where: { email },
+      create: { email, name, image },
+      update: { name, image },
+    })
+  } catch (e) {
+    throw e
+  } finally {
+    await prismaClient.$disconnect()
+  }
+}
 
 export default NextAuth({
   jwt: {
@@ -28,6 +48,19 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user }) {
+      try {
+        upsertUser({
+          email: user.email!,
+          name: user.name!,
+          image: user.image!,
+        })
+        return true
+      } catch (err) {
+        console.error(err)
+        return false
+      }
+    },
     async redirect({ url, baseUrl }) {
       try {
         const structuredUrl = new URL(url)
