@@ -1,5 +1,10 @@
 import { calcProgram } from './mortgageCalculator'
-import { MortgageProgramData, CalculatedMortgageProgram } from './types'
+import {
+  MortgageProgramData,
+  CalculatedMortgageProgram,
+  MortgageEarlyPayoffType,
+  MortgageType,
+} from './types'
 
 function roundProgramCalcFields(program: CalculatedMortgageProgram) {
   const { earlyPayoffAmount, monthlyPayment, totalPayment } = program
@@ -14,7 +19,7 @@ describe('mortgage calculator', () => {
   it('non-linked-fixed, no early payoff', () => {
     const program: MortgageProgramData = {
       amount: 125000,
-      type: 'non-linked-fixed',
+      type: MortgageType.NON_LINKED_FIXED,
       returnType: '',
       periodInMonths: 180,
       interest: 3,
@@ -31,11 +36,11 @@ describe('mortgage calculator', () => {
   it('non-linked-fixed, complete early payoff', () => {
     const program: MortgageProgramData = {
       amount: 125000,
-      type: 'non-linked-fixed',
+      type: MortgageType.NON_LINKED_FIXED,
       returnType: '',
       periodInMonths: 180,
       interest: 3,
-      earlyPayoffType: 'complete',
+      earlyPayoffType: MortgageEarlyPayoffType.COMPLETE,
       earlyPayoffMonths: 14,
       earlyPayoffAmount: 0,
       earlyPayoffPurpose: '',
@@ -52,11 +57,11 @@ describe('mortgage calculator', () => {
   it('non-linked-fixed, paritial early payoff, reduce monthly payment', () => {
     const program: MortgageProgramData = {
       amount: 125000,
-      type: 'non-linked-fixed',
+      type: MortgageType.NON_LINKED_FIXED,
       returnType: '',
       periodInMonths: 180,
       interest: 3,
-      earlyPayoffType: 'partial',
+      earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,
       earlyPayoffMonths: 14,
       earlyPayoffAmount: 40000,
       earlyPayoffPurpose: '',

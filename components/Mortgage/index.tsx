@@ -9,6 +9,7 @@ import {
   CalculatedMortgageProgram,
   MortgageProgramData,
   MortgageSummeryCalculation,
+  MortgageType,
 } from '../../utils/types'
 import MortgageProgram from './MortgageProgram'
 import styles from './Mortgage.module.scss'
@@ -18,7 +19,7 @@ const defaultProgramData = {
   periodInMonths: 240,
   interest: 3,
   returnType: 'spitzer',
-  type: 'non-linked-fixed',
+  type: MortgageType.NON_LINKED_FIXED,
 }
 
 export default function Mortgage() {

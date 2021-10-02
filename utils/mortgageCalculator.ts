@@ -41,7 +41,7 @@ function PMT(
   return pmt
 }
 
-function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
+export function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
   const { interest, periodInMonths, amount } = mortgageProgramData
   return interest && periodInMonths && amount
     ? PMT(interest / (100 * 12), periodInMonths, amount) * -1
@@ -86,7 +86,7 @@ function calcBalanceAfterEarlyPayoff(mortgageProgramData: MortgageProgramData) {
   )
 }
 
-function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
+export function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
   const { earlyPayoffMonths, earlyPayoffType, earlyPayoffAmount } =
     mortgageProgramData
 

@@ -33,13 +33,29 @@ export interface BalanceStatus {
   amount: number
 }
 
+export enum MortgageType {
+  NON_LINKED_FIXED = 'non-linked fixed',
+  LINKED_FIXED = 'linked fixed',
+}
+
+export enum MortgageEarlyPayoffType {
+  COMPLETE = 'complete',
+  PARTIAL = 'partial',
+}
+
+export enum MortgageEarlyPayoffPurpose {
+  SHORTENING_DURATION = 'shortening-duration',
+  REDUCINNG_PAYMENT = 'reducinng-payment',
+}
+
 export interface MortgageProgramData {
   amount: number
-  type: string
+  type?: MortgageType
   returnType: string
   periodInMonths: number
   interest: number
-  earlyPayoffType?: string
+  expectedCpiChange?: number
+  earlyPayoffType?: MortgageEarlyPayoffType
   earlyPayoffMonths?: number
   earlyPayoffAmount?: number
   earlyPayoffPurpose?: string
