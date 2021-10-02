@@ -36,7 +36,10 @@ export default function Layout({ children }: { children: ReactNode }) {
               <>
                 <div className={styles.user}>
                   <Image
-                    src={user?.image!}
+                    src={
+                      user?.image ??
+                      'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/V8BNOaftJmYSAdW0ROdfRQw4cuWPEXxKwCLcDEAEiGQoBRBD___________8BGJ6i0f_______wE/s72-c-k-no/photo.jpg'
+                    }
                     className={styles.avatar}
                     width={'20'}
                     height={'20'}
