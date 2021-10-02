@@ -126,12 +126,13 @@ export function calcAmortizationSchedule(
       (res, cur) => {
         return {
           interestPayment:
-            res.interestPayment + cur[index]?.interestPayment ?? 0,
+            res.interestPayment + (cur[index]?.interestPayment ?? 0),
           principalBalanceInStartPeriond:
             res.principalBalanceInStartPeriond +
-              cur[index]?.principalBalanceInStartPeriond ?? 0,
-          principalPayment: res.principalPayment + cur[index].principalPayment,
-          totalPayment: res.totalPayment + cur[index]?.totalPayment ?? 0,
+            (cur[index]?.principalBalanceInStartPeriond ?? 0),
+          principalPayment:
+            res.principalPayment + (cur[index]?.principalPayment ?? 0),
+          totalPayment: res.totalPayment + (cur[index]?.totalPayment ?? 0),
         }
       },
       {

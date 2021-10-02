@@ -12,7 +12,6 @@
 }
 
 .mortgageProgramAdvance {
-
 }
 .mortgageSummery {
   display: flex;
@@ -29,7 +28,7 @@
   }
 }
 
-.mortgageProgramAdvanceOption{
+.mortgageProgramAdvanceOption {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -46,5 +45,21 @@
 
 .removeButton {
   font-size: 1.5em;
-  padding: .3em;
+  padding: 0.3em;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+.amortizationCharts {
+  display: flex;
+  height: 40vh;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  & div {
+    max-width: 45em;
+  }
 }
