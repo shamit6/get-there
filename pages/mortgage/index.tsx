@@ -1,3 +1,12 @@
-import Mortgage from '../../components/Mortgage'
+import Layout from '../../components/layout'
+import MortgageComp from '../../components/Mortgage'
 
-export default Mortgage
+function MortgagePage() {
+  return (
+    <Layout>
+      <MortgageComp />
+    </Layout>
+  )
+}
+
+export default MortgagePage

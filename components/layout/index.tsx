@@ -6,8 +6,10 @@ import styles from './Layout.module.scss'
 import { ReactNode } from 'react'
 import Button from '../../components/button'
 import UpdateBalance from '../../components/UpdateBalance'
+import { useRouter } from 'next/router'
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const router = useRouter()
   const { data: session, status } = useSession()
   const user = session?.user
 
@@ -58,9 +60,24 @@ export default function Layout({ children }: { children: ReactNode }) {
         </header>
         {session?.user && (
           <nav className={styles.nav}>
-            <Link href="/transactions">
-              <a>Transactions</a>
-            </Link>
+            {router.pathname !== '/' && (
+              <Link href="/">
+                <a>Home</a>
+              </Link>
+            )}
+
+            {router.pathname !== '/transactions' && (
+              <Link href="/transactions">
+                <a>Transactions</a>
+              </Link>
+            )}
+
+            {router.pathname !== '/mortgage' && (
+              <Link href="/mortgage">
+                <a>Mortgage</a>
+              </Link>
+            )}
+
             {/* TODO: show only if balance not updated today */}
             <UpdateBalance />
           </nav>
