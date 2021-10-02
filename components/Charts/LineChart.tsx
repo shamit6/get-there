@@ -1,7 +1,25 @@
 import { ResponsiveLine } from '@nivo/line'
+import { LegendAnchor } from '@nivo/legends'
 import style from './LineChart.module.scss'
 
-export function LineChart({ data }: any) {
+export interface Point {
+  x: string
+  y: number
+}
+export interface Searies {
+  id: string
+  color: string
+  data: Point[]
+}
+export function LineChart({
+  data,
+  anchor,
+  minY,
+}: {
+  data: Searies[]
+  anchor?: LegendAnchor
+  minY?: number
+}) {
   return (
     <ResponsiveLine
       colors={(d) => d.color}
@@ -16,7 +34,7 @@ export function LineChart({ data }: any) {
       xFormat="time:%d/%m/%Y"
       yScale={{
         type: 'linear',
-        min: 'auto',
+        min: minY ?? 'auto',
         max: 'auto',
       }}
       yFormat={(value) => `${value.toLocaleString('he')}`}
@@ -54,7 +72,7 @@ export function LineChart({ data }: any) {
       useMesh={true}
       legends={[
         {
-          anchor: 'top-left',
+          anchor: anchor ?? 'top-left',
           direction: 'column',
           justify: false,
           translateX: 100,

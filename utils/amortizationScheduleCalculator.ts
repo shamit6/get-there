@@ -15,7 +15,7 @@ export interface AmortizationScheduleTransaction {
 function calcMonthlyPaymentToShortenDuration(
   currentMonthlyPayment: number,
   updateProgramData: MortgageProgramData
-) {
+): Number {
   const { amount, interest } = updateProgramData
 
   const monthlyInterest = interest / (100 * 12)
@@ -43,7 +43,7 @@ function calcMonthlyPaymentToShortenDuration(
 
 export function calcProgramAmortizationSchedule(
   programData: MortgageProgramData
-) {
+): AmortizationScheduleTransaction[] {
   const { amount, interest, periodInMonths, returnType } = programData
 
   let currentPrincipalBalanceInStartPeriond = amount
@@ -110,4 +110,39 @@ export function calcProgramAmortizationSchedule(
   return payments
 }
 
-export function calcAmortizationSchedule(programsData: MortgageProgramData[]) {}
+export function calcAmortizationSchedule(
+  programsData: MortgageProgramData[]
+): AmortizationScheduleTransaction[] {
+  const amortizations = programsData.map((programData) =>
+    calcProgramAmortizationSchedule(programData)
+  )
+  const largestAmortizationIndex = amortizations.reduce((res, cur) => {
+    return cur.length > res ? cur.length : res
+  }, 0)
+
+  const fullAmortization = []
+  for (let index = 0; index < largestAmortizationIndex; index++) {
+    fullAmortization[index] = amortizations.reduce(
+      (res, cur) => {
+        return {
+          interestPayment:
+            res.interestPayment + (cur[index]?.interestPayment ?? 0),
+          principalBalanceInStartPeriond:
+            res.principalBalanceInStartPeriond +
+            (cur[index]?.principalBalanceInStartPeriond ?? 0),
+          principalPayment:
+            res.principalPayment + (cur[index]?.principalPayment ?? 0),
+          totalPayment: res.totalPayment + (cur[index]?.totalPayment ?? 0),
+        }
+      },
+      {
+        interestPayment: 0,
+        principalBalanceInStartPeriond: 0,
+        principalPayment: 0,
+        totalPayment: 0,
+      }
+    )
+  }
+
+  return fullAmortization
+}

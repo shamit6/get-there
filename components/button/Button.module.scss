@@ -1,8 +1,8 @@
 .container {
   display: flex;
-  border-radius: .7em;
+  border-radius: 0.7em;
   background-color: inherit;
-  padding: .6em;
+  padding: 0.6em;
 
   &.primary {
     background-color: darkseagreen;
@@ -13,19 +13,19 @@
     filter: contrast(50%);
   }
 
-  &.bordered {
-    border: solid 1px;
-  }
-
   &.linkButton {
-    margin-left: .5em;
+    margin-left: 0.5em;
     background-color: inherit;
     border: 0;
+  }
+
+  &.bordered {
+    border: solid 1px;
   }
 
   .icon {
     height: 1em;
     width: 1em;
-    margin-right: .4em;
+    margin-right: 0.4em;
   }
 }
