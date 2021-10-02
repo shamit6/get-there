@@ -201,7 +201,7 @@ export default function MortgageProgram({
                 tabIndex={1}
               >
                 <option value="shortening-period">shortening period</option>
-                <option value="reducinng-patmeny">
+                <option value="reducinng-payment">
                   reducinng monthly payment
                 </option>
               </select>
