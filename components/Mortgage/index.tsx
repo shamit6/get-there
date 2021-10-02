@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Button from '../../components/button'
 import Add from '../../components/button/plus.svg'
 import Field from '../../components/Field'
-import Layout from '../../components/layout'
 import TextNumber from '../../components/textNumber'
 import { calcTotalSummery } from '../../utils/mortgageCalculator'
 import {
@@ -35,7 +34,7 @@ export default function Mortgage() {
   }, [programsData])
 
   return (
-    <Layout>
+    <>
       {programsData.map((programData, i) => (
         <MortgageProgram
           key={i}
@@ -96,6 +95,6 @@ export default function Mortgage() {
           </div>
         </Field>
       </div>
-    </Layout>
+    </>
   )
 }
