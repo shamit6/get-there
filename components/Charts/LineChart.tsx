@@ -15,10 +15,12 @@ export function LineChart({
   data,
   anchor,
   minY,
+  stacked,
 }: {
   data: Searies[]
   anchor?: LegendAnchor
   minY?: number
+  stacked?: boolean
 }) {
   return (
     <ResponsiveLine
@@ -36,6 +38,7 @@ export function LineChart({
         type: 'linear',
         min: minY ?? 'auto',
         max: 'auto',
+        stacked,
       }}
       yFormat={(value) => `${value.toLocaleString('he')}`}
       axisBottom={null}

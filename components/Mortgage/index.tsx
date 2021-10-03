@@ -162,13 +162,6 @@ export default function Mortgage() {
                   y: d.interestPayment,
                 })),
               },
-            ]}
-          />
-
-          <LineChart
-            anchor="bottom-left"
-            minY={0}
-            data={[
               {
                 id: 'Principal Payment',
                 color: '#2e6f95',
