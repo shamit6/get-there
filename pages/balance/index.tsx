@@ -31,10 +31,11 @@ export default function CurrentBalancePanel() {
     <Layout>
       <div>
         <p>
-          Current estimted balance is{' '}
+          Current estimated balance is{' '}
           {currentBalanceAmount.toLocaleString('he', {
             style: 'currency',
             currency: 'ILS',
+            maximumFractionDigits: 0,
           })}
           <br />
           Last updated was on{' '}
@@ -42,6 +43,7 @@ export default function CurrentBalancePanel() {
           {currentBalanceStatus!.amount.toLocaleString('he', {
             style: 'currency',
             currency: 'ILS',
+            maximumFractionDigits: 0,
           })}
         </p>
         <TextNumber
@@ -49,7 +51,7 @@ export default function CurrentBalancePanel() {
           placeholder={currentBalanceAmount.toLocaleString('he')}
           onValueChange={(values) => {
             const { floatValue } = values
-            setEditedAmount(floatValue!)
+            setEditedAmount(Math.floor(floatValue!))
           }}
         />{' '}
         ₪
