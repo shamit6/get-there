@@ -13,6 +13,7 @@ import {
 import MortgageProgram from './MortgageProgram'
 import styles from './Mortgage.module.scss'
 import {
+  amortizationPaymantsToBurndown,
   AmortizationScheduleTransaction,
   calcAmortizationSchedule,
 } from '../../utils/amortizationScheduleCalculator'
@@ -122,8 +123,25 @@ export default function Mortgage() {
             minY={0}
             data={[
               {
+                id: 'Payment Burndown',
+                color: '#b7094c',
+                data: amortizationPaymantsToBurndown(
+                  amortizationSchedule.map((d) => d.totalPayment)
+                ).map((amount, index) => ({
+                  x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
+                  y: amount,
+                })),
+              },
+            ]}
+          />
+
+          <LineChart
+            anchor="bottom-left"
+            minY={0}
+            data={[
+              {
                 id: 'Total Payment',
-                color: '#012a4a',
+                color: '#892b64',
                 data: amortizationSchedule.map((d, index) => ({
                   x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
                   y: d.totalPayment,
@@ -138,22 +156,15 @@ export default function Mortgage() {
             data={[
               {
                 id: 'Interest Payment',
-                color: '#013a63',
+                color: '#5c4d7d',
                 data: amortizationSchedule.map((d, index) => ({
                   x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
                   y: d.interestPayment,
                 })),
               },
-            ]}
-          />
-
-          <LineChart
-            anchor="bottom-left"
-            minY={0}
-            data={[
               {
                 id: 'Principal Payment',
-                color: '#01497c',
+                color: '#2e6f95',
                 data: amortizationSchedule.map((d, index) => ({
                   x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
                   y: d.principalPayment,

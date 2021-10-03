@@ -146,3 +146,18 @@ export function calcAmortizationSchedule(
 
   return fullAmortization
 }
+
+export function amortizationPaymantsToBurndown(payments: number[]): number[] {
+  const startAmount = payments.reduce((res, cur) => {
+    return res + cur
+  }, 0)
+
+  let runningAmount = startAmount
+
+  const burnDown = payments.map((payment, index, payments) => {
+    runningAmount = runningAmount - payment
+    return runningAmount
+  })
+
+  return [startAmount, ...burnDown, 0]
+}
