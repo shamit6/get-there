@@ -42,6 +42,7 @@ function UpdateBalanceModal({
             {currentBalanceAmount.toLocaleString('he', {
               style: 'currency',
               currency: 'ILS',
+              maximumFractionDigits: 0,
             })}
             <br />
             Last updated was on{' '}
@@ -49,6 +50,7 @@ function UpdateBalanceModal({
             {currentBalanceStatus!.amount.toLocaleString('he', {
               style: 'currency',
               currency: 'ILS',
+              maximumFractionDigits: 0,
             })}
           </p>
         )}
@@ -59,7 +61,7 @@ function UpdateBalanceModal({
             placeholder="40,000"
             onValueChange={(values) => {
               const { floatValue } = values
-              setEditedAmount(floatValue!)
+              setEditedAmount(Math.floor(floatValue!))
             }}
           />{' '}
           ₪
