@@ -38,7 +38,7 @@ function UpdateBalanceModal({
       <>
         {isThereAnyBalance && (
           <p>
-            Current estimted balance is{' '}
+            Current estimated balance is{' '}
             {currentBalanceAmount.toLocaleString('he', {
               style: 'currency',
               currency: 'ILS',
