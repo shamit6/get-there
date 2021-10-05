@@ -39,12 +39,8 @@ function PMT(
 
   pvif = Math.pow(1 + ir, np)
   pmt = (-ir * (pv * pvif + fv)) / (pvif - 1)
-  // pvif = new BigNumber(1 + ir).pow(np);
-  // pmt = pvif.multipliedBy(pv).plus(fv).multipliedBy(-ir).dividedBy(pvif.minus(1))
 
   if (type === 1) pmt /= 1 + ir
-  // if (type === 1)
-  //     pmt = pmt.dividedBy(1+ir);
 
   return pmt
 }
