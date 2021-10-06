@@ -5,7 +5,7 @@ import Button from '../../components/button'
 import Remove from '../../components/button/delete.svg'
 import Field from '../../components/Field'
 import TextNumber from '../../components/textNumber'
-import { calcProgram } from '../../utils/mortgageCalculator'
+import { calcDisplayedMortgageProgram } from '../../utils/amortizationScheduleCalculator'
 import {
   CalculatedMortgageProgram,
   MortgageEarlyPayoffPurpose,
@@ -29,7 +29,7 @@ export default function MortgageProgram({
   const [mortgageProgram, setMortgageProgram] =
     useState<MortgageProgramData>(programData)
   const [calculatedMortgageProgram, setCalculatedMortgageProgram] = useState(
-    calcProgram(programData)
+    calcDisplayedMortgageProgram(programData)
   )
   const [isAdvanceOptionsOpen, setIsAdvanceOptionsOpen] = useState(false)
   const { monthlyPayment, earlyPayoffAmount } = calculatedMortgageProgram
@@ -42,7 +42,7 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    const calculatedMortgageProgram = calcProgram(mortgageProgram)
+    const calculatedMortgageProgram = calcDisplayedMortgageProgram(mortgageProgram)
     setCalculatedMortgageProgram(calculatedMortgageProgram)
     onProgramCalc(calculatedMortgageProgram)
   }, [mortgageProgram])
@@ -202,7 +202,7 @@ export default function MortgageProgram({
                 onChange={(e) => {
                   setMortgageProgram({
                     ...mortgageProgram,
-                    earlyPayoffPurpose: e.target.value,
+                    earlyPayoffPurpose: e.target.value as MortgageEarlyPayoffPurpose,
                   })
                 }}
                 disabled={mortgageProgram.earlyPayoffType === 'complete'}

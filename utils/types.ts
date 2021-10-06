@@ -50,7 +50,7 @@ export enum MortgageEarlyPayoffPurpose {
 
 export interface MortgageProgramData {
   amount: number
-  type?: MortgageType
+  type: MortgageType
   returnType: string
   periodInMonths: number
   interest: number
@@ -58,11 +58,12 @@ export interface MortgageProgramData {
   earlyPayoffType?: MortgageEarlyPayoffType
   earlyPayoffMonths?: number
   earlyPayoffAmount?: number
-  earlyPayoffPurpose?: string
+  earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
 }
 
 export interface CalculatedMortgageProgram extends MortgageProgramData {
   monthlyPayment: number
+  totalInterestPayment: number
   totalPayment: number
 }
 

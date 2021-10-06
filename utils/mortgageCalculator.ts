@@ -1,6 +1,5 @@
 import { sumBy } from 'lodash'
 import {
-  CalculatedMortgageProgram,
   MortgageProgramData,
   MortgageSummeryCalculation,
 } from './types'
@@ -161,19 +160,6 @@ function calcTotalPayment(mortgageProgramData: MortgageProgramData): number {
       calcTotalPaymentUntillAfterEarlyPayoff(mortgageProgramData) +
       calcTotalPaymentNoEarlyPayoff(theoreticMortgage)
     )
-  }
-}
-
-export function calcProgram(
-  mortgageProgramData: MortgageProgramData
-): CalculatedMortgageProgram {
-  const monthlyPayment = calcMonthPayment(mortgageProgramData) || 0
-
-  return {
-    ...mortgageProgramData,
-    monthlyPayment,
-    totalPayment: calcTotalPayment(mortgageProgramData),
-    earlyPayoffAmount: calcEarlyPayoffToView(mortgageProgramData),
   }
 }
 
