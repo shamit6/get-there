@@ -89,6 +89,7 @@ export function calcProgramAmortizationSchedule(
     interest,
     periodInMonths,
     type,
+    returnType,
     expectedCpiChange = 0,
   } = programData
 
@@ -131,6 +132,7 @@ export function calcProgramAmortizationSchedule(
             interest,
             periodInMonths: periodInMonths - currentMonth,
             type,
+            returnType,
           }) || 0
       }
       // else {

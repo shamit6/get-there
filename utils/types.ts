@@ -51,7 +51,7 @@ export enum MortgageEarlyPayoffPurpose {
 export interface MortgageProgramData {
   amount: number
   type: MortgageType
-  returnType?: string
+  returnType: string
   periodInMonths: number
   interest: number
   expectedCpiChange?: number
