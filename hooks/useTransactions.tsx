@@ -1,9 +1,9 @@
 import _ from 'lodash'
 import { useCallback } from 'react'
 import useSWR from 'swr'
-import { TransactionConfig } from '../utils/types'
+import { TransactionConfig } from 'utils/types'
 
-function upsertToTrasactioList(
+function upsertToTransactionList(
   list: TransactionConfig[],
   transaction: TransactionConfig
 ) {
@@ -59,7 +59,7 @@ export default function useTransactions() {
   const upsertTrasaction = useCallback(
     async (transactionConfig: TransactionConfig) => {
       await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
-        return upsertToTrasactioList(
+        return upsertToTransactionList(
           transactionConfigs || [],
           transactionConfig
         )

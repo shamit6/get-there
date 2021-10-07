@@ -1,19 +1,19 @@
-import { calcCurrentBalanceAmount } from '../../utils/transactionsCalculator'
+import { calcCurrentBalanceAmount } from 'utils/transactionsCalculator'
 import {
   addBalanaceAmountToTransactionsSummery,
   getLastDayOfPeriod,
   getTransactionsSummeryByPeriod,
   TimelineSummerizedTransacrionsPeriod,
-} from '../../utils/timelineTrascationCalc'
+} from 'utils/timelineTrascationCalc'
 import useTransaction from '../../hooks/useTransactions'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
-import { TimePeriod } from '../../utils/types'
+import { TimePeriod } from 'utils/types'
 import { format } from 'date-fns'
 import styles from './Timeline.module.scss'
 import React, { useEffect, useState } from 'react'
-import Arrow, { Direction } from '../../components/arrow'
-import TextNumber from '../../components/textNumber'
-import Loader from '../../components/loader'
+import Arrow, { Direction } from 'components/arrow'
+import TextNumber from 'components/textNumber'
+import Loader from 'components/loader'
 import InfiniteScroll from 'react-infinite-scroller'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 

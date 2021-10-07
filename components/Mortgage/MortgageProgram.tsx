@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react'
 import NumberFormat from 'react-number-format'
-import Arrow, { Direction } from '../../components/arrow'
-import Button from '../../components/button'
-import Remove from '../../components/button/delete.svg'
-import Field from '../../components/Field'
-import TextNumber from '../../components/textNumber'
-import { calcDisplayedMortgageProgram } from '../../utils/amortizationScheduleCalculator'
+import Arrow, { Direction } from 'components/arrow'
+import Button from 'components/button'
+import Remove from 'components/button/delete.svg'
+import Field from 'components/Field'
+import TextNumber from 'components/textNumber'
+import { calcDisplayedMortgageProgram } from 'utils/amortizationScheduleCalculator'
 import {
   CalculatedMortgageProgram,
   MortgageEarlyPayoffPurpose,
   MortgageEarlyPayoffType,
   MortgageProgramData,
   MortgageType,
-} from '../../utils/types'
+} from 'utils/types'
 import styles from './Mortgage.module.scss'
 
 export default function MortgageProgram({
@@ -211,7 +211,7 @@ export default function MortgageProgram({
                 <option value={MortgageEarlyPayoffPurpose.SHORTENING_DURATION}>
                   shortening period
                 </option>
-                <option value={MortgageEarlyPayoffPurpose.REDUCINNG_PAYMENT}>
+                <option value={MortgageEarlyPayoffPurpose.REDUCING_PAYMENT}>
                   reducinng monthly payment
                 </option>
               </select>

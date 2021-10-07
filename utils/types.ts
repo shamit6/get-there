@@ -4,7 +4,7 @@ export enum TimePeriod {
   YEAR = 'year',
 }
 
-export interface TransactionnInetrval {
+export interface TransactionInterval {
   timePeriod: TimePeriod
   amount: number
   endDate?: Date
@@ -45,7 +45,7 @@ export enum MortgageEarlyPayoffType {
 
 export enum MortgageEarlyPayoffPurpose {
   SHORTENING_DURATION = 'shortening-duration',
-  REDUCINNG_PAYMENT = 'reducinng-payment',
+  REDUCING_PAYMENT = 'reducing-payment',
 }
 
 export interface MortgageProgramData {

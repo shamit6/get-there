@@ -4,9 +4,9 @@ import { useRouter } from 'next/router'
 import styles from './Form.module.scss'
 import NumberFormat from 'react-number-format'
 import useTransaction from '../../../hooks/useTransactions'
-import { TransactionConfig } from '../../../utils/types'
+import { TransactionConfig } from 'utils/types'
 import { format } from 'date-fns'
-import Button from '../../../components/button'
+import Button from 'components/button'
 import classNames from 'classnames'
 
 export default function Form({

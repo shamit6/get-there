@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr'
-import { BalanceStatus } from '../utils/types'
+import { BalanceStatus } from 'utils/types'
 
 export default function useBalanceStatus(last?: boolean) {
   const url = `/api/balance-statuses${last ? '?last=true' : ''}`

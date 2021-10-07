@@ -4,8 +4,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styles from './Layout.module.scss'
 import { ReactNode } from 'react'
-import Button from '../../components/button'
-import UpdateBalance from '../../components/UpdateBalance'
+import Button from 'components/button'
+import UpdateBalance from 'components/UpdateBalance'
 import { useRouter } from 'next/router'
 
 export default function Layout({ children }: { children: ReactNode }) {
