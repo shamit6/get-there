@@ -2,7 +2,37 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+First, install all dependencies:
+
+```bash
+npm i
+# or
+yarn
+```
+
+### Create .env.local file
+
+Contact an admin for the content of the file
+
+### Generate JWT
+1. Generate key using 
+   ```bash
+   yarn run generateKey
+   ```
+   The output of this command will be in your clipboard
+2. Paste the result into your .env.local file with the prefix
+JWT_SIGNING_PRIVATE_KEY=
+
+   it should look something like
+    ```javascript
+    JWT_SIGNING_PRIVATE_KEY={"kty":"oct","kid":"kidddddddddddddddddd","alg":"HS512","k":"kkkkkkkkkkkkkkkkkk"}
+    ```
+
+For more info see https://next-auth.js.org/warnings#jwt_auto_generated_signing_key
+
+### Run
+
+Then, run the development server:
 
 ```bash
 npm run dev
