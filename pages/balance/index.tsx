@@ -1,11 +1,11 @@
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import TextNumber from '../../components/textNumber'
-import Layout from '../../components/layout'
+import TextNumber from 'components/textNumber'
+import Layout from 'components/layout'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
 import useTransaction from '../../hooks/useTransactions'
-import { calcCurrentBalanceAmount } from '../../utils/transactionsCalculator'
+import { calcCurrentBalanceAmount } from 'utils/transactionsCalculator'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 
 export default function CurrentBalancePanel() {

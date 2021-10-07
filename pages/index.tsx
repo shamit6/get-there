@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { format, startOfDay, addYears } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
-import { TransactionConfig } from '../utils/prisma'
+import { TransactionConfig } from 'utils/prisma'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,
@@ -12,14 +12,14 @@ import {
   getCurrentMonthBalanceAmount,
   getCurrentYearBalanceAmount,
   getTransactionConfigsAmounts,
-} from '../utils/transactionsCalculator'
-import Layout from '../components/layout'
+} from 'utils/transactionsCalculator'
+import Layout from 'components/layout'
 import styles from './Status.module.scss'
-import { LineChart, BarChart } from '../components/Charts'
-import Ticker from '../components/Ticker'
-import Loader from '../components/loader'
-import Field from '../components/Field'
-import ScrollToTopButton from '../components/ScrollToTopButton'
+import { LineChart, BarChart } from 'components/Charts'
+import Ticker from 'components/Ticker'
+import Loader from 'components/loader'
+import Field from 'components/Field'
+import ScrollToTopButton from 'components/ScrollToTopButton'
 import Timeline from './timeline'
 import useEnsureLogin from '../hooks/useEnsureLogin'
 

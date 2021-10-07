@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import Button from '../../components/button'
-import Add from '../../components/button/plus.svg'
-import Field from '../../components/Field'
-import TextNumber from '../../components/textNumber'
-import { calcTotalSummery } from '../../utils/mortgageCalculator'
+import Button from 'components/button'
+import Add from 'components/button/plus.svg'
+import Field from 'components/Field'
+import TextNumber from 'components/textNumber'
+import { calcTotalSummery } from 'utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
   MortgageProgramData,
   MortgageSummeryCalculation,
   MortgageType,
-} from '../../utils/types'
+} from 'utils/types'
 import MortgageProgram from './MortgageProgram'
 import styles from './Mortgage.module.scss'
 import {
   amortizationPaymantsToBurndown,
   AmortizationScheduleTransaction,
   calcAmortizationSchedule,
-} from '../../utils/amortizationScheduleCalculator'
+} from 'utils/amortizationScheduleCalculator'
 import { LineChart } from '../Charts'
 import { addMonths, format } from 'date-fns'
 

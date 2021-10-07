@@ -88,7 +88,7 @@ describe('Amortization Schedule Calculator', () => {
       earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,
       earlyPayoffMonths: 14,
       earlyPayoffAmount: 30000,
-      earlyPayoffPurpose: MortgageEarlyPayoffPurpose.REDUCINNG_PAYMENT,
+      earlyPayoffPurpose: MortgageEarlyPayoffPurpose.REDUCING_PAYMENT,
     }
 
     const result = calcProgramAmortizationSchedule(program)
@@ -303,7 +303,7 @@ describe('mortgage calculator', () => {
       earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,
       earlyPayoffMonths: 14,
       earlyPayoffAmount: 40000,
-      earlyPayoffPurpose: MortgageEarlyPayoffPurpose.REDUCINNG_PAYMENT,
+      earlyPayoffPurpose: MortgageEarlyPayoffPurpose.REDUCING_PAYMENT,
     }
 
     const result = calcDisplayedMortgageProgram(program)

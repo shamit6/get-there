@@ -1,5 +1,5 @@
-import Layout from '../../components/layout'
-import MortgageComp from '../../components/Mortgage'
+import Layout from 'components/layout'
+import MortgageComp from 'components/Mortgage'
 
 function MortgagePage() {
   return (

@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
-import Button from '../../components/button'
+import Button from 'components/button'
 import Form from './form'
-import Layout from '../../components/layout'
+import Layout from 'components/layout'
 import useTransactions from '../../hooks/useTransactions'
-import Loader from '../../components/loader'
-import Delete from '../../components/button/delete.svg'
+import Loader from 'components/loader'
+import Delete from 'components/button/delete.svg'
 
 function PersistTransactionForm() {
   const router = useRouter()

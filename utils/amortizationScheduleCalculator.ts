@@ -124,7 +124,7 @@ export function calcProgramAmortizationSchedule(
 
       if (
         programData.earlyPayoffPurpose ===
-        MortgageEarlyPayoffPurpose.REDUCINNG_PAYMENT
+        MortgageEarlyPayoffPurpose.REDUCING_PAYMENT
       ) {
         monthlyPayment =
           calcMonthPayment({
