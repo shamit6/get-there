@@ -14,6 +14,7 @@ import {
   MortgageType,
 } from 'utils/types'
 import styles from './Mortgage.module.scss'
+import { isMortgageCourseCpiLinked } from 'utils/mortgageCalculator'
 
 export default function MortgageProgram({
   programData,
@@ -42,7 +43,8 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    const calculatedMortgageProgram = calcDisplayedMortgageProgram(mortgageProgram)
+    const calculatedMortgageProgram =
+      calcDisplayedMortgageProgram(mortgageProgram)
     setCalculatedMortgageProgram(calculatedMortgageProgram)
     onProgramCalc(calculatedMortgageProgram)
   }, [mortgageProgram])
@@ -62,7 +64,7 @@ export default function MortgageProgram({
             getInputRef={inputRef}
           />
         </Field>
-        <Field label="period in months">
+        <Field label="Period in months">
           <input
             placeholder="Period in months"
             value={mortgageProgram.periodInMonths || ''}
@@ -99,8 +101,14 @@ export default function MortgageProgram({
               })
             }}
             tabIndex={1}
+            value={mortgageProgram.type}
           >
-            <option value={mortgageProgram.type}>non-linked fixed</option>
+            <option value={MortgageType.LINKED_FIXED}>
+              {MortgageType.LINKED_FIXED}
+            </option>
+            <option value={MortgageType.NON_LINKED_FIXED}>
+              {MortgageType.NON_LINKED_FIXED}
+            </option>
           </select>
         </Field>
         <Field label="Returns type">
@@ -147,75 +155,100 @@ export default function MortgageProgram({
         </Button>
         {isAdvanceOptionsOpen && (
           <div className={styles.mortgageProgramAdvanceOption}>
-            <Field label="Early payoff" horizontal>
-              <select
-                value={mortgageProgram.earlyPayoffType}
-                onChange={(e) => {
-                  setMortgageProgram({
-                    ...mortgageProgram,
-                    earlyPayoffType: e.target.value as MortgageEarlyPayoffType,
-                  })
-                }}
-                tabIndex={1}
-              >
-                <option></option>
-                <option value={MortgageEarlyPayoffType.COMPLETE}>
-                  complete
-                </option>
-                <option value={MortgageEarlyPayoffType.PARTIAL}>partial</option>
-              </select>
-            </Field>
-            <Field>
-              <input
-                placeholder="after x months"
-                value={mortgageProgram.earlyPayoffMonths || ''}
-                type="number"
-                onChange={(e) => {
-                  setMortgageProgram({
-                    ...mortgageProgram,
-                    earlyPayoffMonths: Number(e.target.value),
-                  })
-                }}
-                tabIndex={1}
-              />
-            </Field>
-            <Field>
-              <NumberFormat
-                placeholder="Early payoff amount"
-                value={earlyPayoffAmount?.toFixed(0) || ''}
-                thousandSeparator={true}
-                prefix="₪"
-                disabled={mortgageProgram.earlyPayoffType === 'complete'}
-                onValueChange={({ value }) => {
-                  setMortgageProgram({
-                    ...mortgageProgram,
-                    earlyPayoffAmount: Number(value),
-                  })
-                }}
-                tabIndex={1}
-                getInputRef={inputRef}
-              />
-            </Field>
-            <Field>
-              <select
-                value={mortgageProgram.earlyPayoffPurpose}
-                onChange={(e) => {
-                  setMortgageProgram({
-                    ...mortgageProgram,
-                    earlyPayoffPurpose: e.target.value as MortgageEarlyPayoffPurpose,
-                  })
-                }}
-                disabled={mortgageProgram.earlyPayoffType === 'complete'}
-                tabIndex={1}
-              >
-                <option value={MortgageEarlyPayoffPurpose.SHORTENING_DURATION}>
-                  shortening period
-                </option>
-                <option value={MortgageEarlyPayoffPurpose.REDUCING_PAYMENT}>
-                  reducinng monthly payment
-                </option>
-              </select>
-            </Field>
+            <div className={styles.mortgageProgramAdvanceOptionBlock}>
+              <Field label="Early payoff" horizontal>
+                <select
+                  value={mortgageProgram.earlyPayoffType}
+                  onChange={(e) => {
+                    setMortgageProgram({
+                      ...mortgageProgram,
+                      earlyPayoffType: e.target
+                        .value as MortgageEarlyPayoffType,
+                    })
+                  }}
+                  tabIndex={1}
+                >
+                  <option></option>
+                  <option value={MortgageEarlyPayoffType.COMPLETE}>
+                    complete
+                  </option>
+                  <option value={MortgageEarlyPayoffType.PARTIAL}>
+                    partial
+                  </option>
+                </select>
+              </Field>
+              <Field>
+                <input
+                  placeholder="after x months"
+                  value={mortgageProgram.earlyPayoffMonths || ''}
+                  type="number"
+                  onChange={(e) => {
+                    setMortgageProgram({
+                      ...mortgageProgram,
+                      earlyPayoffMonths: Number(e.target.value),
+                    })
+                  }}
+                  tabIndex={1}
+                />
+              </Field>
+              <Field>
+                <NumberFormat
+                  placeholder="Early payoff amount"
+                  value={earlyPayoffAmount?.toFixed(0) || ''}
+                  thousandSeparator={true}
+                  prefix="₪"
+                  disabled={mortgageProgram.earlyPayoffType === 'complete'}
+                  onValueChange={({ value }) => {
+                    setMortgageProgram({
+                      ...mortgageProgram,
+                      earlyPayoffAmount: Number(value),
+                    })
+                  }}
+                  tabIndex={1}
+                  getInputRef={inputRef}
+                />
+              </Field>
+              <Field>
+                <select
+                  value={mortgageProgram.earlyPayoffPurpose}
+                  onChange={(e) => {
+                    setMortgageProgram({
+                      ...mortgageProgram,
+                      earlyPayoffPurpose: e.target
+                        .value as MortgageEarlyPayoffPurpose,
+                    })
+                  }}
+                  disabled={mortgageProgram.earlyPayoffType === 'complete'}
+                  tabIndex={1}
+                >
+                  <option
+                    value={MortgageEarlyPayoffPurpose.SHORTENING_DURATION}
+                  >
+                    shortening period
+                  </option>
+                  <option value={MortgageEarlyPayoffPurpose.REDUCING_PAYMENT}>
+                    reducinng monthly payment
+                  </option>
+                </select>
+              </Field>
+            </div>
+            <div className={styles.mortgageProgramAdvanceOptionBlock}>
+              <Field label="CPI interest" horizontal>
+                <NumberFormat
+                  placeholder="interest"
+                  suffix="%"
+                  value={mortgageProgram.expectedCpiChange || ''}
+                  disabled={!isMortgageCourseCpiLinked(mortgageProgram)}
+                  onValueChange={({ floatValue }) => {
+                    setMortgageProgram({
+                      ...mortgageProgram,
+                      expectedCpiChange: floatValue,
+                    })
+                  }}
+                  tabIndex={1}
+                />
+              </Field>
+            </div>
           </div>
         )}
       </div>

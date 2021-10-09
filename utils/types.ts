@@ -67,8 +67,12 @@ export interface CalculatedMortgageProgram extends MortgageProgramData {
   totalPayment: number
 }
 
-export interface MortgageSummeryCalculation {
+export interface CalculatedMortgageSummery {
+  originalPrincipalPayment: number
   monthlyPayment: number
-  totalInterestPayment: number
+  maxMonthlyPayment: number
+  cpiLinkPayment: number
+  interestPayment: number
   totalPayment: number
+  currencyRatio: number
 }

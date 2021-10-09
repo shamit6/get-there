@@ -15,7 +15,7 @@ export default function Field({
     <div
       className={classnames(styles.field, { [styles.horizontal]: horizontal })}
     >
-      <label>{label}</label>
+      {label && <label>{label}</label>}
       {children}
     </div>
   )

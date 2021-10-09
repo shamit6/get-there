@@ -14,6 +14,7 @@
 .mortgageProgramAdvance {
 }
 .mortgageSummery {
+  @extend .mortgageProgramRow;
   display: flex;
   flex-wrap: wrap;
 }
@@ -29,11 +30,15 @@
 }
 
 .mortgageProgramAdvanceOption {
+  margin-left: 2em;
+  margin-top: -1em;
+}
+
+.mortgageProgramAdvanceOptionBlock {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  margin-left: 2em;
-  margin-top: -1em;
+  width: 100%;
 }
 
 .removeButtonContainer {
