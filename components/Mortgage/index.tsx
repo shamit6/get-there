@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Button from 'components/button'
 import Add from 'components/button/plus.svg'
-import Field from 'components/Field'
-import TextNumber from 'components/textNumber'
 import { calcTotalSummery } from 'utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
   MortgageProgramData,
-  MortgageSummeryCalculation,
+  CalculatedMortgageSummery,
   MortgageType,
 } from 'utils/types'
 import MortgageProgram from './MortgageProgram'
@@ -19,6 +17,7 @@ import {
 } from 'utils/amortizationScheduleCalculator'
 import { LineChart } from '../Charts'
 import { addMonths, format } from 'date-fns'
+import MortgageSummerySection from './MortgageSummerySection'
 
 const defaultProgramData = {
   amount: 100000,
@@ -33,7 +32,7 @@ export default function Mortgage() {
     Array(3).fill(defaultProgramData)
   )
   const [mortgageSummery, setMortgageSummery] =
-    useState<MortgageSummeryCalculation>()
+    useState<CalculatedMortgageSummery>()
   const [programToFocus, setProgramToFocus] = useState(0)
 
   useEffect(() => {
@@ -68,6 +67,7 @@ export default function Mortgage() {
           }}
         />
       ))}
+      <MortgageSummerySection mortgageSummery={mortgageSummery} />
       <div className={styles.actionBar}>
         <Button
           text="Amortization Schedule"
@@ -89,32 +89,6 @@ export default function Mortgage() {
           icon={<Add />}
           tabIndex={2}
         />
-      </div>
-      <div className={styles.mortgageSummery}>
-        <Field label="Monthly payment">
-          <div>
-            <TextNumber
-              value={mortgageSummery?.monthlyPayment?.toFixed(2)}
-              prefix="₪"
-            />
-          </div>
-        </Field>
-        <Field label="Interest payment">
-          <div>
-            <TextNumber
-              value={mortgageSummery?.totalInterestPayment?.toFixed(2)}
-              prefix="₪"
-            />
-          </div>
-        </Field>
-        <Field label="Total payment">
-          <div>
-            <TextNumber
-              value={mortgageSummery?.totalPayment?.toFixed(2)}
-              prefix="₪"
-            />
-          </div>
-        </Field>
       </div>
       {amortizationSchedule && (
         <div className={styles.amortizationCharts}>
