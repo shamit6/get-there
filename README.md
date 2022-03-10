@@ -36,8 +36,8 @@ For more info see https://next-auth.js.org/warnings#jwt_auto_generated_signing_k
 Then, run the development server:
 
 ```bash
-npm run dev
-# or
+
+
 yarn dev
 ```
 
