@@ -1,7 +1,5 @@
-import { useRouter } from 'next/router'
-import useUser from '../hooks/useUser'
 import { useState } from 'react'
-import { format, startOfDay, addYears } from 'date-fns'
+import { format, startOfDay, addYears, isAfter, subMonths } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
 import { TransactionConfig } from 'utils/prisma'
@@ -25,8 +23,6 @@ import useEnsureLogin from '../hooks/useEnsureLogin'
 
 export default function Home() {
   const nowDate = new Date()
-  const { user, loading } = useUser()
-  const router = useRouter()
   const [startDate, setStartDate] = useState<Date>(startOfDay(nowDate))
   const [endDate, setEndDate] = useState<Date>(startOfDay(addYears(nowDate, 1)))
 
@@ -41,7 +37,13 @@ export default function Home() {
     return <Layout>Empty State</Layout>
   }
 
-  const balanceGraphData = balanceStatuses?.map(({ amount, createdAt }) => ({
+  const lastBalanceStatuses = balanceStatuses?.filter(
+    ({ createdAt }, index) =>
+      isAfter(createdAt, subMonths(new Date(), 2)) ||
+      index === 0
+  )
+
+  const balanceGraphData = lastBalanceStatuses?.map(({ amount, createdAt }) => ({
     x: format(createdAt, 'dd/MM/yyyy'),
     y: amount,
   }))
@@ -55,13 +57,13 @@ export default function Home() {
     allTransactionsOccurances.filter(
       ({ date }) =>
         date.getTime() >=
-        balanceStatuses[balanceStatuses.length - 1].createdAt.getTime()
+        lastBalanceStatuses[0].createdAt.getTime()
     ),
-    balanceStatuses[balanceStatuses.length - 1]
+    lastBalanceStatuses[0]
   )
 
   const transactionsGraphData = [
-    balanceGraphData![balanceGraphData!.length - 1],
+    balanceGraphData![0],
   ].concat(
     transactionToView.map(({ balance, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
@@ -115,7 +117,7 @@ export default function Home() {
 
   const currentBalanceAmount = calcCurrentBalanceAmount(
     transactions,
-    balanceStatuses[balanceStatuses.length - 1]
+    balanceStatuses[0]
   )
 
   const currentYearBalanceAmount = getCurrentYearBalanceAmount(

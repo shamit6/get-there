@@ -19,7 +19,7 @@ export default async function handler(
     if (req.method === 'GET') {
       const userBlanceStatuses = await prismaClient.balanceStatus.findMany({
         where: { userEmail },
-        orderBy: [{ createdAt: 'asc' }],
+        orderBy: [{ createdAt: 'desc' }],
         take: req.query.last ? 1 : undefined,
       })
       response = userBlanceStatuses
