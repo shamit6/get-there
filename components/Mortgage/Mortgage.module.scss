@@ -1,3 +1,10 @@
+.details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3em;
+  flex-wrap: wrap;
+}
+
 .mortgageProgramRow {
   margin-bottom: 1em;
   padding: 0 0 0.5em 1em;

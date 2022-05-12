@@ -4,7 +4,7 @@ import {
   calcProgramAmortizationSchedule,
 } from './amortizationScheduleCalculator'
 import {
-  MortgageProgramData,
+  MortgageCourse,
   MortgageEarlyPayoffType,
   MortgageType,
   MortgageEarlyPayoffPurpose,
@@ -23,10 +23,10 @@ function roundScheduleTransaction(
 
 describe('Amortization Schedule Calculator', () => {
   it('non-linked-fixed, no early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
     }
@@ -49,10 +49,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('non-linked-fixed, complete early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.COMPLETE,
@@ -79,10 +79,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('non-linked-fixed, partial early payoff, reducing payment', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,
@@ -117,10 +117,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('non-linked-fixed, partial early payoff, shortening duration', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,
@@ -149,10 +149,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('linked-fixed, no early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 500000,
       type: MortgageType.LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       expectedCpiChange: 2,
@@ -184,10 +184,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('linked-fixed, complete early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 500000,
       type: MortgageType.LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       expectedCpiChange: 2,
@@ -215,10 +215,10 @@ describe('Amortization Schedule Calculator', () => {
   })
 
   it('linked-fixed, partial early payoff, reducing payment', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 500000,
       type: MortgageType.LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       expectedCpiChange: 2,
@@ -257,10 +257,10 @@ function roundProgramCalcFields(program: CalculatedMortgageProgram) {
 
 describe('mortgage calculator', () => {
   it('non-linked-fixed, no early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
     }
@@ -274,10 +274,10 @@ describe('mortgage calculator', () => {
   })
 
   it('non-linked-fixed, complete early payoff', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.COMPLETE,
@@ -294,10 +294,10 @@ describe('mortgage calculator', () => {
   })
 
   it('non-linked-fixed, paritial early payoff, reduce monthly payment', () => {
-    const program: MortgageProgramData = {
+    const program: MortgageCourse = {
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: 'Spitzer',
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.PARTIAL,

@@ -8,7 +8,8 @@
     "start": "next start",
     "test": "jest",
     "lint": "next lint",
-    "generateKey": "jose newkey -s 256 -t oct -a HS512"
+    "generateKey": "jose newkey -s 256 -t oct -a HS512",
+    "prisma": "prisma generate"
   },
   "dependencies": {
     "@nivo/bar": "^0.73.1",

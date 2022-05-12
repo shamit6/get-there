@@ -1,6 +1,6 @@
 import { sumBy } from 'lodash'
 import {
-  MortgageProgramData,
+  MortgageCourse,
   MortgageSummeryCalculation,
 } from './types'
 import BigNumber from 'bignumber.js'
@@ -40,14 +40,14 @@ function PMT(
   return pmt
 }
 
-export function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
+export function calcMonthPayment(mortgageProgramData: MortgageCourse) {
   const { interest, periodInMonths, amount } = mortgageProgramData
   return interest && periodInMonths && amount
     ? PMT(interest / (100 * 12), periodInMonths, amount) * -1
     : null
 }
 
-function calcBalanceAfterEarlyPayoff(mortgageProgramData: MortgageProgramData) {
+function calcBalanceAfterEarlyPayoff(mortgageProgramData: MortgageCourse) {
   const {
     interest,
     amount,
@@ -85,7 +85,7 @@ function calcBalanceAfterEarlyPayoff(mortgageProgramData: MortgageProgramData) {
   )
 }
 
-export function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
+export function calcEarlyPayoff(mortgageProgramData: MortgageCourse) {
   const { earlyPayoffMonths, earlyPayoffType, earlyPayoffAmount } =
     mortgageProgramData
 
@@ -100,7 +100,7 @@ export function calcEarlyPayoff(mortgageProgramData: MortgageProgramData) {
   return calcBalanceAfterEarlyPayoff(mortgageProgramData)
 }
 
-function calcEarlyPayoffToView(mortgageProgramData: MortgageProgramData) {
+function calcEarlyPayoffToView(mortgageProgramData: MortgageCourse) {
   const { earlyPayoffMonths, earlyPayoffType, earlyPayoffAmount } =
     mortgageProgramData
 
@@ -119,21 +119,21 @@ function calcEarlyPayoffToView(mortgageProgramData: MortgageProgramData) {
 }
 
 function calcTotalPaymentNoEarlyPayoff(
-  mortgageProgramData: MortgageProgramData
+  mortgageProgramData: MortgageCourse
 ) {
   const monthlyPayment = calcMonthPayment(mortgageProgramData) || 0
   return monthlyPayment * mortgageProgramData.periodInMonths
 }
 
 function calcTotalPaymentUntillAfterEarlyPayoff(
-  mortgageProgramData: MortgageProgramData
+  mortgageProgramData: MortgageCourse
 ) {
   const monthPayment = calcMonthPayment(mortgageProgramData) || 0
   const { earlyPayoffMonths = 0 } = mortgageProgramData
   return monthPayment * earlyPayoffMonths + calcEarlyPayoff(mortgageProgramData)
 }
 
-function calcTotalPayment(mortgageProgramData: MortgageProgramData): number {
+function calcTotalPayment(mortgageProgramData: MortgageCourse): number {
   const { periodInMonths, earlyPayoffMonths, earlyPayoffType } =
     mortgageProgramData
   const tatolPaymentNoEarlyPayoff =
@@ -164,7 +164,7 @@ function calcTotalPayment(mortgageProgramData: MortgageProgramData): number {
 }
 
 export function calcTotalSummery(
-  programsData: MortgageProgramData[]
+  programsData: MortgageCourse[]
 ): MortgageSummeryCalculation {
   const totalPayment = sumBy(programsData, 'totalPayment')
   const totalLoanAmount = sumBy(programsData, 'amount')
