@@ -19,11 +19,11 @@ import { LineChart } from '../Charts'
 import { addMonths, format } from 'date-fns'
 import MortgageSummerySection from './MortgageSummerySection'
 
-const defaultProgramData = {
+const defaultProgramData: MortgageCourse = {
   amount: 100000,
   periodInMonths: 240,
   interest: 3,
-  returnType: 'Sspitzer',
+  returnType: 'Spitzer',
   type: MortgageType.NON_LINKED_FIXED,
 }
 
