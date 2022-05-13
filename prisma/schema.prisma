@@ -8,11 +8,10 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
 }
 
 model BalanceStatus {
-  id        String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   amount    Int
   userEmail String   
@@ -21,17 +20,19 @@ model BalanceStatus {
 }
 
 model User {
-  id      String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
-  email   String   @unique
-  name    String?
-  image   String?
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  email             String   @unique
+  name              String?
+  image             String?
   balanceStatus     BalanceStatus[]
   transactionConfig TransactionConfig[]
+  MortgageCourse    MortgageCourse[]
+  Mortgage          Mortgage[]
   @@map("users")
 }
 
 model TransactionConfig {
-  id            String   @id @default(dbgenerated()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   type          String
   date          DateTime
   amount        Int
@@ -43,3 +44,63 @@ model TransactionConfig {
   @@map("transactionConfigs")
 }
   
+enum MortgageType {
+  NON_LINKED_FIXED
+  LINKED_FIXED
+}
+
+enum ReturnType {
+  Shpitzer
+  Bullet
+  CPM
+}
+
+enum MortgageEarlyPayoffType {
+  COMPLETE
+  PARTIAL
+}
+
+enum MortgageEarlyPayoffPurpose {
+  SHORTENING_DURATION
+  REDUCINNG_PAYMENT
+}
+
+model MortgageCourse {
+  id                 String                      @id @default(auto()) @map("_id") @db.ObjectId
+  amount             Int
+  type               MortgageType
+  returnType         ReturnType
+  periodInMonths     Int
+  interest           Float
+  expectedCpiChange  Float?
+  earlyPayoffType    MortgageEarlyPayoffType?
+  earlyPayoffMonths  Int?
+  earlyPayoffAmount  Int?
+  earlyPayoffPurpose MortgageEarlyPayoffPurpose?
+  User               User?                       @relation(fields: [userId], references: [id])
+  userId             String?                     @db.ObjectId
+  Mortgage           Mortgage?                   @relation(fields: [mortgageId], references: [id])
+  mortgageId         String?                     @db.ObjectId
+}
+
+enum Bank {
+  POALIM
+  DISCOUNT
+  LEUMI
+  MIZRAHI
+  YAHAV
+  JERUSALEM
+}
+
+model Mortgage {
+  id           String           @id @default(auto()) @map("_id") @db.ObjectId
+  fundingRate  Int
+  bank         Bank
+  income       Int
+  userEmail    String
+  user         User             @relation(fields: [userEmail], references: [email])
+  courses      MortgageCourse[]
+  offeringDate DateTime
+  marketValue  Int
+  adderss      String?
+}

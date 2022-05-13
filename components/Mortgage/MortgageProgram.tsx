@@ -10,8 +10,9 @@ import {
   CalculatedMortgageProgram,
   MortgageEarlyPayoffPurpose,
   MortgageEarlyPayoffType,
-  MortgageProgramData,
+  MortgageCourse,
   MortgageType,
+  ReturnType,
 } from 'utils/types'
 import styles from './Mortgage.module.scss'
 import { isMortgageCourseCpiLinked } from 'utils/mortgageCalculator'
@@ -22,13 +23,13 @@ export default function MortgageProgram({
   onProgramRemove,
   isFocus,
 }: {
-  programData: MortgageProgramData
+  programData: MortgageCourse
   onProgramCalc(data: CalculatedMortgageProgram): void
   onProgramRemove(): void
   isFocus: boolean
 }) {
   const [mortgageProgram, setMortgageProgram] =
-    useState<MortgageProgramData>(programData)
+    useState<MortgageCourse>(programData)
   const [calculatedMortgageProgram, setCalculatedMortgageProgram] = useState(
     calcDisplayedMortgageProgram(programData)
   )
@@ -116,12 +117,12 @@ export default function MortgageProgram({
             onChange={(e) => {
               setMortgageProgram({
                 ...mortgageProgram,
-                returnType: e.target.value,
+                returnType: e.target.value as ReturnType,
               })
             }}
             tabIndex={1}
           >
-            <option value={mortgageProgram.returnType}>spitzer</option>
+            <option value={mortgageProgram.returnType}>Spitzer</option>
           </select>
         </Field>
         <Field label="Monthly payment">

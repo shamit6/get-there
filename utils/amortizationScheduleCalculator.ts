@@ -3,7 +3,7 @@ import {
   CalculatedMortgageProgram,
   MortgageEarlyPayoffPurpose,
   MortgageEarlyPayoffType,
-  MortgageProgramData,
+  MortgageCourse,
   MortgageType,
 } from './types'
 
@@ -45,7 +45,7 @@ function PMT(
   return pmt
 }
 
-function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
+function calcMonthPayment(mortgageProgramData: MortgageCourse) {
   const { interest, periodInMonths, amount } = mortgageProgramData
   return interest && periodInMonths && amount
     ? PMT(interest / (100 * 12), periodInMonths, amount) * -1
@@ -54,7 +54,7 @@ function calcMonthPayment(mortgageProgramData: MortgageProgramData) {
 
 function calcMonthlyPaymentToShortenDuration(
   currentMonthlyPayment: number,
-  updateProgramData: MortgageProgramData
+  updateProgramData: MortgageCourse
 ): Number {
   const { amount, interest } = updateProgramData
 
@@ -82,7 +82,7 @@ function calcMonthlyPaymentToShortenDuration(
 }
 
 export function calcProgramAmortizationSchedule(
-  programData: MortgageProgramData
+  programData: MortgageCourse
 ): AmortizationScheduleTransaction[] {
   const {
     amount,
@@ -164,7 +164,7 @@ export function calcProgramAmortizationSchedule(
 }
 
 export function calcAmortizationSchedule(
-  programsData: MortgageProgramData[]
+  programsData: MortgageCourse[]
 ): AmortizationScheduleTransaction[] {
   const amortizations = programsData.map((programData) =>
     calcProgramAmortizationSchedule(programData)
@@ -216,7 +216,7 @@ export function amortizationPaymantsToBurndown(payments: number[]): number[] {
 }
 
 export function calcDisplayedMortgageProgram(
-  programData: MortgageProgramData
+  programData: MortgageCourse
 ): CalculatedMortgageProgram {
   const payemnt = calcProgramAmortizationSchedule(programData)
 

@@ -4,7 +4,7 @@ import Add from 'components/button/plus.svg'
 import { calcTotalSummery } from 'utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
-  MortgageProgramData,
+  MortgageCourse,
   CalculatedMortgageSummery,
   MortgageType,
 } from 'utils/types'
@@ -23,12 +23,12 @@ const defaultProgramData = {
   amount: 100000,
   periodInMonths: 240,
   interest: 3,
-  returnType: 'spitzer',
+  returnType: 'Sspitzer',
   type: MortgageType.NON_LINKED_FIXED,
 }
 
 export default function Mortgage() {
-  const [programsData, setProgramsData] = useState<MortgageProgramData[]>(
+  const [programsData, setProgramsData] = useState<MortgageCourse[]>(
     Array(3).fill(defaultProgramData)
   )
   const [mortgageSummery, setMortgageSummery] =

@@ -48,10 +48,12 @@ export enum MortgageEarlyPayoffPurpose {
   REDUCING_PAYMENT = 'reducing-payment',
 }
 
-export interface MortgageProgramData {
+export type ReturnType = 'Spitzer' | 'Bullet' | 'CPM'
+
+export interface MortgageCourse {
   amount: number
   type: MortgageType
-  returnType: string
+  returnType: ReturnType
   periodInMonths: number
   interest: number
   expectedCpiChange?: number
@@ -61,7 +63,7 @@ export interface MortgageProgramData {
   earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
 }
 
-export interface CalculatedMortgageProgram extends MortgageProgramData {
+export interface CalculatedMortgageProgram extends MortgageCourse {
   monthlyPayment: number
   totalInterestPayment: number
   totalPayment: number
@@ -75,4 +77,24 @@ export interface CalculatedMortgageSummery {
   interestPayment: number
   totalPayment: number
   currencyRatio: number
+}
+
+export enum Bank {
+  POALIM = 'POALIM',
+  DISCOUNT = 'DISCOUNT',
+  LEUMI = 'LEUMI',
+  MIZRAHI = 'MIZRAHI',
+  YAHAV = 'YAHAV',
+  JERUSALEM = 'JERUSALEM',
+}
+
+export interface Mortgage {
+  fundingRate: number
+  bank: Bank
+  income: number
+  userEmail: string
+  courses: MortgageCourse[]
+  offeringDate: Date
+  marketValue: number
+  adderss?: string
 }

@@ -1,17 +1,17 @@
 import { maxBy, sumBy } from 'lodash'
 import { calcAmortizationSchedule } from './amortizationScheduleCalculator'
 import {
-  MortgageProgramData,
+  MortgageCourse,
   CalculatedMortgageSummery,
   MortgageType,
 } from './types'
 
-export function isMortgageCourseCpiLinked(programsData: MortgageProgramData) {
+export function isMortgageCourseCpiLinked(programsData: MortgageCourse) {
   return programsData.type === MortgageType.LINKED_FIXED
 }
 
 export function calcTotalSummery(
-  mortgageCourses: MortgageProgramData[]
+  mortgageCourses: MortgageCourse[]
 ): CalculatedMortgageSummery {
   const totalAmortizationSchedule = calcAmortizationSchedule(mortgageCourses)
   const originalPrincipalPayment =
