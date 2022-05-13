@@ -44,10 +44,12 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    const calculatedMortgageProgram =
-      calcDisplayedMortgageProgram(mortgageProgram)
-    setCalculatedMortgageProgram(calculatedMortgageProgram)
-    onProgramCalc(calculatedMortgageProgram)
+    if (mortgageProgram.periodInMonths && mortgageProgram.interest) {
+      const calculatedMortgageProgram =
+        calcDisplayedMortgageProgram(mortgageProgram)
+      setCalculatedMortgageProgram(calculatedMortgageProgram)
+      onProgramCalc(calculatedMortgageProgram)
+    }
   }, [mortgageProgram])
   return (
     <div className={styles.mortgageProgramRow}>

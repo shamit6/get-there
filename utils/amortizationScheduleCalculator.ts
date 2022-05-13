@@ -229,7 +229,7 @@ export function calcDisplayedMortgageProgram(
     ...programData,
     totalPayment: sumBy(payemnt, 'totalPayment'),
     totalInterestPayment: sumBy(payemnt, 'interestPayment'),
-    monthlyPayment: payemnt[0].totalPayment,
+    monthlyPayment: payemnt[0]?.totalPayment ?? 0,
     earlyPayoffAmount: displayEarlyPayoffAmount,
   }
 }

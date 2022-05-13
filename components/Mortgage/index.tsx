@@ -8,7 +8,7 @@ import {
   CalculatedMortgageSummery,
   MortgageType,
 } from 'utils/types'
-import MortgageProgram from './MortgageProgram'
+import MortgageCourseCompnent from './MortgageCourse'
 import styles from './Mortgage.module.scss'
 import {
   amortizationPaymantsToBurndown,
@@ -47,7 +47,7 @@ export default function Mortgage() {
   return (
     <>
       {programsData.map((programData, i) => (
-        <MortgageProgram
+        <MortgageCourseCompnent
           key={i}
           isFocus={i === programToFocus}
           programData={programData}
