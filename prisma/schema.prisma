@@ -62,7 +62,7 @@ enum MortgageEarlyPayoffType {
 
 enum MortgageEarlyPayoffPurpose {
   SHORTENING_DURATION
-  REDUCINNG_PAYMENT
+  REDUCING_PAYMENT
 }
 
 model MortgageCourse {
@@ -95,12 +95,12 @@ enum Bank {
 model Mortgage {
   id           String           @id @default(auto()) @map("_id") @db.ObjectId
   fundingRate  Int
-  bank         Bank?
-  income       Int?
-  userEmail    String?
+  bank         Bank
+  income       Int
+  userEmail    String
   user         User             @relation(fields: [userEmail], references: [email])
   courses      MortgageCourse[]
-  offeringDate DateTime?
-  marketValue  Int?
+  offeringDate DateTime
+  marketValue  Int
   adderss      String?
 }

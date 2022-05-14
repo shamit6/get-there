@@ -1,10 +1,10 @@
 import Layout from 'components/layout'
-import MortgageComp from 'components/Mortgage'
+import MortgageForm from 'components/Mortgage/MortgageForm'
 
 function MortgagePage() {
   return (
     <Layout>
-      <MortgageComp />
+      <MortgageForm />
     </Layout>
   )
 }

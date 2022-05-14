@@ -2,7 +2,8 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { getEnv } from 'utils/envs'
-import { prismaClient, User } from 'utils/prisma'
+import { prismaClient } from 'utils/prisma'
+import { User } from 'utils/types'
 
 async function upsertUser({
   email,

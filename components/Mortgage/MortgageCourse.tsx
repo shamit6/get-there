@@ -162,7 +162,7 @@ export default function MortgageProgram({
             <div className={styles.mortgageProgramAdvanceOptionBlock}>
               <Field label="Early payoff" horizontal>
                 <select
-                  value={mortgageProgram.earlyPayoffType}
+                  value={mortgageProgram.earlyPayoffType!}
                   onChange={(e) => {
                     setMortgageProgram({
                       ...mortgageProgram,
@@ -201,7 +201,7 @@ export default function MortgageProgram({
                   value={earlyPayoffAmount?.toFixed(0) || ''}
                   thousandSeparator={true}
                   prefix="₪"
-                  disabled={mortgageProgram.earlyPayoffType === 'complete'}
+                  disabled={mortgageProgram.earlyPayoffType === MortgageEarlyPayoffType.COMPLETE}
                   onValueChange={({ value }) => {
                     setMortgageProgram({
                       ...mortgageProgram,
@@ -214,7 +214,7 @@ export default function MortgageProgram({
               </Field>
               <Field>
                 <select
-                  value={mortgageProgram.earlyPayoffPurpose}
+                  value={mortgageProgram.earlyPayoffPurpose!}
                   onChange={(e) => {
                     setMortgageProgram({
                       ...mortgageProgram,
@@ -222,7 +222,10 @@ export default function MortgageProgram({
                         .value as MortgageEarlyPayoffPurpose,
                     })
                   }}
-                  disabled={mortgageProgram.earlyPayoffType === 'complete'}
+                  disabled={
+                    mortgageProgram.earlyPayoffType ===
+                    MortgageEarlyPayoffType.COMPLETE
+                  }
                   tabIndex={1}
                 >
                   <option
@@ -246,7 +249,7 @@ export default function MortgageProgram({
                   onValueChange={({ floatValue }) => {
                     setMortgageProgram({
                       ...mortgageProgram,
-                      expectedCpiChange: floatValue,
+                      expectedCpiChange: floatValue!,
                     })
                   }}
                   tabIndex={1}

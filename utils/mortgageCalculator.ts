@@ -1,13 +1,14 @@
 import { maxBy, sumBy } from 'lodash'
 import { calcAmortizationSchedule } from './amortizationScheduleCalculator'
-import {
+import type {
   MortgageCourse,
   CalculatedMortgageSummery,
-  MortgageType,
+  Mortgage,
 } from './types'
+import { ObjectId } from 'bson'
 
 export function isMortgageCourseCpiLinked(programsData: MortgageCourse) {
-  return programsData.type === MortgageType.LINKED_FIXED
+  return programsData.type === 'LINKED_FIXED'
 }
 
 export function calcTotalSummery(
@@ -31,5 +32,26 @@ export function calcTotalSummery(
     currencyRatio: originalPrincipalPayment
       ? totalPayment / originalPrincipalPayment
       : 0,
+  }
+}
+
+export function generateNewMortageCourse(): MortgageCourse {
+  return {
+    id: new ObjectId().toJSON(),
+    amount: 100000,
+    type: 'NON_LINKED_FIXED',
+    returnType: 'Shpitzer',
+    periodInMonths: 2400,
+    interest: 3,
+  }
+}
+
+export function generateNewMortage(): Partial<Mortgage> {
+  return {
+    courses: [
+      generateNewMortageCourse(),
+      generateNewMortageCourse(),
+      generateNewMortageCourse(),
+    ],
   }
 }

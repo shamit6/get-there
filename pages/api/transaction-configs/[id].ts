@@ -1,6 +1,7 @@
 import { getSession } from 'next-auth/react'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { prismaClient, TransactionConfig } from 'utils/prisma'
+import { prismaClient } from 'utils/prisma'
+import type { TransactionConfig } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,

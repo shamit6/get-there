@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { format, startOfDay, addYears, isAfter, subMonths } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalancesStatus from '../hooks/useBalanceStatus'
-import { TransactionConfig } from 'utils/prisma'
+import { TransactionConfig } from 'utils/types'
 import {
   generateTransactionConfigsOccurances,
   addBalanaceToSortTransaction,

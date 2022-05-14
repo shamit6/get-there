@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Button from 'components/button'
 import Add from 'components/button/plus.svg'
-import { calcTotalSummery } from 'utils/mortgageCalculator'
+import { calcTotalSummery, generateNewMortageCourse } from 'utils/mortgageCalculator'
 import {
   CalculatedMortgageProgram,
   MortgageCourse,
   CalculatedMortgageSummery,
-  MortgageType,
 } from 'utils/types'
 import MortgageCourseCompnent from './MortgageCourse'
 import styles from './Mortgage.module.scss'
@@ -16,50 +15,59 @@ import {
 } from 'utils/amortizationScheduleCalculator'
 import MortgageSummerySection from './MortgageSummerySection'
 import MortgagePaymentsCharts from './MortgagePaymentsCharts'
-
-const defaultProgramData: MortgageCourse = {
-  amount: 100000,
-  periodInMonths: 240,
-  interest: 3,
-  returnType: 'Spitzer',
-  type: MortgageType.NON_LINKED_FIXED,
-}
+import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
+import { remove } from 'lodash'
 
 export default function Mortgage() {
-  const [programsData, setProgramsData] = useState<MortgageCourse[]>(
-    Array(3).fill(defaultProgramData)
-  )
+  const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
+  console.log('currentMortgagecurrentMortgage', currentMortgage);
+  
+  const mortgageCourses = currentMortgage?.courses || []
   const [mortgageSummery, setMortgageSummery] =
     useState<CalculatedMortgageSummery>()
   const [programToFocus, setProgramToFocus] = useState(0)
 
   useEffect(() => {
-    setMortgageSummery(calcTotalSummery(programsData))
-  }, [programsData])
+    if (mortgageCourses.length > 0) {
+      setMortgageSummery(calcTotalSummery(mortgageCourses))
+    }
+  }, [mortgageCourses])
 
   const [amortizationSchedule, setAmortizationSchedule] =
     useState<AmortizationScheduleTransaction[]>()
 
   return (
     <>
-      {programsData.map((programData, i) => (
+      {mortgageCourses.map((course, i) => (
         <MortgageCourseCompnent
-          key={i}
+          key={course.id}
           isFocus={i === programToFocus}
-          programData={programData}
+          programData={course}
           onProgramCalc={(programData: CalculatedMortgageProgram) => {
-            setProgramsData((prevState) => [
-              ...prevState.slice(0, i),
-              programData,
-              ...prevState.slice(i + 1),
-            ])
+            setCurrentMortgage((prevState) => {
+              const courses = prevState?.courses!
+              return {
+                ...prevState,
+                courses: [
+                  ...courses.slice(0, i),
+                  programData,
+                  ...courses.slice(i + 1),
+                ],
+              }
+            })
           }}
           onProgramRemove={() => {
-            setProgramToFocus(Math.min(i, programsData.length - 2))
-            setProgramsData((prevState) => [
-              ...prevState.slice(0, i),
-              ...prevState.slice(i + 1),
-            ])
+            setProgramToFocus(Math.min(i, mortgageCourses.length - 2))
+            setCurrentMortgage((prevState) => {
+              const courses = prevState?.courses!
+              return {
+                ...prevState,
+                courses: [
+                  ...courses.slice(0, i),
+                  ...courses.slice(i + 1),
+                ],
+              }
+            })
           }}
         />
       ))}
@@ -68,7 +76,7 @@ export default function Mortgage() {
         <Button
           text="Amortization Schedule"
           onClick={() => {
-            setAmortizationSchedule(calcAmortizationSchedule(programsData))
+            setAmortizationSchedule(calcAmortizationSchedule(mortgageCourses))
           }}
           bordered
           linkTheme
@@ -77,8 +85,17 @@ export default function Mortgage() {
         <Button
           text="Add program"
           onClick={() => {
-            setProgramsData([...programsData, defaultProgramData])
-            setProgramToFocus(programsData.length)
+            setCurrentMortgage((prevState) => {
+              const courses = prevState?.courses!
+              return {
+                ...prevState,
+                courses: [
+                  ...courses,
+                  generateNewMortageCourse(),
+                ],
+              }
+            })
+            setProgramToFocus(mortgageCourses.length)
           }}
           bordered
           linkTheme
