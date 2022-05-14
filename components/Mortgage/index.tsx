@@ -11,13 +11,11 @@ import {
 import MortgageCourseCompnent from './MortgageCourse'
 import styles from './Mortgage.module.scss'
 import {
-  amortizationPaymantsToBurndown,
   AmortizationScheduleTransaction,
   calcAmortizationSchedule,
 } from 'utils/amortizationScheduleCalculator'
-import { LineChart } from '../Charts'
-import { addMonths, format } from 'date-fns'
 import MortgageSummerySection from './MortgageSummerySection'
+import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 
 const defaultProgramData: MortgageCourse = {
   amount: 100000,
@@ -41,8 +39,6 @@ export default function Mortgage() {
 
   const [amortizationSchedule, setAmortizationSchedule] =
     useState<AmortizationScheduleTransaction[]>()
-
-  const today = new Date()
 
   return (
     <>
@@ -91,62 +87,9 @@ export default function Mortgage() {
         />
       </div>
       {amortizationSchedule && (
-        <div className={styles.amortizationCharts}>
-          <LineChart
-            anchor="bottom-left"
-            minY={0}
-            data={[
-              {
-                id: 'Payment Burndown',
-                color: '#b7094c',
-                data: amortizationPaymantsToBurndown(
-                  amortizationSchedule.map((d) => d.totalPayment)
-                ).map((amount, index) => ({
-                  x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
-                  y: amount,
-                })),
-              },
-            ]}
-          />
-
-          <LineChart
-            anchor="bottom-left"
-            minY={0}
-            data={[
-              {
-                id: 'Total Payment',
-                color: '#892b64',
-                data: amortizationSchedule.map((d, index) => ({
-                  x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
-                  y: d.totalPayment,
-                })),
-              },
-            ]}
-          />
-
-          <LineChart
-            anchor="bottom-left"
-            minY={0}
-            data={[
-              {
-                id: 'Interest Payment',
-                color: '#5c4d7d',
-                data: amortizationSchedule.map((d, index) => ({
-                  x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
-                  y: d.interestPayment,
-                })),
-              },
-              {
-                id: 'Principal Payment',
-                color: '#2e6f95',
-                data: amortizationSchedule.map((d, index) => ({
-                  x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
-                  y: d.principalPayment,
-                })),
-              },
-            ]}
-          />
-        </div>
+        <MortgagePaymentsCharts
+          mortgagePaymentsSchedule={amortizationSchedule}
+        />
       )}
     </>
   )

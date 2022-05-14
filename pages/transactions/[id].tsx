@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import { useCallback } from 'react'
 import Button from 'components/button'
-import Form from './form'
+import TransactionForm from 'components/TransactionForm'
 import Layout from 'components/layout'
-import useTransactions from '../../hooks/useTransactions'
+import useTransactions from 'hooks/useTransactions'
 import Loader from 'components/loader'
 import Delete from 'components/button/delete.svg'
 
@@ -35,7 +35,7 @@ function PersistTransactionForm() {
             onClick={() => onDelete()}
             icon={<Delete />}
           />
-          <Form transactionConfig={transaction!} />
+          <TransactionForm transactionConfig={transaction!} />
         </div>
       )}
     </Layout>

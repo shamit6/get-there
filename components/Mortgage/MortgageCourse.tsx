@@ -69,6 +69,7 @@ export default function MortgageProgram({
         </Field>
         <Field label="Period in months">
           <input
+            required
             placeholder="Period in months"
             value={mortgageProgram.periodInMonths || ''}
             type="number"

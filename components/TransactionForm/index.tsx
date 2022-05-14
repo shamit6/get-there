@@ -3,7 +3,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
 import styles from './Form.module.scss'
 import NumberFormat from 'react-number-format'
-import useTransaction from '../../../hooks/useTransactions'
+import useTransaction from 'hooks/useTransactions'
 import { TransactionConfig } from 'utils/types'
 import { format } from 'date-fns'
 import Button from 'components/button'
@@ -105,7 +105,6 @@ export default function Form({
           type="text"
           placeholder="Salary"
           defaultValue={transactionConfig?.type}
-          {...register('type', { required: 'error message' })}
           required
         />
         <span />

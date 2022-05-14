@@ -1,10 +1,10 @@
 import Layout from 'components/layout'
-import Form from '../form'
+import TransactionForm from 'components/TransactionForm'
 
 function New() {
   return (
     <Layout>
-      <Form />
+      <TransactionForm />
     </Layout>
   )
 }
