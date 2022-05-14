@@ -1,7 +1,8 @@
 import React, { useCallback, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/router'
-import styles from './Form.module.scss'
+import overrideStyles from './Form.module.scss'
+import styles from 'components/Field/Field.module.scss'
 import NumberFormat from 'react-number-format'
 import useTransaction from 'hooks/useTransactions'
 import { TransactionConfig } from 'utils/types'
@@ -48,7 +49,7 @@ export default function Form({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={classNames(styles.form, {
+      className={classNames(styles.form, overrideStyles.form, {
         [styles.submitted]: formState.isSubmitted,
       })}
       noValidate
@@ -109,7 +110,7 @@ export default function Form({
         />
         <span />
       </div>
-      <div className={styles.repeatedField}>
+      <div className={overrideStyles.repeatedField}>
         <label htmlFor="repeated">Repeated</label>
         <input
           type="checkbox"
@@ -157,7 +158,7 @@ export default function Form({
                 value={value ? format(value, 'yyyy-MM-dd') : undefined}
               />
               <div
-                className={styles.clearInput}
+                className={overrideStyles.clearInput}
                 onClick={() => {
                   onChange(null)
                   endDateEl.current!.value = ''
