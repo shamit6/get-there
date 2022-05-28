@@ -34,4 +34,8 @@
   display: flex;
   flex-direction: row-reverse;
   margin-right: 1em;
+
+  &.centered {
+    justify-content: center;
+  }
 }

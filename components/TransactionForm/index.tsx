@@ -7,8 +7,9 @@ import NumberFormat from 'react-number-format'
 import useTransaction from 'hooks/useTransactions'
 import { TransactionConfig } from 'utils/types'
 import { format } from 'date-fns'
-import Button from 'components/button'
+import Button, { ButtonsGroup } from 'components/button'
 import classNames from 'classnames'
+import Field from 'components/Field'
 
 export default function Form({
   transactionConfig,
@@ -36,6 +37,7 @@ export default function Form({
         newTransactionData.periodAmount = Number(periodAmount)
         newTransactionData.endDate = endDate
       }
+console.log('newTransactionData', newTransactionData);
 
       upsertTrasaction(newTransactionData)
 
@@ -54,15 +56,13 @@ export default function Form({
       })}
       noValidate
     >
-      <div className={styles.field}>
-        <label>Amount</label>
+      <Field label="Amount">
         <Controller
           control={control}
           name="amount"
           rules={{ required: true }}
           defaultValue={transactionConfig?.amount}
           render={({ field: { onChange, onBlur, value } }) => (
-            <>
               <NumberFormat
                 onValueChange={({ value }) => onChange(value)}
                 onBlur={onBlur}
@@ -72,20 +72,16 @@ export default function Form({
                 prefix={'₪'}
                 required
               />
-              <span />
-            </>
           )}
         />
-      </div>
-      <div className={styles.field}>
-        <label>Date</label>
+      </Field>
+      <Field label="Date">
         <Controller
           control={control}
           name="date"
           rules={{ required: true }}
           defaultValue={transactionConfig?.date}
           render={({ field: { onChange, value } }) => (
-            <>
               <input
                 type="date"
                 onChange={(e) => {
@@ -94,22 +90,19 @@ export default function Form({
                 value={value && format(value, 'yyyy-MM-dd')}
                 required
               />
-              <span />
-            </>
           )}
         />
-      </div>
-      <div className={styles.field}>
-        <label>Type</label>
-        <input
-          id="type"
-          type="text"
-          placeholder="Salary"
-          defaultValue={transactionConfig?.type}
-          required
-        />
-        <span />
-      </div>
+      </Field>
+      <Field label="type">
+          <input
+            id="type"
+            type="text"
+            placeholder="Salary"
+            defaultValue={transactionConfig?.type}
+            required
+            {...register('type', { required: true })}
+          />
+      </Field>
       <div className={overrideStyles.repeatedField}>
         <label htmlFor="repeated">Repeated</label>
         <input
@@ -140,8 +133,7 @@ export default function Form({
           <option value="year">years</option>
         </select>
       </div>
-      <div className={styles.field}>
-        <label>End Date</label>
+      <Field label="End Date">
         <Controller
           control={control}
           name="endDate"
@@ -169,9 +161,11 @@ export default function Form({
             </>
           )}
         />
-      </div>
+      </Field>
       <hr />
-      <Button text="submit" primary className={styles.submitButton} />
+      <ButtonsGroup centered className={overrideStyles.submitGroupButton}>
+        <Button text="Submit" primary />
+      </ButtonsGroup>
     </form>
   )
 }

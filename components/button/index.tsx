@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import styles from './Button.module.scss'
 
-interface ButtonProps extends React.ComponentProps<"button">    {
+interface ButtonProps extends React.ComponentProps<'button'> {
   text?: string
   linkTheme?: boolean
   bordered?: boolean
@@ -42,6 +42,14 @@ export default function Button({
   )
 }
 
-export function ButtonsGroup({ children }: React.PropsWithChildren<{}>) {
-  return <div className={styles.group}>{children}</div>
+export function ButtonsGroup({
+  children,
+  className,
+  centered,
+}: React.PropsWithChildren<{ className?: string; centered?: boolean }>) {
+  return (
+    <div className={classnames(styles.group, { [styles.centered]: centered }, className)}>
+      {children}
+    </div>
+  )
 }

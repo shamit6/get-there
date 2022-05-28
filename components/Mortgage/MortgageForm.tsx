@@ -44,17 +44,14 @@ function MortgageForm() {
             rules={{ required: true }}
             defaultValue={currentMortgage?.fundingRate}
             render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <NumberFormat
-                  onValueChange={({ value }) => onChange(value)}
-                  onBlur={onBlur}
-                  value={value}
-                  placeholder="3%"
-                  suffix="%"
-                  required
-                />
-                <span />
-              </>
+              <NumberFormat
+                onValueChange={({ value }) => onChange(value)}
+                onBlur={onBlur}
+                value={value}
+                placeholder="3%"
+                suffix="%"
+                required
+              />
             )}
           />
         </Field>
@@ -83,7 +80,6 @@ function MortgageForm() {
                     </option>
                   ))}
                 </select>
-                <span />
               </>
             )}
           />
@@ -95,18 +91,15 @@ function MortgageForm() {
             rules={{ required: true }}
             defaultValue={currentMortgage?.income}
             render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <NumberFormat
-                  onValueChange={({ value }) => onChange(value)}
-                  onBlur={onBlur}
-                  value={value}
-                  placeholder="income"
-                  prefix="₪"
-                  thousandSeparator
-                  required
-                />
-                <span />
-              </>
+              <NumberFormat
+                onValueChange={({ value }) => onChange(value)}
+                onBlur={onBlur}
+                value={value}
+                placeholder="income"
+                prefix="₪"
+                thousandSeparator
+                required
+              />
             )}
           />
         </Field>
@@ -117,18 +110,15 @@ function MortgageForm() {
             rules={{ required: true }}
             defaultValue={currentMortgage?.marketValue}
             render={({ field: { onChange, onBlur, value } }) => (
-              <>
-                <NumberFormat
-                  onValueChange={({ value }) => onChange(value)}
-                  onBlur={onBlur}
-                  value={value}
-                  placeholder="market value"
-                  prefix="₪"
-                  thousandSeparator
-                  required
-                />
-                <span />
-              </>
+              <NumberFormat
+                onValueChange={({ value }) => onChange(value)}
+                onBlur={onBlur}
+                value={value}
+                placeholder="market value"
+                prefix="₪"
+                thousandSeparator
+                required
+              />
             )}
           />
         </Field>
@@ -139,34 +129,28 @@ function MortgageForm() {
             rules={{ required: true }}
             defaultValue={currentMortgage?.offeringDate}
             render={({ field: { onChange, value } }) => (
-              <>
-                <input
-                  type="date"
-                  onChange={(e) => {
-                    onChange(e.target.valueAsDate)
-                  }}
-                  value={value && format(value, 'yyyy-MM-dd')}
-                  required
-                />
-                <span />
-              </>
+              <input
+                type="date"
+                onChange={(e) => {
+                  onChange(e.target.valueAsDate)
+                }}
+                value={value && format(value, 'yyyy-MM-dd')}
+                required
+              />
             )}
           />
         </Field>
         <Field label="Address">
-          <>
-            <input
-              id="type"
-              type="text"
-              placeholder="Salary"
-              defaultValue={currentMortgage?.address}
-            />
-            <span />
-          </>
+          <input
+            id="type"
+            type="text"
+            placeholder="address"
+            defaultValue={currentMortgage?.address}
+          />
         </Field>
       </Section>
       <MortgageSummerySection />
-      <ButtonsGroup>
+      <ButtonsGroup centered>
         <Button
           text="Amortization Schedule"
           onClick={() => {
@@ -180,12 +164,12 @@ function MortgageForm() {
           tabIndex={1}
         />
         <Button text="submit" primary className={styles.submitButton} />
+        {amortizationSchedule && (
+          <MortgagePaymentsCharts
+            mortgagePaymentsSchedule={amortizationSchedule}
+          />
+        )}
       </ButtonsGroup>
-      {amortizationSchedule && (
-        <MortgagePaymentsCharts
-          mortgagePaymentsSchedule={amortizationSchedule}
-        />
-      )}
     </form>
   )
 }
