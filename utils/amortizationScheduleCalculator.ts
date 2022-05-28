@@ -136,16 +136,6 @@ export function calcProgramAmortizationSchedule(
             returnType,
           }) || 0
       }
-      // else {
-      //   monthlyPayment = calcMonthlyPaymentToShortenDuration(monthlyPayment, {
-      //     amount: currentPrincipalBalanceInStartPeriond - principalPayment,
-      //     interest,
-      //     periodInMonths: periodInMonths - currentMonth,
-      //     returnType,
-      //   })
-      //   console.log('monthlyPayment', monthlyPayment);
-
-      // }
     }
 
     const totalPayment = interestPayment + principalPayment

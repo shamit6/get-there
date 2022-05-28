@@ -9,34 +9,36 @@
   }
   
   &.submitted {
-    input:required:invalid {
-      outline: none;
-      border-color: #c00000;
-      box-shadow: inset 0px 0px 0px 1px #c00000;
-    }
-    
-    input:required:invalid + span {
-      position: absolute;
-    }
-    
-    input:required:invalid + span::after {
-      content: '!';
-      top: 0.4em;
-      position: absolute;
-      right: 1.5em;
-      color: #c00000;
-      border: #c00000 solid 1px;
-      border-radius: 50%;
-      padding: 0 0.4em;
-      font-size: 1em;
-      font-weight: 700;
+    input, select {
+      &:required:invalid {
+        outline: none;
+        border-color: #c00000;
+        box-shadow: inset 0px 0px 0px 1px #c00000;
+      }
+      
+      &:required:invalid + span {
+        position: absolute;
+      }
+      
+      &:required:invalid + span::after {
+        content: '!';
+        top: 0.4em;
+        position: absolute;
+        right: 1.5em;
+        color: #c00000;
+        border: #c00000 solid 1px;
+        border-radius: 50%;
+        padding: 0 0.4em;
+        font-size: 1em;
+        font-weight: 700;
+      }
     }
   }
-
+  
   .submitButton {
     align-self: center;
     margin-top: 1em;
-    font-size: 1em;
+    // font-size: 1em;
     margin: auto;
   }
 }
@@ -99,5 +101,31 @@
   div {
     width: 9.1667em;
     padding: 0.532em;
+  }
+}
+
+.section {
+  padding: 0 0 0.5em 1em;
+  border: 1px #80808080 solid;
+  margin-bottom: 1em;
+  border-radius: 1em;  
+  
+  >label {
+    padding: 0.5em 0 0 0.2em;
+    display: block;
+    font-size: 1.2em;
+    margin-bottom: -0.2em;
+    text-decoration: underline;
+    text-underline-position: from-font;
+  }
+  
+  .sectionItems {
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content;
+
+    &.vertical {
+      flex-direction: column;
+    }
   }
 }

@@ -58,7 +58,7 @@ export default function MortgageProgram({
           <NumberFormat
             placeholder="amout"
             value={mortgageProgram.amount || ''}
-            thousandSeparator={true}
+            thousandSeparator
             prefix="₪"
             onValueChange={({ value }) => {
               setMortgageProgram({ ...mortgageProgram, amount: Number(value) })
@@ -108,10 +108,10 @@ export default function MortgageProgram({
             value={mortgageProgram.type}
           >
             <option value={MortgageType.LINKED_FIXED}>
-              {MortgageType.LINKED_FIXED}
+              linked fixed
             </option>
             <option value={MortgageType.NON_LINKED_FIXED}>
-              {MortgageType.NON_LINKED_FIXED}
+              non-linked fixed
             </option>
           </select>
         </Field>

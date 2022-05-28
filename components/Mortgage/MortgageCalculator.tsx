@@ -1,43 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import Button from 'components/button'
+import React, { useState } from 'react'
+import Button, { ButtonsGroup } from 'components/button'
 import Add from 'components/button/plus.svg'
-import { calcTotalSummery, generateNewMortageCourse } from 'utils/mortgageCalculator'
-import {
-  CalculatedMortgageProgram,
-  MortgageCourse,
-  CalculatedMortgageSummery,
-} from 'utils/types'
+import { generateNewMortageCourse } from 'utils/mortgageCalculator'
+import { CalculatedMortgageProgram } from 'utils/types'
 import MortgageCourseCompnent from './MortgageCourse'
 import styles from './Mortgage.module.scss'
-import {
-  AmortizationScheduleTransaction,
-  calcAmortizationSchedule,
-} from 'utils/amortizationScheduleCalculator'
-import MortgageSummerySection from './MortgageSummerySection'
-import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
-import { remove } from 'lodash'
+import { Section } from 'components/Field'
 
 export default function Mortgage() {
   const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
-  console.log('currentMortgagecurrentMortgage', currentMortgage);
-  
+
   const mortgageCourses = currentMortgage?.courses || []
-  const [mortgageSummery, setMortgageSummery] =
-    useState<CalculatedMortgageSummery>()
   const [programToFocus, setProgramToFocus] = useState(0)
 
-  useEffect(() => {
-    if (mortgageCourses.length > 0) {
-      setMortgageSummery(calcTotalSummery(mortgageCourses))
-    }
-  }, [mortgageCourses])
-
-  const [amortizationSchedule, setAmortizationSchedule] =
-    useState<AmortizationScheduleTransaction[]>()
-
   return (
-    <>
+    <Section label="Courses" direction="column">
       {mortgageCourses.map((course, i) => (
         <MortgageCourseCompnent
           key={course.id}
@@ -62,26 +40,13 @@ export default function Mortgage() {
               const courses = prevState?.courses!
               return {
                 ...prevState,
-                courses: [
-                  ...courses.slice(0, i),
-                  ...courses.slice(i + 1),
-                ],
+                courses: [...courses.slice(0, i), ...courses.slice(i + 1)],
               }
             })
           }}
         />
       ))}
-      <MortgageSummerySection mortgageSummery={mortgageSummery} />
-      <div className={styles.actionBar}>
-        <Button
-          text="Amortization Schedule"
-          onClick={() => {
-            setAmortizationSchedule(calcAmortizationSchedule(mortgageCourses))
-          }}
-          bordered
-          linkTheme
-          tabIndex={1}
-        />
+      <ButtonsGroup>
         <Button
           text="Add program"
           onClick={() => {
@@ -89,10 +54,7 @@ export default function Mortgage() {
               const courses = prevState?.courses!
               return {
                 ...prevState,
-                courses: [
-                  ...courses,
-                  generateNewMortageCourse(),
-                ],
+                courses: [...courses, generateNewMortageCourse()],
               }
             })
             setProgramToFocus(mortgageCourses.length)
@@ -100,14 +62,10 @@ export default function Mortgage() {
           bordered
           linkTheme
           icon={<Add />}
+          type="button"
           tabIndex={2}
         />
-      </div>
-      {amortizationSchedule && (
-        <MortgagePaymentsCharts
-          mortgagePaymentsSchedule={amortizationSchedule}
-        />
-      )}
-    </>
+      </ButtonsGroup>
+    </Section>
   )
 }

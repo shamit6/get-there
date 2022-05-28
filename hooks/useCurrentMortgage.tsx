@@ -2,19 +2,20 @@ import React, { createContext, useState, useContext, ReactElement } from 'react'
 import { Mortgage } from 'utils/types'
 
 interface CurrentMortgageContextProps {
-  currentMortgage: Partial<Mortgage> | null
-  setCurrentMortgage:  React.Dispatch<React.SetStateAction<Partial<Mortgage> | null>>
+  currentMortgage: Partial<Mortgage>
+  setCurrentMortgage:  React.Dispatch<React.SetStateAction<Partial<Mortgage>>>
 }
 
 const CurrentMortgageContext = createContext<CurrentMortgageContextProps>({
-  currentMortgage: null,
-  setCurrentMortgage: () => null,
+  currentMortgage: {},
+  setCurrentMortgage: () => {},
 })
 
 export function CurrentMortgageProvider({
   children,
-}: React.PropsWithChildren<{}>): ReactElement {
-  const [value, setValue] = useState<Partial<Mortgage> | null>(null)
+  mortgage
+}: React.PropsWithChildren<{mortgage: Partial<Mortgage>}>): ReactElement {
+  const [value, setValue] = useState<Partial<Mortgage>>(mortgage)
 
   return (
     <CurrentMortgageContext.Provider

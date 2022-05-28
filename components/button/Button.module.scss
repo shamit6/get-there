@@ -29,3 +29,9 @@
     margin-right: 0.4em;
   }
 }
+
+.group {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-right: 1em;
+}

@@ -1,17 +1,3 @@
-// import {
-//   Mortgage as MortgagePrisma,
-//   MortgageCourse as MortgageCoursePrisma,
-//   MortgageEarlyPayoffPurpose,
-//   MortgageEarlyPayoffType,
-// } from 'utils/prisma'
-
-// export {
-//   ReturnType,
-//   MortgageEarlyPayoffType,
-//   MortgageType,
-//   MortgageEarlyPayoffPurpose,
-// } from 'utils/prisma'
-
 import type {
   // User,
   Mortgage as MortgagePrisma,
@@ -27,17 +13,14 @@ import {
 export type {
   // BalanceStatus,
   User,
-  // TransactionConfig,
-  // Mortgage,
-  // MortgageCourse,
 } from '@prisma/client'
 export {
+  Bank,
   MortgageType,
   ReturnType,
   MortgageEarlyPayoffType,
   MortgageEarlyPayoffPurpose,
 } from '@prisma/client'
-
 
 export enum TimePeriod {
   WEEK = 'week',
@@ -74,36 +57,6 @@ export interface BalanceStatus {
   amount: number
 }
 
-export enum MortgageTypeEnum {
-  NON_LINKED_FIXED = 'non-linked fixed',
-  LINKED_FIXED = 'linked fixed',
-}
-
-export enum MortgageEarlyPayoffTypeEnum {
-  COMPLETE = 'complete',
-  PARTIAL = 'partial',
-}
-
-export enum MortgageEarlyPayoffPurposeEnum {
-  SHORTENING_DURATION = 'shortening-duration',
-  REDUCING_PAYMENT = 'reducing-payment',
-}
-
-// export type ReturnType = 'Spitzer' | 'Bullet' | 'CPM'
-
-// export interface MortgageCourse {
-//   amount: number
-//   type: MortgageType
-//   returnType: ReturnType
-//   periodInMonths: number
-//   interest: number
-//   expectedCpiChange?: number
-//   earlyPayoffType?: MortgageEarlyPayoffType
-//   earlyPayoffMonths?: number
-//   earlyPayoffAmount?: number
-//   earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
-// }
-
 export interface MortgageCourse
   extends Omit<
     MortgageCoursePrisma,
@@ -122,9 +75,10 @@ export interface MortgageCourse
   earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
 }
 
-export interface Mortgage extends Omit<MortgagePrisma, 'userEmail' | 'id'> {
+export interface Mortgage extends Omit<MortgagePrisma, 'userEmail' | 'id' | 'address'> {
   id: string
   courses: MortgageCourse[]
+  address?: string
 }
 export interface CalculatedMortgageProgram extends MortgageCourse {
   monthlyPayment: number
@@ -140,13 +94,4 @@ export interface CalculatedMortgageSummery {
   interestPayment: number
   totalPayment: number
   currencyRatio: number
-}
-
-export enum Bank {
-  POALIM = 'POALIM',
-  DISCOUNT = 'DISCOUNT',
-  LEUMI = 'LEUMI',
-  MIZRAHI = 'MIZRAHI',
-  YAHAV = 'YAHAV',
-  JERUSALEM = 'JERUSALEM',
 }

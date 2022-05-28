@@ -1,7 +1,7 @@
 .mortgageProgramRow {
-  margin-bottom: 1em;
-  padding: 0 0 0.5em 1em;
-  border: 1px #80808080 solid;
+  // margin-bottom: 1em;
+  // padding: 0 0 0.5em 1em;
+  // border: 1px #80808080 solid;
   border-radius: 1em;
   width: fit-content;
 }
@@ -12,11 +12,6 @@
 }
 
 .mortgageProgramAdvance {
-}
-.mortgageSummery {
-  @extend .mortgageProgramRow;
-  display: flex;
-  flex-wrap: wrap;
 }
 
 .advanceOptionCollapse {
@@ -55,7 +50,8 @@
 
 .actionBar {
   display: flex;
-  justify-content: space-between;
+  flex-direction: row-reverse;
+  margin-right: 1em;
 }
 
 .amortizationCharts {

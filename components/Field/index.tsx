@@ -9,7 +9,7 @@ export default function Field({
 }: {
   label?: string
   horizontal?: boolean
-  children: ReactChild
+  children?: ReactChild
 }) {
   return (
     <div
@@ -17,6 +17,25 @@ export default function Field({
     >
       {label && <label>{label}</label>}
       {children}
+    </div>
+  )
+}
+
+export function Section({
+  label,
+  direction,
+  children,
+}: React.PropsWithChildren<{ label?: string; direction?: 'column' | 'row' }>) {
+  return (
+    <div className={classnames(styles.section)}>
+      {label && <label>{label}</label>}
+      <div
+        className={classnames(styles.sectionItems, {
+          [styles.vertical]: direction === 'column',
+        })}
+      >
+        {children}
+      </div>
     </div>
   )
 }

@@ -1,16 +1,29 @@
-import Field from 'components/Field'
+import Field, { Section } from 'components/Field'
 import TextNumber from 'components/textNumber'
-import React from 'react'
+import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
+import React, { useEffect, useState } from 'react'
+import { calcTotalSummery } from 'utils/mortgageCalculator'
 import { CalculatedMortgageSummery } from 'utils/types'
-import styles from './Mortgage.module.scss'
 
-export default function MortgageSummerySection({
-  mortgageSummery,
-}: {
-  mortgageSummery?: CalculatedMortgageSummery
-}) {
+export default function MortgageSummerySection() {
+  const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
+
+  const mortgageCourses = currentMortgage?.courses || []
+  const [mortgageSummery, setMortgageSummery] =
+    useState<CalculatedMortgageSummery>()
+
+  useEffect(() => {
+    if (mortgageCourses.length > 0) {
+      setMortgageSummery(calcTotalSummery(mortgageCourses))
+    }
+  }, [mortgageCourses])
+
+  if (!mortgageSummery) {
+    return null
+  }
+
   return (
-    <div className={styles.mortgageSummery}>
+    <Section label="Total Payment">
       <Field label="Loan amount">
         <div>
           <TextNumber
@@ -46,7 +59,7 @@ export default function MortgageSummerySection({
       <Field label="Total payment">
         <div>
           <TextNumber
-            value={mortgageSummery?.currencyRatio.toFixed(2)}
+            value={mortgageSummery?.totalPayment.toFixed(2)}
             prefix="₪"
           />
         </div>
@@ -59,6 +72,6 @@ export default function MortgageSummerySection({
           />
         </div>
       </Field>
-    </div>
+    </Section>
   )
 }

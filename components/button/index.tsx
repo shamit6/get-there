@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import styles from './Button.module.scss'
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ComponentProps<"button">    {
   text?: string
   linkTheme?: boolean
   bordered?: boolean
@@ -40,4 +40,8 @@ export default function Button({
       {text || children}
     </button>
   )
+}
+
+export function ButtonsGroup({ children }: React.PropsWithChildren<{}>) {
+  return <div className={styles.group}>{children}</div>
 }
