@@ -32,21 +32,26 @@ export default function Home() {
   const { transactions } = useTransaction()
 
   if (!transactions || !balanceStatuses) {
-    return <Loader />
+    return (
+      <Layout>
+        <Loader />
+      </Layout>
+    )
   } else if (balanceStatuses.length === 0) {
     return <Layout>Empty State</Layout>
   }
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
-      isAfter(createdAt, subMonths(new Date(), 2)) ||
-      index === 0
+      isAfter(createdAt, subMonths(new Date(), 2)) || index === 0
   )
 
-  const balanceGraphData = lastBalanceStatuses?.map(({ amount, createdAt }) => ({
-    x: format(createdAt, 'dd/MM/yyyy'),
-    y: amount,
-  }))
+  const balanceGraphData = lastBalanceStatuses?.map(
+    ({ amount, createdAt }) => ({
+      x: format(createdAt, 'dd/MM/yyyy'),
+      y: amount,
+    })
+  )
 
   const allTransactionsOccurances = generateTransactionConfigsOccurances(
     transactions,
@@ -55,16 +60,12 @@ export default function Home() {
   )
   const transactionToView = addBalanaceToSortTransaction(
     allTransactionsOccurances.filter(
-      ({ date }) =>
-        date.getTime() >=
-        lastBalanceStatuses[0].createdAt.getTime()
+      ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
     ),
     lastBalanceStatuses[0]
   )
 
-  const transactionsGraphData = [
-    balanceGraphData![0],
-  ].concat(
+  const transactionsGraphData = [balanceGraphData![0]].concat(
     transactionToView.map(({ balance, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
       y: balance!,

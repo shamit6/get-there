@@ -11,9 +11,13 @@
     "generateKey": "jose newkey -s 256 -t oct -a HS512"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.8.2",
     "@nivo/bar": "^0.73.1",
     "@nivo/core": "^0.73.0",
     "@nivo/line": "^0.73.0",
+    "@popperjs/core": "^2.11.5",
     "@prisma/client": "^3.14.0",
     "@svgr/webpack": "^5.5.0",
     "axios": "^0.21.1",
@@ -30,6 +34,7 @@
     "react-hook-form": "^7.10.1",
     "react-infinite-scroller": "^1.2.4",
     "react-number-format": "^4.6.4",
+    "react-popper": "^2.3.0",
     "react-vertical-timeline-component": "^3.3.3",
     "sass": "^1.35.2",
     "swr": "^1.0.1"

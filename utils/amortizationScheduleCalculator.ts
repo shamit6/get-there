@@ -97,7 +97,9 @@ export function calcProgramAmortizationSchedule(
   let principalBalanceInStartPeriond = amount
   const monthlyInterest = interest / (100 * 12)
   let monthlyCPIInterest =
-    type === MortgageType.LINKED_FIXED ? (expectedCpiChange ?? 0) / (100 * 12) : 0
+    type === MortgageType.LINKED_FIXED
+      ? (expectedCpiChange ?? 0) / (100 * 12)
+      : 0
 
   let monthlyPayment = calcMonthPayment({ ...programData }) || 0
   const payments: AmortizationScheduleTransaction[] = []

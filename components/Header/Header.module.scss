@@ -1,0 +1,61 @@
+.header {
+  grid-row-start: 1;
+  grid-column-start: 1;
+  grid-column-end: 4;
+
+  display: flex;
+  background-color: #041403c4;
+  color: white;
+  padding: 0.5em;
+}
+
+.logutButton {
+  color: white;
+}
+
+.login {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.user {
+  border-width: 2px;
+  border-radius: 3em;
+  border: solid 1px gray;
+  padding: 0.2em;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  .avatar {
+    border-radius: 50%;
+    margin-right: 3px;
+  }
+
+  .name {
+    margin: auto 0.2em;
+  }
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  // .balanceDisclaimer {
+  //   cursor: pointer;
+  //   font-size: 0.8em;
+  //   opacity: 0.8;
+  //   margin-left: auto;
+  // }
+  .link {
+    text-decoration: none;
+    margin-right: 1em;
+    &.selected {
+      text-decoration: underline;
+      text-underline-position: under;
+    }
+  }
+}

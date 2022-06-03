@@ -75,7 +75,8 @@ export interface MortgageCourse
   earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
 }
 
-export interface Mortgage extends Omit<MortgagePrisma, 'userEmail' | 'id' | 'address'> {
+export interface Mortgage
+  extends Omit<MortgagePrisma, 'userEmail' | 'id' | 'address'> {
   id: string
   courses: MortgageCourse[]
   address?: string
