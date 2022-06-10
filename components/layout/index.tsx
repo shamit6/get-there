@@ -3,8 +3,11 @@ import styles from './Layout.module.scss'
 import { ReactNode } from 'react'
 import Header from 'components/Header/Header'
 import UpdateBalance from 'components/UpdateBalance'
+import { useRouter } from 'next/router'
 
 export default function Layout({ children }: { children: ReactNode }) {
+  const router = useRouter()
+
   return (
     <>
       <Head>
@@ -18,10 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       </Head>
       <div className={styles.wrapper}>
         <Header />
-        <div >
-
-        <UpdateBalance />
-        </div>
+        <div>{router.pathname === '/' && <UpdateBalance />}</div>
         <div className={styles.content}>{children}</div>
       </div>
       <div id="modal-root"></div>

@@ -71,13 +71,13 @@ export default function useTransactions() {
         ? '/api/transaction-configs'
         : `/api/transaction-configs/${id}`
 
-      fetch(url, {
+      await fetch(url, {
         method: isNewTransaction ? 'POST' : 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(transactionData),
-      }).then(() => {
-        return mutate()
       })
+ 
+      await mutate()
     },
     []
   )

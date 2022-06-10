@@ -1,19 +1,22 @@
 import Field, { Section } from 'components/Field'
 import TextNumber from 'components/textNumber'
-import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
 import React, { useEffect, useState } from 'react'
+import { useWatch } from 'react-hook-form'
 import { calcTotalSummery } from 'utils/mortgageCalculator'
 import { CalculatedMortgageSummery } from 'utils/types'
 
 export default function MortgageSummerySection() {
-  const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
-
-  const mortgageCourses = currentMortgage?.courses || []
+  const mortgageCourses = useWatch({ name: 'courses' })
   const [mortgageSummery, setMortgageSummery] =
     useState<CalculatedMortgageSummery>()
 
   useEffect(() => {
-    if (mortgageCourses.length > 0) {
+    if (
+      mortgageCourses?.length > 0 &&
+      mortgageCourses.every(
+        (course: any) => course.periodInMonths && course.interest
+      )
+    ) {
       setMortgageSummery(calcTotalSummery(mortgageCourses))
     }
   }, [mortgageCourses])

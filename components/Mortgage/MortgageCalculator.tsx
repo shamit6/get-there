@@ -2,47 +2,28 @@ import React, { useState } from 'react'
 import Button, { ButtonsGroup } from 'components/button'
 import Add from 'components/button/plus.svg'
 import { generateNewMortageCourse } from 'utils/mortgageCalculator'
-import { CalculatedMortgageProgram } from 'utils/types'
-import MortgageCourseCompnent from './MortgageCourse'
-import styles from './Mortgage.module.scss'
-import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
+import MortgageCourseComponent from './MortgageCourse'
 import { Section } from 'components/Field'
+import { useFieldArray, useFormContext } from 'react-hook-form'
 
 export default function Mortgage() {
-  const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
-
-  const mortgageCourses = currentMortgage?.courses || []
+  const {control} = useFormContext();  
   const [programToFocus, setProgramToFocus] = useState(0)
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
+    control,
+    name: "courses",
+  });
 
   return (
     <Section label="Courses" direction="column">
-      {mortgageCourses.map((course, i) => (
-        <MortgageCourseCompnent
-          key={course.id}
+      {fields.map(({id}, i) => (
+        <MortgageCourseComponent
+          key={id}
+          index={i}
           isFocus={i === programToFocus}
-          programData={course}
-          onProgramCalc={(programData: CalculatedMortgageProgram) => {
-            setCurrentMortgage((prevState) => {
-              const courses = prevState?.courses!
-              return {
-                ...prevState,
-                courses: [
-                  ...courses.slice(0, i),
-                  programData,
-                  ...courses.slice(i + 1),
-                ],
-              }
-            })
-          }}
           onProgramRemove={() => {
-            setProgramToFocus(Math.min(i, mortgageCourses.length - 2))
-            setCurrentMortgage((prevState) => {
-              const courses = prevState?.courses!
-              return {
-                ...prevState,
-                courses: [...courses.slice(0, i), ...courses.slice(i + 1)],
-              }
-            })
+            remove(i)
+            setProgramToFocus(Math.min(i, fields.length - 2))
           }}
         />
       ))}
@@ -50,14 +31,8 @@ export default function Mortgage() {
         <Button
           text="Add program"
           onClick={() => {
-            setCurrentMortgage((prevState) => {
-              const courses = prevState?.courses!
-              return {
-                ...prevState,
-                courses: [...courses, generateNewMortageCourse()],
-              }
-            })
-            setProgramToFocus(mortgageCourses.length)
+            setProgramToFocus(fields.length)
+            append([generateNewMortageCourse()])
           }}
           bordered
           linkTheme

@@ -37,7 +37,6 @@ export default function Form({
         newTransactionData.periodAmount = Number(periodAmount)
         newTransactionData.endDate = endDate
       }
-console.log('newTransactionData', newTransactionData);
 
       upsertTrasaction(newTransactionData)
 

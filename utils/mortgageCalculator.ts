@@ -41,7 +41,7 @@ export function generateNewMortageCourse(): MortgageCourse {
     amount: 100000,
     type: 'NON_LINKED_FIXED',
     returnType: 'Shpitzer',
-    periodInMonths: 2400,
+    periodInMonths: 240,
     interest: 3,
   }
 }

@@ -1,7 +1,7 @@
 import MortgageComp from './MortgageCalculator'
 import classNames from 'classnames'
 import styles from 'components/Field/Field.module.scss'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, FormProvider } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import Button, { ButtonsGroup } from 'components/button'
 import { useCurrentMortgage } from 'hooks/useCurrentMortgage'
@@ -17,24 +17,39 @@ import {
 import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 
 function MortgageForm() {
-  const { register, handleSubmit, watch, control, formState } = useForm({
+  const { currentMortgage } = useCurrentMortgage()
+  
+  const formsMethods  = useForm({
     shouldUseNativeValidation: false,
+    defaultValues: currentMortgage
   })
-  const { currentMortgage, setCurrentMortgage } = useCurrentMortgage()
+  
+  const { register, handleSubmit, watch, control, formState } = formsMethods
   const [amortizationSchedule, setAmortizationSchedule] =
     useState<AmortizationScheduleTransaction[]>()
 
+  const courses = watch('courses')
+
   return (
+    <FormProvider {...formsMethods}>
     <form
       className={classNames(styles.form, {
         [styles.submitted]: formState.isSubmitted,
       })}
       style={{ flexDirection: 'column', width: 'fit-content' }}
-      onSubmit={handleSubmit((data) => {
-        console.log('submitred', data)
+      onSubmit={handleSubmit(async (data) => {
+        const url = '/api/mortgages'
+        
+        // await fetch(url, {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+          
+        //   // @ts-ignore
+        //   body: JSON.stringify({...data, courses: currentMortgage.courses}),
+        // })
       })}
       noValidate
-    >
+      >
       <MortgageComp />
       <Section label="Propose Details">
         <Field label="Funding Rate">
@@ -45,22 +60,22 @@ function MortgageForm() {
             defaultValue={currentMortgage?.fundingRate}
             render={({ field: { onChange, onBlur, value } }) => (
               <NumberFormat
-                onValueChange={({ value }) => onChange(value)}
-                onBlur={onBlur}
-                value={value}
+              onValueChange={({ floatValue }) => onChange(floatValue)}
+              onBlur={onBlur}
+              value={value}
                 placeholder="3%"
                 suffix="%"
                 required
-              />
-            )}
-          />
+                />
+                )}
+                />
         </Field>
         <Field label="Bank">
           <Controller
             control={control}
             name="bank"
             rules={{ required: true }}
-            defaultValue={currentMortgage?.bank ?? ''}
+            defaultValue={currentMortgage?.bank}
             render={({ field: { onChange, onBlur, value } }) => (
               <>
                 <select
@@ -70,7 +85,7 @@ function MortgageForm() {
                   onBlur={onBlur}
                   value={value}
                   required
-                >
+                  >
                   <option value="" disabled hidden>
                     Select a bank
                   </option>
@@ -92,16 +107,16 @@ function MortgageForm() {
             defaultValue={currentMortgage?.income}
             render={({ field: { onChange, onBlur, value } }) => (
               <NumberFormat
-                onValueChange={({ value }) => onChange(value)}
-                onBlur={onBlur}
-                value={value}
-                placeholder="income"
-                prefix="₪"
-                thousandSeparator
-                required
+              onValueChange={({ floatValue }) => onChange(floatValue)}
+              onBlur={onBlur}
+              value={value}
+              placeholder="income"
+              prefix="₪"
+              thousandSeparator
+              required
               />
-            )}
-          />
+              )}
+              />
         </Field>
         <Field label="Market Value">
           <Controller
@@ -111,34 +126,33 @@ function MortgageForm() {
             defaultValue={currentMortgage?.marketValue}
             render={({ field: { onChange, onBlur, value } }) => (
               <NumberFormat
-                onValueChange={({ value }) => onChange(value)}
-                onBlur={onBlur}
-                value={value}
-                placeholder="market value"
-                prefix="₪"
-                thousandSeparator
-                required
+              onValueChange={({ floatValue }) => onChange(floatValue)}
+              onBlur={onBlur}
+              value={value}
+              placeholder="market value"
+              prefix="₪"
+              thousandSeparator
+              required
               />
-            )}
-          />
+              )}
+              />
         </Field>
         <Field label="Offering Date">
           <Controller
             control={control}
             name="offeringDate"
             rules={{ required: true }}
-            defaultValue={currentMortgage?.offeringDate}
             render={({ field: { onChange, value } }) => (
               <input
-                type="date"
-                onChange={(e) => {
-                  onChange(e.target.valueAsDate)
-                }}
-                value={value && format(value, 'yyyy-MM-dd')}
-                required
+              type="date"
+              onChange={(e) => {
+                onChange(e.target.valueAsDate)
+              }}
+              value={value && format(value, 'yyyy-MM-dd')}
+              required
               />
-            )}
-          />
+              )}
+              />
         </Field>
         <Field label="Address">
           <input
@@ -146,7 +160,7 @@ function MortgageForm() {
             type="text"
             placeholder="address"
             defaultValue={currentMortgage?.address}
-          />
+            />
         </Field>
       </Section>
       <MortgageSummerySection />
@@ -155,22 +169,23 @@ function MortgageForm() {
           text="Amortization Schedule"
           onClick={() => {
             setAmortizationSchedule(
-              calcAmortizationSchedule(currentMortgage?.courses!)
-            )
-          }}
-          type="button"
-          bordered
-          linkTheme
-          tabIndex={1}
-        />
+              calcAmortizationSchedule(courses!)
+              )
+            }}
+            type="button"
+            bordered
+            linkTheme
+            tabIndex={1}
+            />
         <Button text="submit" primary className={styles.submitButton} />
-        {amortizationSchedule && (
-          <MortgagePaymentsCharts
-            mortgagePaymentsSchedule={amortizationSchedule}
-          />
-        )}
       </ButtonsGroup>
+      {amortizationSchedule && (
+        <MortgagePaymentsCharts
+        mortgagePaymentsSchedule={amortizationSchedule}
+        />
+        )}
     </form>
+        </FormProvider>
   )
 }
 

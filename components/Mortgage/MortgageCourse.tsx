@@ -16,22 +16,21 @@ import {
 } from 'utils/types'
 import styles from './Mortgage.module.scss'
 import { isMortgageCourseCpiLinked } from 'utils/mortgageCalculator'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 
 export default function MortgageProgram({
-  programData,
-  onProgramCalc,
   onProgramRemove,
   isFocus,
+  index,
 }: {
-  programData: MortgageCourse
-  onProgramCalc(data: CalculatedMortgageProgram): void
   onProgramRemove(): void
   isFocus: boolean
+  index: number
 }) {
-  const [mortgageProgram, setMortgageProgram] =
-    useState<MortgageCourse>(programData)
+  const { control, register, setFocus } = useFormContext()
+  const course = useWatch({ name: `courses.${index}` })
   const [calculatedMortgageProgram, setCalculatedMortgageProgram] = useState(
-    calcDisplayedMortgageProgram(programData)
+    {} as CalculatedMortgageProgram
   )
   const [isAdvanceOptionsOpen, setIsAdvanceOptionsOpen] = useState(false)
   const { monthlyPayment, earlyPayoffAmount } = calculatedMortgageProgram
@@ -44,93 +43,114 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    if (mortgageProgram.periodInMonths && mortgageProgram.interest) {
-      const calculatedMortgageProgram =
-        calcDisplayedMortgageProgram(mortgageProgram)
+    if (course.periodInMonths && course.interest) {    
+      const calculatedMortgageProgram = calcDisplayedMortgageProgram(course)
       setCalculatedMortgageProgram(calculatedMortgageProgram)
-      onProgramCalc(calculatedMortgageProgram)
     }
-  }, [mortgageProgram])
+  }, [course])
   return (
     <div className={styles.mortgageProgramRow}>
       <div className={styles.mortgageProgramBasic}>
         <Field label="Amount">
-          <NumberFormat
-            placeholder="amout"
-            value={mortgageProgram.amount || ''}
-            thousandSeparator
-            prefix="₪"
-            onValueChange={({ value }) => {
-              setMortgageProgram({ ...mortgageProgram, amount: Number(value) })
-            }}
-            tabIndex={1}
-            getInputRef={inputRef}
+          <Controller
+            control={control}
+            name={`courses.${index}.amount`}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur } }) => (
+              <NumberFormat
+                onValueChange={({ floatValue }) => {
+                  onChange(floatValue)
+                }}
+                onBlur={onBlur}
+                defaultValue={course.amount}
+                thousandSeparator
+                placeholder="amount"
+                suffix="₪"
+                required
+                tabIndex={1}
+                getInputRef={inputRef}
+              />
+            )}
           />
         </Field>
         <Field label="Period in months">
-          <input
-            required
-            placeholder="Period in months"
-            value={mortgageProgram.periodInMonths || ''}
-            type="number"
-            onChange={(e) => {
-              setMortgageProgram({
-                ...mortgageProgram,
-                periodInMonths: Number(e.target.value),
-              })
-            }}
-            tabIndex={1}
+          <Controller
+            control={control}
+            name={`courses.${index}.periodInMonths`}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <NumberFormat
+                onValueChange={({ floatValue }) => onChange(floatValue)}
+                onBlur={onBlur}
+                defaultValue={course.periodInMonths}
+                thousandSeparator
+                required
+                tabIndex={1}
+                placeholder="period in months"
+              />
+            )}
           />
         </Field>
         <Field label="Interest">
-          <NumberFormat
-            placeholder="interest"
-            suffix="%"
-            value={mortgageProgram.interest || ''}
-            onValueChange={({ value }) => {
-              setMortgageProgram({
-                ...mortgageProgram,
-                interest: Number(value),
-              })
-            }}
-            tabIndex={1}
+          <Controller
+            control={control}
+            name={`courses.${index}.interest`}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <NumberFormat
+                onValueChange={({ floatValue }) => onChange(floatValue)}
+                onBlur={onBlur}
+                defaultValue={course.interest}
+                thousandSeparator
+                required
+                tabIndex={1}
+                placeholder="interest"
+                suffix="%"
+              />
+            )}
           />
         </Field>
         <Field label="Type">
-          <select
-            onChange={(e) => {
-              setMortgageProgram({
-                ...mortgageProgram,
-                type: e.target.value as MortgageType,
-              })
-            }}
-            tabIndex={1}
-            value={mortgageProgram.type}
-          >
-            <option value={MortgageType.LINKED_FIXED}>
-              linked fixed
-            </option>
-            <option value={MortgageType.NON_LINKED_FIXED}>
-              non-linked fixed
-            </option>
-          </select>
+          <Controller
+            control={control}
+            name={`courses.${index}.type`}
+            rules={{ required: true }}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <select
+                tabIndex={1}
+                defaultValue={course.type}
+                onChange={onChange}
+                onBlur={onBlur}
+              >
+                <option value={MortgageType.LINKED_FIXED}>linked fixed</option>
+                <option value={MortgageType.NON_LINKED_FIXED}>
+                  non-linked fixed
+                </option>
+              </select>
+            )}
+          />
         </Field>
         <Field label="Returns type">
-          <select
-            onChange={(e) => {
-              setMortgageProgram({
-                ...mortgageProgram,
-                returnType: e.target.value as ReturnType,
-              })
-            }}
-            tabIndex={1}
-          >
-            <option value={mortgageProgram.returnType}>Spitzer</option>
-          </select>
+          <Controller
+            control={control}
+            name={`courses.${index}.returnType`}
+            rules={{ required: true }}
+            defaultValue={course.returnType}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <select
+                value={value}
+                tabIndex={1}
+                onChange={onChange}
+                onBlur={onBlur}
+              >
+                <option value={ReturnType.Shpitzer}>Spitzer</option>
+              </select>
+            )}
+          />
         </Field>
         <Field label="Monthly payment">
           <div>
-            <TextNumber value={monthlyPayment?.toFixed(0)} prefix="₪" />
+            <TextNumber value={monthlyPayment?.toFixed(0)} suffix="₪" />
           </div>
         </Field>
         <div className={styles.removeButtonContainer}>
@@ -150,6 +170,7 @@ export default function MortgageProgram({
           className={styles.advanceOptionCollapse}
           onClick={() => setIsAdvanceOptionsOpen(!isAdvanceOptionsOpen)}
           tabIndex={1}
+          type="button"
         >
           <Arrow
             className={styles.arrow}
@@ -162,14 +183,8 @@ export default function MortgageProgram({
             <div className={styles.mortgageProgramAdvanceOptionBlock}>
               <Field label="Early payoff" horizontal>
                 <select
-                  value={mortgageProgram.earlyPayoffType!}
-                  onChange={(e) => {
-                    setMortgageProgram({
-                      ...mortgageProgram,
-                      earlyPayoffType: e.target
-                        .value as MortgageEarlyPayoffType,
-                    })
-                  }}
+                  {...register(`courses.${index}.earlyPayoffType`)}
+                  defaultValue={course.earlyPayoffType}
                   tabIndex={1}
                 >
                   <option></option>
@@ -182,49 +197,61 @@ export default function MortgageProgram({
                 </select>
               </Field>
               <Field>
-                <input
-                  placeholder="after x months"
-                  value={mortgageProgram.earlyPayoffMonths || ''}
-                  type="number"
-                  onChange={(e) => {
-                    setMortgageProgram({
-                      ...mortgageProgram,
-                      earlyPayoffMonths: Number(e.target.value),
-                    })
-                  }}
-                  tabIndex={1}
+                <Controller
+                  control={control}
+                  name={`courses.${index}.earlyPayoffMonths`}
+                  rules={{ required: !!course.earlyPayoffType }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <NumberFormat
+                      onValueChange={({ floatValue }) => onChange(floatValue)}
+                      onBlur={onBlur}
+                      defaultValue={course.earlyPayoffMonths}
+                      thousandSeparator
+                      required={!!course.earlyPayoffType}
+                      tabIndex={1}
+                      placeholder="after x months"
+                    />
+                  )}
                 />
               </Field>
               <Field>
-                <NumberFormat
-                  placeholder="Early payoff amount"
-                  value={earlyPayoffAmount?.toFixed(0) || ''}
-                  thousandSeparator={true}
-                  prefix="₪"
-                  disabled={mortgageProgram.earlyPayoffType === MortgageEarlyPayoffType.COMPLETE}
-                  onValueChange={({ value }) => {
-                    setMortgageProgram({
-                      ...mortgageProgram,
-                      earlyPayoffAmount: Number(value),
-                    })
-                  }}
-                  tabIndex={1}
-                  getInputRef={inputRef}
+                <Controller
+                  control={control}
+                  name={`courses.${index}.earlyPayoffAmount`}
+                  rules={{ required: !!course.earlyPayoffType }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <NumberFormat
+                      onValueChange={({ floatValue }) => {
+                        onChange(floatValue)
+                      }}
+                      onBlur={onBlur}
+                      value={
+                        course.earlyPayoffType ===
+                        MortgageEarlyPayoffType.COMPLETE
+                          ? earlyPayoffAmount?.toFixed(0)
+                          : value
+                      }
+                      thousandSeparator
+                      required={!!course.earlyPayoffType}
+                      tabIndex={1}
+                      placeholder="early payoff amount"
+                      suffix="₪"
+                      disabled={
+                        course.earlyPayoffType !==
+                        MortgageEarlyPayoffType.PARTIAL
+                      }
+                    />
+                  )}
                 />
               </Field>
               <Field>
                 <select
-                  value={mortgageProgram.earlyPayoffPurpose!}
-                  onChange={(e) => {
-                    setMortgageProgram({
-                      ...mortgageProgram,
-                      earlyPayoffPurpose: e.target
-                        .value as MortgageEarlyPayoffPurpose,
-                    })
-                  }}
+                  {...register(`courses.${index}.earlyPayoffPurpose`, {
+                    required: !!course.earlyPayoffType,
+                  })}
+                  defaultValue={course.earlyPayoffPurpose}
                   disabled={
-                    mortgageProgram.earlyPayoffType ===
-                    MortgageEarlyPayoffType.COMPLETE
+                    course.earlyPayoffType === MortgageEarlyPayoffType.COMPLETE
                   }
                   tabIndex={1}
                 >
@@ -241,18 +268,21 @@ export default function MortgageProgram({
             </div>
             <div className={styles.mortgageProgramAdvanceOptionBlock}>
               <Field label="CPI interest" horizontal>
-                <NumberFormat
-                  placeholder="interest"
-                  suffix="%"
-                  value={mortgageProgram.expectedCpiChange || ''}
-                  disabled={!isMortgageCourseCpiLinked(mortgageProgram)}
-                  onValueChange={({ floatValue }) => {
-                    setMortgageProgram({
-                      ...mortgageProgram,
-                      expectedCpiChange: floatValue!,
-                    })
-                  }}
-                  tabIndex={1}
+                <Controller
+                  control={control}
+                  name={`courses.${index}.expectedCpiChange`}
+                  defaultValue={course.earlyPayoffAmount}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <NumberFormat
+                      onValueChange={({ floatValue }) => onChange(floatValue)}
+                      onBlur={onBlur}
+                      value={value}
+                      disabled={!isMortgageCourseCpiLinked(course)}
+                      tabIndex={1}
+                      placeholder="CPI interest"
+                      suffix="%"
+                    />
+                  )}
                 />
               </Field>
             </div>

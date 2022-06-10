@@ -67,6 +67,7 @@ export interface MortgageCourse
     | 'earlyPayoffMonths'
     | 'earlyPayoffAmount'
     | 'earlyPayoffPurpose'
+    | 'userEmail'
   > {
   expectedCpiChange?: number
   earlyPayoffType?: MortgageEarlyPayoffType
@@ -77,7 +78,7 @@ export interface MortgageCourse
 
 export interface Mortgage
   extends Omit<MortgagePrisma, 'userEmail' | 'id' | 'address'> {
-  id: string
+  id?: string
   courses: MortgageCourse[]
   address?: string
 }
