@@ -11,19 +11,24 @@ import Button, { ButtonsGroup } from 'components/button'
 import classNames from 'classnames'
 import Field from 'components/Field'
 
+interface TransactionFormProps extends TransactionConfig {
+  repeated: boolean
+}
+
 export default function Form({
   transactionConfig,
 }: {
   transactionConfig?: TransactionConfig
 }) {
-  const { register, handleSubmit, watch, control, formState } = useForm({
-    shouldUseNativeValidation: false,
-  })
+  const { register, handleSubmit, watch, control, formState } =
+    useForm<TransactionFormProps>({
+      shouldUseNativeValidation: false,
+    })
 
   const router = useRouter()
   const { upsertTrasaction } = useTransaction()
   const onSubmit = useCallback(
-    async (data: TransactionConfig & { repeated: boolean }) => {
+    async (data: TransactionFormProps) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
 
@@ -62,15 +67,15 @@ export default function Form({
           rules={{ required: true }}
           defaultValue={transactionConfig?.amount}
           render={({ field: { onChange, onBlur, value } }) => (
-              <NumberFormat
-                onValueChange={({ value }) => onChange(value)}
-                onBlur={onBlur}
-                value={value}
-                placeholder="₪40,000"
-                thousandSeparator={true}
-                prefix={'₪'}
-                required
-              />
+            <NumberFormat
+              onValueChange={({ value }) => onChange(value)}
+              onBlur={onBlur}
+              value={value}
+              placeholder="₪40,000"
+              thousandSeparator={true}
+              prefix={'₪'}
+              required
+            />
           )}
         />
       </Field>
@@ -81,26 +86,26 @@ export default function Form({
           rules={{ required: true }}
           defaultValue={transactionConfig?.date}
           render={({ field: { onChange, value } }) => (
-              <input
-                type="date"
-                onChange={(e) => {
-                  onChange(e.target.valueAsDate)
-                }}
-                value={value && format(value, 'yyyy-MM-dd')}
-                required
-              />
+            <input
+              type="date"
+              onChange={(e) => {
+                onChange(e.target.valueAsDate)
+              }}
+              value={value && format(value, 'yyyy-MM-dd')}
+              required
+            />
           )}
         />
       </Field>
       <Field label="type">
-          <input
-            id="type"
-            type="text"
-            placeholder="Salary"
-            defaultValue={transactionConfig?.type}
-            required
-            {...register('type', { required: true })}
-          />
+        <input
+          id="type"
+          type="text"
+          placeholder="Salary"
+          defaultValue={transactionConfig?.type}
+          required
+          {...register('type', { required: true })}
+        />
       </Field>
       <div className={overrideStyles.repeatedField}>
         <label htmlFor="repeated">Repeated</label>

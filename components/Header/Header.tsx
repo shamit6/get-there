@@ -32,7 +32,7 @@ export default function Header() {
         <nav className={styles.nav}>
           <NavEntry route="/" label="Home" />
           <NavEntry route="/transactions" label="Transactions" />
-          <NavEntry route="/mortgage" label="Mortgage" />
+          <NavEntry route="/mortgages" label="Mortgage" />
         </nav>
       )}
       <div className={styles.login}>

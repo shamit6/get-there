@@ -69,11 +69,11 @@ export interface MortgageCourse
     | 'earlyPayoffPurpose'
     | 'userEmail'
   > {
-  expectedCpiChange?: number
-  earlyPayoffType?: MortgageEarlyPayoffType
-  earlyPayoffMonths?: number
-  earlyPayoffAmount?: number
-  earlyPayoffPurpose?: MortgageEarlyPayoffPurpose
+  expectedCpiChange?: number | null
+  earlyPayoffType?: MortgageEarlyPayoffType | null
+  earlyPayoffMonths?: number | null
+  earlyPayoffAmount?: number | null
+  earlyPayoffPurpose?: MortgageEarlyPayoffPurpose | null
 }
 
 export interface Mortgage
