@@ -25,7 +25,7 @@ function generateTransactionConfigOccurances(
   const transactionOccurances: Transaction[] = []
 
   if (!interval?.timePeriod) {
-    if (!isBefore(date, fromDate) && !isAfter(date, untilDate)) {
+    if (!isBefore(date, fromDate) || !isAfter(date, untilDate)) {
       return []
     } else {
       return [{ amount, type, date }]
@@ -111,7 +111,7 @@ export function calcCurrentBalanceAmount(
     lastBalanceStatus
   )
 
-  return transactionsWithBlance[transactionsWithBlance.length - 1].balance!
+  return transactionsWithBlance[transactionsWithBlance.length - 1].amount!
 }
 
 export function getCurrentMonthBalanceAmount(
