@@ -81,7 +81,7 @@ export function addBalanaceToSortTransaction(
       transactionsWithBalance.push(transaction)
     } else {
       currentAmount += transaction.amount
-      transactionsWithBalance.push({ ...transaction, balance: currentAmount })
+      transactionsWithBalance.push({ ...transaction, amount: currentAmount })
     }
   })
 
