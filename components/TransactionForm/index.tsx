@@ -5,7 +5,7 @@ import overrideStyles from './Form.module.scss'
 import styles from 'components/Field/Field.module.scss'
 import NumberFormat from 'react-number-format'
 import useTransaction from 'hooks/useTransactions'
-import { TransactionConfig } from 'utils/types'
+import { TimePeriod, TransactionConfig } from 'utils/types'
 import { format } from 'date-fns'
 import Button, { ButtonsGroup } from 'components/button'
 import classNames from 'classnames'
@@ -15,14 +15,25 @@ interface TransactionFormProps extends TransactionConfig {
   repeated: boolean
 }
 
+function getTransactionConfigDefaultFormValues(
+  transactionConfig?: TransactionConfig
+) {
+  return {
+    timePeriod: TimePeriod.MONTH,
+    periodAmount: 1,
+    ...(transactionConfig || {}),
+  }
+}
+
 export default function Form({
   transactionConfig,
 }: {
   transactionConfig?: TransactionConfig
 }) {
-  const { register, handleSubmit, watch, control, formState } =
+  const { register, handleSubmit, watch, control, formState, getValues } =
     useForm<TransactionFormProps>({
       shouldUseNativeValidation: false,
+      defaultValues: getTransactionConfigDefaultFormValues(transactionConfig),
     })
 
   const router = useRouter()
@@ -65,7 +76,6 @@ export default function Form({
           control={control}
           name="amount"
           rules={{ required: true }}
-          defaultValue={transactionConfig?.amount}
           render={({ field: { onChange, onBlur, value } }) => (
             <NumberFormat
               onValueChange={({ value }) => onChange(value)}
@@ -84,7 +94,6 @@ export default function Form({
           control={control}
           name="date"
           rules={{ required: true }}
-          defaultValue={transactionConfig?.date}
           render={({ field: { onChange, value } }) => (
             <input
               type="date"
@@ -102,7 +111,6 @@ export default function Form({
           id="type"
           type="text"
           placeholder="Salary"
-          defaultValue={transactionConfig?.type}
           required
           {...register('type', { required: true })}
         />
@@ -120,7 +128,6 @@ export default function Form({
         <label>In</label>
         <input
           type="number"
-          defaultValue={transactionConfig?.periodAmount || 1}
           disabled={!isRepeated}
           {...register('periodAmount', { required: isRepeated })}
           required={isRepeated}
@@ -128,7 +135,6 @@ export default function Form({
         <span />
         <select
           {...register('timePeriod')}
-          defaultValue={transactionConfig?.timePeriod || 'month'}
           disabled={!isRepeated}
           style={{ marginLeft: '1em' }}
         >
@@ -141,7 +147,6 @@ export default function Form({
         <Controller
           control={control}
           name="endDate"
-          defaultValue={transactionConfig?.endDate}
           render={({ field: { onChange, value } }) => (
             <>
               <input

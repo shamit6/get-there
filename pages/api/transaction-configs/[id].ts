@@ -29,7 +29,12 @@ export default async function handler(
     } else if (method === 'PUT') {
       response = await prismaClient.transactionConfig.update({
         where: { id: id as string },
-        data: body,
+        data: {
+          ...body,
+          timePeriod: !body.timePeriod ? null : body.timePeriod,
+          periodAmount: !body.periodAmount ? null : Number(body.periodAmount),
+          endDate: !body.endDate ? null : body.endDate,
+        },
       })
     } else if (method === 'DELETE') {
       response = await prismaClient.transactionConfig.delete({

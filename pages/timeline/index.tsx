@@ -149,8 +149,6 @@ function Timeline({
   ])
 
   const loadmore = () => {
-    console.log('numberOFitems', numberOFitems)
-
     setNumberOFitems(numberOFitems + 5)
   }
 

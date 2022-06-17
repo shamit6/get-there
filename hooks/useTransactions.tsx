@@ -58,26 +58,34 @@ export default function useTransactions() {
 
   const upsertTrasaction = useCallback(
     async (transactionConfig: TransactionConfig) => {
-      await mutate((transactionConfigs: TransactionConfig[] | undefined) => {
-        return upsertToTransactionList(
-          transactionConfigs || [],
-          transactionConfig
-        )
-      }, false)
+      await mutate(
+        async (transactionConfigs = []) => {
+          const { id, ...transactionData } = transactionConfig
+          const isNewTransaction = !id
+          const url = isNewTransaction
+            ? '/api/transaction-configs'
+            : `/api/transaction-configs/${id}`
 
-      const { id, ...transactionData } = transactionConfig
-      const isNewTransaction = !id
-      const url = isNewTransaction
-        ? '/api/transaction-configs'
-        : `/api/transaction-configs/${id}`
-
-      await fetch(url, {
-        method: isNewTransaction ? 'POST' : 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(transactionData),
-      })
- 
-      await mutate()
+          const updatedTransactionConfig = await fetch(url, {
+            method: isNewTransaction ? 'POST' : 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(transactionData),
+          }).then((r) => r.json())
+          console.log('updatedTransactionConfig', updatedTransactionConfig);
+          
+          return upsertToTransactionList(transactionConfigs, transactionConfig)
+        },
+        {
+          optimisticData: (transactionConfigs = []) => {
+            return upsertToTransactionList(
+              transactionConfigs,
+              transactionConfig
+            )
+          },
+          populateCache: false,
+          rollbackOnError: true
+        }
+      )
     },
     []
   )
