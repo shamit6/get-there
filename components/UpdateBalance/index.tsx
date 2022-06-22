@@ -31,7 +31,7 @@ function UpdateBalanceModal({
     ? calcCurrentBalanceAmount(transactions!, balanceStatuses?.[0]!)
     : 0
 
-  const currentBalanceStatus = balanceStatuses![0]
+  const currentBalanceStatus = balanceStatuses?.[0]
 
   return (
     <Modal isOpen={isOpen}>

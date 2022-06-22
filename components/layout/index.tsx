@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         />
       </Head>
       <div className={styles.wrapper}>
-        <Header />
+        {router.pathname !== '/login' && <Header />}
         <div>{router.pathname === '/' && <UpdateBalance />}</div>
         <div className={styles.content}>{children}</div>
       </div>
