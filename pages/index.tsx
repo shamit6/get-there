@@ -43,7 +43,7 @@ export default function Home() {
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
-      isAfter(createdAt, subMonths(new Date(), 2)) || index === 0
+      isAfter(createdAt, subMonths(new Date(), 5)) || index === 0
   )
 
   const balanceGraphData = lastBalanceStatuses?.map(
@@ -66,9 +66,9 @@ export default function Home() {
   )
 
   const transactionsGraphData = [balanceGraphData![0]].concat(
-    transactionToView.map(({ balance, date }) => ({
+    transactionToView.map(({ amount, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
-      y: balance!,
+      y: amount!,
     }))
   )
 
@@ -85,12 +85,12 @@ export default function Home() {
     },
   ]
 
-  const totalTransactioAmounnts = getTransactionConfigsAmounts(
+  const totalTransactionAmounts = getTransactionConfigsAmounts(
     transactions,
     startDate,
     endDate
   )
-  const earningsSpendings = totalTransactioAmounnts.reduce(
+  const earningsSpendings = totalTransactionAmounts.reduce(
     (res, cur) => {
       if (cur.amount > 0) {
         // @ts-ignore-next-line
