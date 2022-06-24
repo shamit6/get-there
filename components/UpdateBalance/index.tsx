@@ -1,12 +1,13 @@
 import { format } from 'date-fns'
 import React, { useState } from 'react'
-import TextNumber from 'components/textNumber'
 import useBalanceStatus from 'hooks/useBalanceStatus'
 import useTransaction from 'hooks/useTransactions'
 import { calcCurrentBalanceAmount } from 'utils/transactionsCalculator'
-import Button from '../button'
+import Button, { ButtonsGroup } from '../button'
 import Modal from '../Modal'
 import styles from './UpdateBalance.module.scss'
+import Field from 'components/Field'
+import NumberFormat from 'react-number-format'
 
 function UpdateBalanceModal({
   isOpen,
@@ -54,26 +55,26 @@ function UpdateBalanceModal({
             })}
           </p>
         )}
-        <div>
-          <label>New amount: </label>
-          <TextNumber
-            displayType="input"
-            placeholder="40,000"
+        <Field label='New amount:' horizontal>
+          <NumberFormat
             onValueChange={(values) => {
               const { floatValue } = values
               setEditedAmount(Math.floor(floatValue!))
             }}
-          />{' '}
-          ₪
-        </div>
-        <div className={styles.buttonsPanel}>
+            thousandSeparator
+            placeholder="new amount"
+            suffix="₪"
+            tabIndex={1}
+          />
+        </Field>
+        <ButtonsGroup centered>
           <Button
             text="Cancel"
             onClick={async () => {
               onClose()
             }}
           />
-          <Button
+        <Button
             text="Update Balance"
             onClick={async () => {
               updateBalanceStatus(editedAmount!)
@@ -82,7 +83,7 @@ function UpdateBalanceModal({
             disabled={!editedAmount}
             primary
           />
-        </div>
+        </ButtonsGroup>
       </>
     </Modal>
   )

@@ -2,7 +2,8 @@ import useSWR, { mutate } from 'swr'
 import { BalanceStatus } from 'utils/types'
 
 export default function useBalanceStatus(last?: boolean) {
-  const url = `/api/balance-statuses${last ? '?last=true' : ''}`
+  const url = '/api/balance-statuses'
+  // const url = `/api/balance-statuses${last ? '?last=true' : ''}`
 
   const { error, data } = useSWR<BalanceStatus[]>(url, (url) =>
     fetch(url)
@@ -12,34 +13,41 @@ export default function useBalanceStatus(last?: boolean) {
           createdAt: new Date(createdAt),
           ...rest,
         }))
-      ),
-      {refreshInterval: 5000}
+      )
   )
 
   const updateBalanceStatus = async (amount: number) => {
-    await mutate(
-      '/api/balance-statuses',
-      (balanceStatuses: BalanceStatus[]) =>
-        balanceStatuses
-          ? balanceStatuses.concat({ amount, createdAt: new Date() })
-          : [{ amount, createdAt: new Date() }],
-      false
-    )
-    await mutate(
-      '/api/balance-statuses?last=true',
-      () => [{ amount, createdAt: new Date() }],
-      false
-    )
+    const optimisticData = [{ amount, createdAt: new Date() }, ...(data || [])]
 
-    await fetch('/api/balance-statuses', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount }),
-    })
+    mutate(
+      url,
+      async () => {
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount }),
+        })
+        const [newBalance] = await response.json()
+
+        return [
+          {
+            amount: newBalance.amount,
+            createdAt: new Date(newBalance.createdAt),
+          },
+          ...(data || []),
+        ]
+      },
+      {
+        optimisticData,
+        rollbackOnError: true,
+        populateCache: true,
+        revalidate: false
+      }
+    )
   }
 
   return {
-    balanceStatuses: data,
+    balanceStatuses: last ? data?.slice(0, 1) : data,
     isLoading: !error && !data,
     error,
     updateBalanceStatus,

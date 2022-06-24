@@ -33,8 +33,7 @@ export default function useTransactions() {
             date: new Date(date),
             endDate: endDate ? new Date(endDate) : undefined,
           }))
-        }),
-    { refreshInterval: 5000 }
+        })
   )
 
   const deleteTrasaction = useCallback(
@@ -71,8 +70,6 @@ export default function useTransactions() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(transactionData),
           }).then((r) => r.json())
-          console.log('updatedTransactionConfig', updatedTransactionConfig);
-          
           return upsertToTransactionList(transactionConfigs, transactionConfig)
         },
         {
@@ -83,7 +80,7 @@ export default function useTransactions() {
             )
           },
           populateCache: false,
-          rollbackOnError: true
+          rollbackOnError: true,
         }
       )
     },

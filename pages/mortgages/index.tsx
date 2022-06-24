@@ -24,7 +24,7 @@ export default function Mortgages() {
             <div className={styles.title}>Mortgage</div>
             <Button
               text="New mortgage"
-              onClick={() => router.push('/transactions/new')}
+              onClick={() => router.push('/mortgages/new')}
               bordered
               linkTheme
               icon={<Add />}

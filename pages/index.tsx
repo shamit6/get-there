@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { format, startOfDay, addYears, isAfter, subMonths } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
-import useBalancesStatus from '../hooks/useBalanceStatus'
+import useBalanceStatus from '../hooks/useBalanceStatus'
 import { TransactionConfig } from 'utils/types'
 import {
   generateTransactionConfigsOccurances,
@@ -28,7 +28,7 @@ export default function Home() {
 
   useEnsureLogin()
 
-  const { balanceStatuses } = useBalancesStatus()
+  const { balanceStatuses } = useBalanceStatus()
   const { transactions } = useTransaction()
 
   if (!transactions || !balanceStatuses) {
@@ -40,6 +40,8 @@ export default function Home() {
   } else if (balanceStatuses.length === 0) {
     return <Layout>Empty State</Layout>
   }
+
+  console.log('balanceStatuses', balanceStatuses)
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
