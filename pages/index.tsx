@@ -20,6 +20,7 @@ import Field from 'components/Field'
 import ScrollToTopButton from 'components/ScrollToTopButton'
 import Timeline from './timeline'
 import useEnsureLogin from '../hooks/useEnsureLogin'
+import { roundUp } from 'utils/roundUp'
 
 export default function Home() {
   const nowDate = new Date()
@@ -30,6 +31,10 @@ export default function Home() {
 
   const { balanceStatuses } = useBalancesStatus()
   const { transactions } = useTransaction()
+
+  const [targetAmount, setTargetAmount] = useState<number>(
+    roundUp(balanceStatuses?.[balanceStatuses?.length - 1].amount)
+  )
 
   if (!transactions || !balanceStatuses) {
     return (
@@ -160,12 +165,21 @@ export default function Home() {
           </div>
         </div>
         <div className={styles.filterPanel}>
-          <Field label="From date:">
+          {/* <Field label="From date:">
             <input
               type="date"
               value={format(startDate, 'yyyy-MM-dd')}
               onChange={(e) => {
                 setStartDate(e.target.valueAsDate!)
+              }}
+            />
+          </Field> */}
+          <Field label="Target amount:">
+            <input
+              type="number"
+              value={targetAmount}
+              onChange={(e) => {
+                setTargetAmount(e.target.valueAsNumber)
               }}
             />
           </Field>
