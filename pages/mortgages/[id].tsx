@@ -11,7 +11,6 @@ function MortgagePage() {
   const { isLoading, mortgages } = useMortgages()
 
   const mortgage = mortgages?.find(({ id }) => router.query.id === id)
-  console.log(mortgages, mortgage)
 
   return (
     <Layout>

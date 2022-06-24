@@ -116,8 +116,6 @@ function Timeline({
 
     setCurrentBalanceAmount(currentBalanceAmount)
 
-    console.log('---------start---------')
-
     const transactionsSummery = getTransactionsSummeryByPeriod(
       transactions!,
       periodResolution,
@@ -125,7 +123,6 @@ function Timeline({
       fromDate,
       untilDate
     )
-    console.log('---------end---------')
 
     if (transactionsSummery.length === timelineTransactions.length) {
       setHasMore(false)
