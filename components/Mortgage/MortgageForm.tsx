@@ -40,8 +40,6 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
         })}
         style={{ flexDirection: 'column', width: 'fit-content' }}
         onSubmit={handleSubmit(async (data) => {
-          console.log('onSubmit')
-
           const url = '/api/mortgages'
 
           await fetch(url, {
