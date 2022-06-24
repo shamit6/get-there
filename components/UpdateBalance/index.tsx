@@ -55,7 +55,7 @@ function UpdateBalanceModal({
             })}
           </p>
         )}
-        <Field label='New amount:' horizontal>
+        <Field label="New amount:" horizontal>
           <NumberFormat
             onValueChange={(values) => {
               const { floatValue } = values
@@ -67,14 +67,8 @@ function UpdateBalanceModal({
             tabIndex={1}
           />
         </Field>
-        <ButtonsGroup centered>
+        <ButtonsGroup>
           <Button
-            text="Cancel"
-            onClick={async () => {
-              onClose()
-            }}
-          />
-        <Button
             text="Update Balance"
             onClick={async () => {
               updateBalanceStatus(editedAmount!)
@@ -83,6 +77,12 @@ function UpdateBalanceModal({
             disabled={!editedAmount}
             primary
           />
+        <Button
+          text="Cancel"
+          onClick={async () => {
+            onClose()
+          }}
+        />
         </ButtonsGroup>
       </>
     </Modal>

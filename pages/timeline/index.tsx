@@ -87,10 +87,10 @@ function TransactionsSummery({
 
 function Timeline({
   fromDate = new Date(),
-  untillDate,
+  untilDate,
 }: {
   fromDate?: Date
-  untillDate?: Date
+  untilDate?: Date
 }) {
   const { balanceStatuses, isLoading: isLoadingBalance } =
     useBalanceStatus(true)
@@ -116,13 +116,16 @@ function Timeline({
 
     setCurrentBalanceAmount(currentBalanceAmount)
 
+    console.log('---------start---------')
+
     const transactionsSummery = getTransactionsSummeryByPeriod(
       transactions!,
       periodResolution,
       numberOFitems,
       fromDate,
-      untillDate
+      untilDate
     )
+    console.log('---------end---------')
 
     if (transactionsSummery.length === timelineTransactions.length) {
       setHasMore(false)
@@ -145,7 +148,7 @@ function Timeline({
     isLoadingBalance,
     isLoadingTransactions,
     fromDate,
-    untillDate,
+    untilDate,
   ])
 
   const loadmore = () => {

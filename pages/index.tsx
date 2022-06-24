@@ -1,25 +1,21 @@
 import { useState } from 'react'
-import { format, startOfDay, addYears, isAfter, subMonths } from 'date-fns'
+import { format, startOfDay, addYears } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalanceStatus from '../hooks/useBalanceStatus'
-import { TransactionConfig } from 'utils/types'
 import {
-  generateTransactionConfigsOccurances,
-  addBalanaceToSortTransaction,
   calcCurrentBalanceAmount,
   getCurrentMonthBalanceAmount,
   getCurrentYearBalanceAmount,
-  getTransactionConfigsAmounts,
 } from 'utils/transactionsCalculator'
 import Layout from 'components/layout'
 import styles from './Status.module.scss'
-import { LineChart, BarChart } from 'components/Charts'
 import Ticker from 'components/Ticker'
 import Loader from 'components/loader'
 import Field from 'components/Field'
 import ScrollToTopButton from 'components/ScrollToTopButton'
 import Timeline from './timeline'
 import useEnsureLogin from '../hooks/useEnsureLogin'
+import ChartsPanel from 'components/ChartsPanel'
 
 export default function Home() {
   const nowDate = new Date()
@@ -40,83 +36,6 @@ export default function Home() {
   } else if (balanceStatuses.length === 0) {
     return <Layout>Empty State</Layout>
   }
-
-  console.log('balanceStatuses', balanceStatuses)
-
-  const lastBalanceStatuses = balanceStatuses?.filter(
-    ({ createdAt }, index) =>
-      isAfter(createdAt, subMonths(new Date(), 5)) || index === 0
-  )
-
-  const balanceGraphData = lastBalanceStatuses?.map(
-    ({ amount, createdAt }) => ({
-      x: format(createdAt, 'dd/MM/yyyy'),
-      y: amount,
-    })
-  )
-
-  const allTransactionsOccurances = generateTransactionConfigsOccurances(
-    transactions,
-    startDate,
-    endDate
-  )
-  const transactionToView = addBalanaceToSortTransaction(
-    allTransactionsOccurances.filter(
-      ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
-    ),
-    lastBalanceStatuses[0]
-  )
-
-  const transactionsGraphData = [balanceGraphData![0]].concat(
-    transactionToView.map(({ amount, date }) => ({
-      x: format(date, 'dd/MM/yyyy'),
-      y: amount!,
-    }))
-  )
-
-  const lineChartData = [
-    {
-      id: 'Balance',
-      color: '#9d4edd',
-      data: balanceGraphData,
-    },
-    {
-      id: 'Predicted Balance',
-      color: '#e0aaff',
-      data: transactionsGraphData,
-    },
-  ]
-
-  const totalTransactionAmounts = getTransactionConfigsAmounts(
-    transactions,
-    startDate,
-    endDate
-  )
-  const earningsSpendings = totalTransactionAmounts.reduce(
-    (res, cur) => {
-      if (cur.amount > 0) {
-        // @ts-ignore-next-line
-        res[0].push(cur)
-      } else {
-        // @ts-ignore-next-line
-        res[1].push(cur)
-      }
-      return res
-    },
-    [[], []] as [TransactionConfig[], TransactionConfig[]]
-  )
-
-  const barChartData = earningsSpendings.map((earnSpend, index) => {
-    const earnings = index === 0
-    return {
-      type: earnings ? 'Earnings' : 'Spendings',
-      ...earnSpend.reduce((res, cur) => {
-        res[cur.type] = Math.abs(cur.amount)
-        res[`${cur.type}Color`] = earnings ? '#036666' : '#e01e37'
-        return res
-      }, {} as any),
-    }
-  })
 
   const currentBalanceAmount = calcCurrentBalanceAmount(
     transactions,
@@ -182,18 +101,9 @@ export default function Home() {
           </Field>
         </div>
         <div className={styles.graphs}>
-          <div className={styles.lineChart}>
-            <LineChart data={lineChartData} />
-          </div>
-          <div className={styles.barChart}>
-            <BarChart
-              data={barChartData}
-              indexBy="type"
-              keys={Array.from(new Set(transactions.map((cur) => cur.type)))}
-            />
-          </div>
+          <ChartsPanel startDate={startDate} endDate={endDate} />
           <div className={styles.timeline}>
-            <Timeline fromDate={startDate} untillDate={endDate} />
+            <Timeline fromDate={startDate} untilDate={endDate} />
           </div>
         </div>
         <ScrollToTopButton />

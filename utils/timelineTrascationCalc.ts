@@ -44,7 +44,7 @@ export function getNextIntervalTimeFunc(
   }
 }
 
-function getLastDayOfPreiod(
+function getLastDayOfPeriodByDate(
   timePeriod: TimePeriod,
   amountOfPeriods: number,
   fromDate: Date
@@ -94,10 +94,10 @@ function getTransactionSummery(
   periodResolution: TimePeriod
 ): SummerizedTransacrionPeriod[] {
   const { date, type, amount, ...interval } = transactionConfig
-  const transactionOccurances: SummerizedTransacrionPeriod[] = []
+  const transactionOccurrences: SummerizedTransacrionPeriod[] = []
 
   if (!interval?.timePeriod) {
-    if (!isBefore(date, fromDate) && !isAfter(date, untilDate)) {
+    if (isAfter(fromDate, date) || isBefore(untilDate, date)) {
       return []
     } else {
       return [
@@ -134,7 +134,7 @@ function getTransactionSummery(
         currentTransactionSummrey.totalAmout += amount
         isAnythingToPush = true
       } else {
-        transactionOccurances.push(currentTransactionSummrey)
+        transactionOccurrences.push(currentTransactionSummrey)
         currentTransactionSummrey = {
           time: extractTimeByPeriod(currentDate, periodResolution),
           totalAmout: amount,
@@ -147,10 +147,10 @@ function getTransactionSummery(
   }
 
   if (isAnythingToPush) {
-    transactionOccurances.push(currentTransactionSummrey)
+    transactionOccurrences.push(currentTransactionSummrey)
   }
 
-  return transactionOccurances
+  return transactionOccurrences
 }
 
 export function getTransactionsSummeryByPeriod(
@@ -160,31 +160,29 @@ export function getTransactionsSummeryByPeriod(
   fromDate: Date = new Date(),
   maxDate?: Date
 ): SummerizedTransacrionsPeriod[] {
-  const lastDayOfPreiod = getLastDayOfPreiod(
+  const lastDayOfPeriod = getLastDayOfPeriodByDate(
     periodResolution,
     itemsToGenerate,
     fromDate
   )
 
-  const untillDate = !maxDate
-    ? lastDayOfPreiod
-    : min([maxDate, lastDayOfPreiod])
+  const untilDate = !maxDate ? lastDayOfPeriod : min([maxDate, lastDayOfPeriod])
 
-  const transactionConfigsOccurances = transactionConfigs.flatMap(
+  const transactionConfigsOccurrences = transactionConfigs.flatMap(
     (transactionConfig) =>
       getTransactionSummery(
         transactionConfig,
         fromDate,
-        untillDate,
+        untilDate,
         periodResolution
       )
   )
-  transactionConfigsOccurances.sort(function compare(t1, t2) {
+  transactionConfigsOccurrences.sort(function compare(t1, t2) {
     const subYears = t1.time.year - t2.time.year
     return subYears ? subYears : (t1.time.month || 0) - (t2.time.month || 0)
   })
 
-  return transactionConfigsOccurances.reduce((acc, curr) => {
+  return transactionConfigsOccurrences.reduce((acc, curr) => {
     const last = acc[acc.length - 1]
 
     if (JSON.stringify(last?.time) !== JSON.stringify(curr.time)) {

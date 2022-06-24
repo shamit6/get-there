@@ -22,10 +22,10 @@ function generateTransactionConfigOccurances(
   untilDate: Date
 ): Transaction[] {
   const { date, type, amount, ...interval } = transactionConfig
-  const transactionOccurances: Transaction[] = []
+  const transactionOccurrences: Transaction[] = []
 
   if (!interval?.timePeriod) {
-    if (!isBefore(date, fromDate) || !isAfter(date, untilDate)) {
+    if (isAfter(fromDate, date) || isBefore(untilDate, date)) {
       return []
     } else {
       return [{ amount, type, date }]
@@ -42,20 +42,20 @@ function generateTransactionConfigOccurances(
 
   while (!isAfter(currentDate, generateUntilDate)) {
     if (!isBefore(currentDate, fromDate)) {
-      transactionOccurances.push({ amount, type, date: currentDate })
+      transactionOccurrences.push({ amount, type, date: currentDate })
     }
     currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
   }
 
-  return transactionOccurances
+  return transactionOccurrences
 }
 
-export function generateTransactionConfigsOccurances(
+export function generateTransactionConfigsOccurrences(
   transactionConfigs: TransactionConfig[],
   fromDate: Date,
   untilDate: Date
 ): Transaction[] {
-  const transactionConfigsOccurances = transactionConfigs.flatMap(
+  const transactionConfigsOccurrences = transactionConfigs.flatMap(
     (transactionConfig) =>
       generateTransactionConfigOccurances(
         transactionConfig,
@@ -63,12 +63,12 @@ export function generateTransactionConfigsOccurances(
         untilDate
       )
   )
-  return transactionConfigsOccurances.sort(function compare(t1, t2) {
+  return transactionConfigsOccurrences.sort(function compare(t1, t2) {
     return t1.date.getTime() - t2.date.getTime()
   })
 }
 
-export function addBalanaceToSortTransaction(
+export function addBalanceToSortTransaction(
   transactions: Transaction[],
   balanceStatus: BalanceStatus
 ) {
@@ -96,7 +96,7 @@ export function calcCurrentBalanceAmount(
     return lastBalanceStatus.amount
   }
 
-  const transactionsUntilNow = generateTransactionConfigsOccurances(
+  const transactionsUntilNow = generateTransactionConfigsOccurrences(
     transactionConfigs,
     lastBalanceStatus.createdAt,
     new Date()
@@ -106,7 +106,7 @@ export function calcCurrentBalanceAmount(
     return lastBalanceStatus.amount
   }
 
-  const transactionsWithBlance = addBalanaceToSortTransaction(
+  const transactionsWithBlance = addBalanceToSortTransaction(
     transactionsUntilNow,
     lastBalanceStatus
   )
@@ -120,7 +120,7 @@ export function getCurrentMonthBalanceAmount(
 ) {
   const monthStartDate = startOfMonth(currentDate)
   const monthEndDate = endOfMonth(currentDate)
-  const currentMonthOccurences = generateTransactionConfigsOccurances(
+  const currentMonthOccurences = generateTransactionConfigsOccurrences(
     transactions,
     monthStartDate,
     monthEndDate
@@ -140,7 +140,7 @@ export function getCurrentYearBalanceAmount(
 ) {
   const yearStartDate = startOfYear(currentDate)
   const yearEndDate = endOfYear(currentDate)
-  const currentYearOccurences = generateTransactionConfigsOccurances(
+  const currentYearOccurences = generateTransactionConfigsOccurrences(
     transactions,
     yearStartDate,
     yearEndDate
@@ -157,13 +157,13 @@ export function getTransactionConfigsAmounts(
   fromDate: Date,
   untilDate: Date
 ) {
-  const occureces = generateTransactionConfigsOccurances(
+  const occurrences = generateTransactionConfigsOccurrences(
     transactionConfigs,
     fromDate,
     untilDate
   )
 
-  const amountToType = occureces.reduce((acc, currTransaction) => {
+  const amountToType = occurrences.reduce((acc, currTransaction) => {
     const { type, amount } = currTransaction
     if (!acc[type]) {
       return { ...acc, [type]: amount }
