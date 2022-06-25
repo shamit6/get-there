@@ -6,16 +6,18 @@ export default function Field({
   label,
   horizontal,
   children,
+  htmlFor,
 }: {
   label?: string
   horizontal?: boolean
   children?: ReactChild
+  htmlFor?: string
 }) {
   return (
     <div
       className={classnames(styles.field, { [styles.horizontal]: horizontal })}
     >
-      {label && <label>{label}</label>}
+      {label && <label htmlFor={htmlFor}>{label}</label>}
       {children}
       <span />
     </div>

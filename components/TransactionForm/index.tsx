@@ -106,7 +106,7 @@ export default function Form({
           )}
         />
       </Field>
-      <Field label="type">
+      <Field label="Type">
         <input
           id="type"
           type="text"
@@ -115,34 +115,34 @@ export default function Form({
           {...register('type', { required: true })}
         />
       </Field>
-      <div className={overrideStyles.repeatedField}>
-        <label htmlFor="repeated">Repeated</label>
+      <hr />
+      <Field htmlFor="repeated" label="Repeated" horizontal>
         <input
           type="checkbox"
           id="repeated"
           defaultChecked={!!transactionConfig?.timePeriod}
           {...register('repeated', { required: isRepeated })}
         />
-      </div>
-      <div className={styles.field}>
-        <label>In</label>
+      </Field>
+      <hr />
+      <Field label="In">
         <input
           type="number"
           disabled={!isRepeated}
           {...register('periodAmount', { required: isRepeated })}
           required={isRepeated}
         />
-        <span />
+      </Field>
+      <Field label=" ">
         <select
           {...register('timePeriod')}
           disabled={!isRepeated}
-          style={{ marginLeft: '1em' }}
         >
           <option value="week">weeks</option>
           <option value="month">months</option>
           <option value="year">years</option>
         </select>
-      </div>
+      </Field>
       <Field label="End Date">
         <Controller
           control={control}
