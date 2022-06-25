@@ -5,7 +5,7 @@ import styles from './Header.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
 import classnames from 'classnames'
-import Popper from '../Popper/Popper'
+import Popper from '../Popover'
 
 export default function Header() {
   const router = useRouter()
