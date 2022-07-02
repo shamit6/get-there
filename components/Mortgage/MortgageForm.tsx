@@ -1,11 +1,7 @@
 import MortgageComp from './MortgageCalculator'
 import classNames from 'classnames'
 import styles from 'components/Field/Field.module.scss'
-import {
-  useForm,
-  Controller,
-  FormProvider,
-} from 'react-hook-form'
+import { useForm, Controller, FormProvider } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import Button, { ButtonsGroup } from 'components/button'
 import Field, { Section } from 'components/Field'
@@ -19,6 +15,8 @@ import {
 } from 'utils/amortizationScheduleCalculator'
 import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 import { Mortgage } from 'utils/types'
+import useMortgages from 'hooks/useMortgages'
+import { useRouter } from 'next/router'
 
 function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
   const formsMethods = useForm({
@@ -26,10 +24,11 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
     defaultValues: mortgage,
   })
 
-  const { register, handleSubmit, watch, control, formState } = formsMethods
+  const { handleSubmit, watch, control, formState } = formsMethods
   const [amortizationSchedule, setAmortizationSchedule] =
     useState<AmortizationScheduleTransaction[]>()
-
+  const { upsertMortgage } = useMortgages()
+  const router = useRouter()
   const courses = watch('courses')
 
   return (
@@ -40,14 +39,16 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
         })}
         style={{ flexDirection: 'column', width: 'fit-content' }}
         onSubmit={handleSubmit(async (data) => {
-          const url = '/api/mortgages'
-
-          await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-
-            body: JSON.stringify({ ...data }),
+          data.courses?.forEach((course) => {
+            if (!course.earlyPayoffType) {
+              course.earlyPayoffMonths = undefined
+              course.earlyPayoffPurpose = undefined
+              course.earlyPayoffAmount = undefined
+            }
           })
+          upsertMortgage(data as Mortgage)
+
+          await router.push('/mortgages')
         })}
         noValidate
       >
@@ -164,7 +165,8 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
           </Field>
         </Section>
         <MortgageSummerySection />
-        <ButtonsGroup centered>
+        <ButtonsGroup>
+          <Button text="Save" primary className={styles.submitButton} />
           <Button
             text="Amortization Schedule"
             onClick={() => {
@@ -175,7 +177,6 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
             linkTheme
             tabIndex={1}
           />
-          <Button text="submit" primary className={styles.submitButton} />
         </ButtonsGroup>
         {amortizationSchedule && (
           <MortgagePaymentsCharts

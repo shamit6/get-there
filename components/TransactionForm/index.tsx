@@ -173,7 +173,7 @@ export default function Form({
       </Field>
       <hr />
       <ButtonsGroup centered className={overrideStyles.submitGroupButton}>
-        <Button text="Submit" primary />
+        <Button text="Save" primary />
       </ButtonsGroup>
     </form>
   )

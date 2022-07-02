@@ -1,5 +1,19 @@
+import { useCallback } from 'react'
 import useSWR from 'swr'
-import { Mortgage } from 'utils/types'
+import type { Mortgage } from 'utils/types'
+
+function upsertToMortgageList(list: Mortgage[], mortgage: Mortgage) {
+  if (!mortgage.id) {
+    return [...list, mortgage]
+  } else {
+    const index = list.findIndex((t) => t.id === mortgage.id)
+    if (index === -1) {
+      return [...list, mortgage]
+    } else {
+      return [...list.slice(0, index), mortgage, ...list.slice(index + 1)]
+    }
+  }
+}
 
 export default function useMortgages() {
   const { data, mutate, error } = useSWR<Mortgage[]>('/api/mortgages', (url) =>
@@ -13,9 +27,39 @@ export default function useMortgages() {
       })
   )
 
+  const upsertMortgage = useCallback(async (mortgage: Mortgage) => {
+    await mutate(
+      async () => {
+        const { id, ...transactionData } = mortgage
+        const isNewMortgage = !id
+        const url = isNewMortgage ? '/api/mortgages' : `/api/mortgages/${id}`
+
+        const upsertedMortgage = await fetch(url, {
+          method: isNewMortgage ? 'POST' : 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(transactionData),
+        })
+          .then((r) => r.json())
+          .then(({ offeringDate, ...rest }) => ({
+            ...rest,
+            offeringDate: new Date(offeringDate)
+          }))
+
+        return upsertToMortgageList(data || [], upsertedMortgage)
+      },
+      {
+        optimisticData: (mortgages = []) => {
+          return upsertToMortgageList(mortgages, mortgage)
+        },
+        populateCache: true,
+        rollbackOnError: true,
+      }
+    )
+  }, [])
+
   return {
     mortgages: data,
-    mutate,
+    upsertMortgage,
     isLoading: !error && !data,
   }
 }

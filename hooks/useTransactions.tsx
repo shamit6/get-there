@@ -10,14 +10,12 @@ function upsertToTransactionList(
   if (!transaction.id) {
     return [...list, transaction]
   } else {
-    const a = list.reduce<TransactionConfig[]>((acc, curr) => {
-      if (curr.id === transaction.id) {
-        return [...acc, transaction]
-      } else {
-        return [...acc, curr]
-      }
-    }, [])
-    return a
+    const index = list.findIndex((t) => t.id === transaction.id)
+    if (index === -1) {
+      return [...list, transaction]
+    } else {
+      return [...list.slice(0, index), transaction, ...list.slice(index + 1)]
+    }
   }
 }
 
@@ -58,7 +56,7 @@ export default function useTransactions() {
   const upsertTrasaction = useCallback(
     async (transactionConfig: TransactionConfig) => {
       await mutate(
-        async (transactionConfigs = []) => {
+        async () => {
           const { id, ...transactionData } = transactionConfig
           const isNewTransaction = !id
           const url = isNewTransaction
@@ -69,8 +67,15 @@ export default function useTransactions() {
             method: isNewTransaction ? 'POST' : 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(transactionData),
-          }).then((r) => r.json())
-          return upsertToTransactionList(transactionConfigs, transactionConfig)
+          })
+            .then((r) => r.json())
+            .then(({ date, endDate, ...rest }) => ({
+              ...rest,
+              date: new Date(date),
+              endDate: endDate ? new Date(endDate) : undefined,
+            }))
+
+          return upsertToTransactionList(data || [], updatedTransactionConfig)
         },
         {
           optimisticData: (transactionConfigs = []) => {
@@ -79,7 +84,7 @@ export default function useTransactions() {
               transactionConfig
             )
           },
-          populateCache: false,
+          populateCache: true,
           rollbackOnError: true,
         }
       )
