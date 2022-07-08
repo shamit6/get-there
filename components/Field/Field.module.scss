@@ -128,3 +128,16 @@
     }
   }
 }
+
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: .6em;
+  width: 100%;
+  
+  .title {
+    flex: 1;
+    font-size: 1.5em;
+  }
+}

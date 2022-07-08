@@ -24,6 +24,11 @@ export function LineChart({
 }) {
   return (
     <ResponsiveLine
+      defs={[{ id: 'fill-color', color: 'inherit' }]}
+      enableArea
+      fill={[
+        { match: '*', id: 'fill-color' },
+      ]}
       colors={(d) => d.color}
       data={data}
       margin={{ top: 50, right: 10, bottom: 50, left: 60 }}

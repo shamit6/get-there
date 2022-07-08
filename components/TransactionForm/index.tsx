@@ -9,7 +9,8 @@ import { TimePeriod, TransactionConfig } from 'utils/types'
 import { format } from 'date-fns'
 import Button, { ButtonsGroup } from 'components/button'
 import classNames from 'classnames'
-import Field from 'components/Field'
+import Field, { PageHeader } from 'components/Field'
+import Delete from 'components/button/delete.svg'
 
 interface TransactionFormProps extends TransactionConfig {
   repeated: boolean
@@ -37,7 +38,7 @@ export default function Form({
     })
 
   const router = useRouter()
-  const { upsertTrasaction } = useTransaction()
+  const { upsertTrasaction, deleteTrasaction } = useTransaction()
   const onSubmit = useCallback(
     async (data: TransactionFormProps) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
@@ -61,6 +62,12 @@ export default function Form({
     [upsertTrasaction, router]
   )
 
+  const onDelete = useCallback(async () => {
+    deleteTrasaction(transactionConfig?.id!)
+    await router.push('/transactions')
+  }, [deleteTrasaction, transactionConfig, router])
+
+
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
   const endDateEl = useRef<HTMLInputElement>(null)
   return (
@@ -71,6 +78,14 @@ export default function Form({
       })}
       noValidate
     >
+      <PageHeader title="Transaction">
+        {transactionConfig?.id && <Button
+          text="delete"
+          bordered
+          onClick={() => onDelete()}
+          icon={<Delete />}
+        />}
+      </PageHeader>
       <Field label="Amount">
         <Controller
           control={control}
@@ -134,10 +149,7 @@ export default function Form({
         />
       </Field>
       <Field label=" ">
-        <select
-          {...register('timePeriod')}
-          disabled={!isRepeated}
-        >
+        <select {...register('timePeriod')} disabled={!isRepeated}>
           <option value="week">weeks</option>
           <option value="month">months</option>
           <option value="year">years</option>

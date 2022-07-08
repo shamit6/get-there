@@ -36,19 +36,27 @@ export default function useTransactions() {
 
   const deleteTrasaction = useCallback(
     async (transactionId: string) => {
-      await mutate((transactionConfigs: TransactionConfig[] = []) => {
-        return _.remove(
-          transactionConfigs,
-          (transaction) => transaction.id !== transactionId
-        )
-      }, false)
+      await mutate(
+        async (transactionConfigs: TransactionConfig[] = []) => {
+          await fetch(`/api/transaction-configs/${transactionId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          })
 
-      fetch(`/api/transaction-configs/${transactionId}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      }).then(() => {
-        return mutate()
-      })
+          return transactionConfigs.filter(
+            ({id}) => id === transactionId
+          )
+        },
+        {
+          populateCache: false,
+          rollbackOnError: true,
+          optimisticData: (transactionConfigs: TransactionConfig[] = []) => {
+            return transactionConfigs.filter(
+              ({id}) => id !== transactionId
+            )
+          },
+        }
+      )
     },
     [mutate]
   )

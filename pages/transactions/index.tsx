@@ -8,6 +8,7 @@ import useBalanceStatus from '../../hooks/useBalanceStatus'
 import Add from 'components/button/plus.svg'
 import Button from 'components/button'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
+import { PageHeader } from 'components/Field'
 
 function List() {
   useEnsureLogin()
@@ -20,9 +21,8 @@ function List() {
       {isLoading || isLoadingBalance ? (
         <Loader />
       ) : (
-        <div className={styles.content}>
-          <div className={styles.pageHeader}>
-            <div className={styles.title}>Transactions</div>
+        <>
+          <PageHeader title="Transactions">
             <Button
               text="New transaction"
               onClick={() => router.push('/transactions/new')}
@@ -30,7 +30,7 @@ function List() {
               linkTheme
               icon={<Add />}
             />
-          </div>
+          </PageHeader>
           <table className={styles.transactionTable}>
             <thead>
               <tr className={styles.tableHeader}>
@@ -58,7 +58,7 @@ function List() {
               ))}
             </tbody>
           </table>
-        </div>
+        </>
       )}
     </Layout>
   )

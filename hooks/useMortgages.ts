@@ -1,3 +1,4 @@
+import { remove } from 'lodash'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import type { Mortgage } from 'utils/types'
@@ -42,7 +43,7 @@ export default function useMortgages() {
           .then((r) => r.json())
           .then(({ offeringDate, ...rest }) => ({
             ...rest,
-            offeringDate: new Date(offeringDate)
+            offeringDate: new Date(offeringDate),
           }))
 
         return upsertToMortgageList(data || [], upsertedMortgage)
@@ -57,9 +58,32 @@ export default function useMortgages() {
     )
   }, [])
 
+  const deleteMortgage = useCallback(
+    async (mortgageId: string) => {
+      await mutate(
+        async (mortgages = []) => {
+          await fetch(`/api/mortgages/${mortgageId}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+          })
+          return mortgages.filter((mortgage) => mortgage.id === mortgageId)
+        },
+        {
+          populateCache: false,
+          rollbackOnError: true,
+          optimisticData: (mortgages = []) => {
+            return mortgages.filter((mortgage) => mortgage.id === mortgageId)
+          },
+        }
+      )
+    },
+    [mutate]
+  )
+
   return {
     mortgages: data,
     upsertMortgage,
+    deleteMortgage,
     isLoading: !error && !data,
   }
 }

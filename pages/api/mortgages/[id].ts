@@ -22,19 +22,19 @@ export default async function handler(
   try {
     if (method === 'GET') {
       await prismaClient.$connect()
-      const mortgage = await prismaClient.mortgage.findFirst({
-        where: { userEmail, id: id as string },
+      const mortgage = await prismaClient.mortgage.findUnique({
+        where: { id: id as string },
         include: {
           courses: true,
         },
       })
 
-      if (!mortgage) {
+      if (mortgage?.userEmail !== userEmail) {
         throw new Error('Mortgage not found')
       }
 
       res.status(200).json(mortgage)
-    } else {
+    } else if (method === 'PUT') {
       const response = await prismaClient.$transaction(
         async (prisma) => {
           const { courses, ...reqMortgageRest } = body as Mortgage
@@ -71,6 +71,29 @@ export default async function handler(
       )
 
       res.status(200).json(response as Mortgage)
+    } else if (method === 'DELETE') {
+      await prismaClient.$transaction(
+        async (prisma) => {
+          const { count } = await prismaClient.mortgage.deleteMany({
+            where: { userEmail, id: id as string },
+          })
+
+          if (count === 0) {
+            throw new Error('Mortgage not found')
+          }
+
+          await prisma.mortgageCourse.deleteMany({
+            where: { mortgageId: id as string, userEmail },
+          })
+
+          await prisma.mortgageCourse.deleteMany({
+            where: { mortgageId: id as string, userEmail },
+          })
+        },
+        { timeout: 10000 }
+      )
+
+      res.status(200)
     }
   } catch (e) {
     if (e.message === 'Mortgage not found') {

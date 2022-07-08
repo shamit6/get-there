@@ -8,6 +8,7 @@ import Button from 'components/button'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 import useMortgages from 'hooks/useMortgages'
 import { sumBy } from 'lodash'
+import { PageHeader } from 'components/Field'
 
 export default function Mortgages() {
   useEnsureLogin()
@@ -20,8 +21,7 @@ export default function Mortgages() {
         <Loader />
       ) : (
         <div className={styles.content}>
-          <div className={styles.pageHeader}>
-            <div className={styles.title}>Mortgage</div>
+          <PageHeader title="Mortgages">
             <Button
               text="New mortgage"
               onClick={() => router.push('/mortgages/new')}
@@ -29,7 +29,7 @@ export default function Mortgages() {
               linkTheme
               icon={<Add />}
             />
-          </div>
+          </PageHeader>
           <table className={styles.transactionTable}>
             <thead>
               <tr className={styles.tableHeader}>

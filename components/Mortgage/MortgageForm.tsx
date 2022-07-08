@@ -4,11 +4,11 @@ import styles from 'components/Field/Field.module.scss'
 import { useForm, Controller, FormProvider } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import Button, { ButtonsGroup } from 'components/button'
-import Field, { Section } from 'components/Field'
+import Field, { PageHeader, Section } from 'components/Field'
 import { Bank } from '@prisma/client'
 import { format } from 'date-fns'
 import MortgageSummerySection from './MortgageSummerySection'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import {
   AmortizationScheduleTransaction,
   calcAmortizationSchedule,
@@ -17,6 +17,7 @@ import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 import { Mortgage } from 'utils/types'
 import useMortgages from 'hooks/useMortgages'
 import { useRouter } from 'next/router'
+import Delete from 'components/button/delete.svg'
 
 function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
   const formsMethods = useForm({
@@ -27,9 +28,14 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
   const { handleSubmit, watch, control, formState } = formsMethods
   const [amortizationSchedule, setAmortizationSchedule] =
     useState<AmortizationScheduleTransaction[]>()
-  const { upsertMortgage } = useMortgages()
+  const { upsertMortgage, deleteMortgage } = useMortgages()
   const router = useRouter()
   const courses = watch('courses')
+
+  const onDelete = useCallback(async () => {
+    deleteMortgage(mortgage?.id!)
+    await router.push('/mortgages')
+  }, [deleteMortgage, mortgage, router])
 
   return (
     <FormProvider {...formsMethods}>
@@ -52,6 +58,14 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
         })}
         noValidate
       >
+        <PageHeader title="Mortgage">
+          {mortgage?.id && <Button
+            text="delete"
+            bordered
+            onClick={() => onDelete()}
+            icon={<Delete />}
+          />}
+        </PageHeader>
         <MortgageComp />
         <Section label="Propose Details">
           <Field label="Funding Rate">

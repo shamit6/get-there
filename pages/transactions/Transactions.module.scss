@@ -1,22 +1,7 @@
-.content {
-  grid-column-start: 2;
-  grid-row-start: 3;
-}
 
 .footer {
   grid-column-start: 2;
   grid-row-start: 4;
-}
-
-.pageHeader {
-  display: flex;
-  align-items: center;
-  margin-bottom: .6em;
-
-  .title {
-    flex: 1;
-    font-size: 1.5em;
-  }
 }
 
 .transactionTable {

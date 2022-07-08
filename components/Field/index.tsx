@@ -1,5 +1,5 @@
 import styles from './Field.module.scss'
-import { ReactChild } from 'react'
+import React, { ReactChild } from 'react'
 import classnames from 'classnames'
 
 export default function Field({
@@ -39,6 +39,18 @@ export function Section({
       >
         {children}
       </div>
+    </div>
+  )
+}
+
+export function PageHeader({
+  children,
+  title,
+}: React.PropsWithChildren<{ title: string }>) {
+  return (
+    <div className={styles.pageHeader}>
+      <div className={styles.title}>{title}</div>
+      {children}
     </div>
   )
 }
