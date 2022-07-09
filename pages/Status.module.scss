@@ -4,22 +4,6 @@
   flex-direction: column;
 }
 
-.first {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  flex-direction: column;
-  position: relative;
-
-  .smallTickers {
-    margin-top: 0.5em;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    font-weight: normal;
-  }
-}
-
 .graphs {
   flex: 1;
   display: grid;

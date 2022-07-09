@@ -1,3 +1,4 @@
+import { addMonths, isAfter, isBefore } from 'date-fns'
 import { sumBy } from 'lodash'
 import {
   CalculatedMortgageProgram,
@@ -5,6 +6,8 @@ import {
   MortgageEarlyPayoffType,
   MortgageCourse,
   MortgageType,
+  Transaction,
+  Mortgage,
 } from './types'
 
 export interface AmortizationScheduleTransaction {
@@ -225,4 +228,27 @@ export function calcDisplayedMortgageProgram(
     monthlyPayment: payemnt[0]?.totalPayment ?? 0,
     earlyPayoffAmount: displayEarlyPayoffAmount,
   }
+}
+
+export function generateTransactionMortgageOccurrences(
+  mortgages: Mortgage[],
+  startDate: Date,
+  endDate: Date
+): Transaction[] {
+  return mortgages.flatMap((mortgage) => {
+    const { courses, offeringDate } = mortgage
+
+    const mortgageTransactions = calcAmortizationSchedule(courses).map(
+      (payment, index) => {
+        return {
+          amount: Math.trunc(-payment.totalPayment),
+          date: addMonths(offeringDate, index + 1),
+          type: 'mortgage',
+        }
+      }
+    )
+    return mortgageTransactions.filter(
+      ({ date }) => !isBefore(date, startDate) && !isAfter(date, endDate)
+    )
+  })
 }

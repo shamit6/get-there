@@ -3,6 +3,32 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prismaClient } from '../../../utils/prisma'
 import { Mortgage } from 'utils/types'
 
+export async function fetchMortgagesForSsr(req: NextApiRequest) {
+  const session = await getSession({ req })
+  const userEmail = session?.user?.email
+
+  try {
+    if (!userEmail) {
+      return []
+    }
+
+    prismaClient.$connect()
+    const mortgages = prismaClient.mortgage.findMany({
+      where: { userEmail },
+      include: {
+        courses: true,
+      },
+    })
+    await prismaClient.$disconnect()
+
+    return mortgages
+  } catch {
+    return []
+  } finally {
+    await prismaClient.$disconnect()
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Mortgage | Mortgage[]>

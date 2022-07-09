@@ -1,18 +1,16 @@
-import type { TimePeriod } from './types'
+import type { TimePeriod, Transaction } from './types'
 import {
   addWeeks,
   addMonths,
   addYears,
   isAfter,
   min,
-  isBefore,
   getYear,
   getMonth,
   lastDayOfYear,
   lastDayOfMonth,
   lastDayOfWeek,
 } from 'date-fns'
-import { TransactionConfig } from './types'
 
 interface SummerizedTransacrionPeriod {
   time: { year: number; month?: number }
@@ -23,7 +21,7 @@ interface SummerizedTransacrionPeriod {
 interface SummerizedTransacrionsPeriod {
   time: { year: number; month?: number }
   totalAmount: number
-  transaction: { type: string; amount: number }[]
+  transactions: { type: string; amount: number }[]
 }
 
 export interface TimelineSummerizedTransacrionsPeriod
@@ -59,22 +57,6 @@ function getLastDayOfPeriodByDate(
   }
 }
 
-function getFirstOccuranceNotBefore(
-  transactionConfig: TransactionConfig,
-  notBeforeDate: Date
-): Date {
-  const getNextIntervalTime = getNextIntervalTimeFunc(
-    transactionConfig.timePeriod as TimePeriod
-  )
-  let currDate = transactionConfig.date
-
-  while (isBefore(currDate, notBeforeDate)) {
-    currDate = getNextIntervalTime(currDate, transactionConfig.periodAmount!)
-  }
-
-  return currDate
-}
-
 function extractTimeByPeriod(
   date: Date,
   periodResolution: TimePeriod
@@ -85,126 +67,6 @@ function extractTimeByPeriod(
     default:
       return { year: getYear(date), month: getMonth(date) }
   }
-}
-
-function getTransactionSummery(
-  transactionConfig: TransactionConfig,
-  fromDate: Date,
-  untilDate: Date,
-  periodResolution: TimePeriod
-): SummerizedTransacrionPeriod[] {
-  const { date, type, amount, ...interval } = transactionConfig
-  const transactionOccurrences: SummerizedTransacrionPeriod[] = []
-
-  if (!interval?.timePeriod) {
-    if (isAfter(fromDate, date) || isBefore(untilDate, date)) {
-      return []
-    } else {
-      return [
-        {
-          time: extractTimeByPeriod(date, periodResolution),
-          totalAmout: amount,
-          type,
-        },
-      ]
-    }
-  }
-
-  let currentDate = getFirstOccuranceNotBefore(transactionConfig, fromDate)
-  let currentTransactionSummrey = {
-    time: extractTimeByPeriod(currentDate, periodResolution),
-    totalAmout: 0,
-    type,
-  }
-  let isAnythingToPush = false
-
-  const getNextIntervalTime = getNextIntervalTimeFunc(
-    interval!.timePeriod as TimePeriod
-  )
-  const generateUntilDate = interval!.endDate
-    ? min([untilDate, interval!.endDate])
-    : untilDate
-
-  while (!isAfter(currentDate, generateUntilDate)) {
-    if (!isBefore(currentDate, fromDate)) {
-      if (
-        JSON.stringify(currentTransactionSummrey.time) ===
-        JSON.stringify(extractTimeByPeriod(currentDate, periodResolution))
-      ) {
-        currentTransactionSummrey.totalAmout += amount
-        isAnythingToPush = true
-      } else {
-        transactionOccurrences.push(currentTransactionSummrey)
-        currentTransactionSummrey = {
-          time: extractTimeByPeriod(currentDate, periodResolution),
-          totalAmout: amount,
-          type,
-        }
-        isAnythingToPush = !isAfter(currentDate, generateUntilDate)
-      }
-    }
-    currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
-  }
-
-  if (isAnythingToPush) {
-    transactionOccurrences.push(currentTransactionSummrey)
-  }
-
-  return transactionOccurrences
-}
-
-export function getTransactionsSummeryByPeriod(
-  transactionConfigs: TransactionConfig[],
-  periodResolution: TimePeriod,
-  itemsToGenerate: number,
-  fromDate: Date = new Date(),
-  maxDate?: Date
-): SummerizedTransacrionsPeriod[] {
-  const lastDayOfPeriod = getLastDayOfPeriodByDate(
-    periodResolution,
-    itemsToGenerate,
-    fromDate
-  )
-
-  const untilDate = !maxDate ? lastDayOfPeriod : min([maxDate, lastDayOfPeriod])
-
-  const transactionConfigsOccurrences = transactionConfigs.flatMap(
-    (transactionConfig) =>
-      getTransactionSummery(
-        transactionConfig,
-        fromDate,
-        untilDate,
-        periodResolution
-      )
-  )
-  transactionConfigsOccurrences.sort(function compare(t1, t2) {
-    const subYears = t1.time.year - t2.time.year
-    return subYears ? subYears : (t1.time.month || 0) - (t2.time.month || 0)
-  })
-
-  return transactionConfigsOccurrences.reduce((acc, curr) => {
-    const last = acc[acc.length - 1]
-
-    if (JSON.stringify(last?.time) !== JSON.stringify(curr.time)) {
-      acc.push({
-        time: curr.time,
-        totalAmount: curr.totalAmout,
-        transaction: [{ type: curr.type, amount: curr.totalAmout }],
-      })
-
-      return acc
-    } else {
-      const updatedLast = {
-        time: last.time,
-        totalAmount: last.totalAmount + curr.totalAmout,
-        transaction: [
-          ...last.transaction,
-          { type: curr.type, amount: curr.totalAmout },
-        ],
-      }
-      return [...acc.slice(0, acc.length - 1), updatedLast]
-    }
-  }, [] as SummerizedTransacrionsPeriod[])
 }
 
 export function addBalanaceAmountToTransactionsSummery(
@@ -235,4 +97,66 @@ export function getLastDayOfPeriod(
     default:
       return lastDayOfMonth(new Date(time.year, time.month!))
   }
+}
+
+export function getTransactionsSummeryByPeriod(
+  transactions: Transaction[],
+  periodResolution: TimePeriod,
+  itemsToGenerate: number,
+  fromDate: Date = new Date(),
+  maxDate?: Date
+): SummerizedTransacrionsPeriod[] {
+  const lastDayOfPeriod = getLastDayOfPeriodByDate(
+    periodResolution,
+    itemsToGenerate,
+    fromDate
+  )
+
+  const untilDate = !maxDate ? lastDayOfPeriod : min([maxDate, lastDayOfPeriod])
+  let currentDate = fromDate
+  const getNextDate = getNextIntervalTimeFunc(periodResolution)
+
+  const summarizedTransactionsPeriods: {
+    time: { year: number; month?: number }
+    totalAmount: number
+    transactions: { [type: string]: number }
+  }[] = []
+
+  while (
+    !isAfter(currentDate, untilDate) &&
+    summarizedTransactionsPeriods.length <= itemsToGenerate + 2
+  ) {
+    summarizedTransactionsPeriods.push({
+      time: extractTimeByPeriod(currentDate, periodResolution),
+      totalAmount: 0,
+      transactions: {},
+    })
+
+    currentDate = getNextDate(currentDate, 1)
+  }
+
+  transactions.forEach((transaction) => {
+    const transactionTime = JSON.stringify(
+      extractTimeByPeriod(transaction.date, periodResolution)
+    )
+
+    const relevantPeriod = summarizedTransactionsPeriods.find(
+      ({ time }) => JSON.stringify(time) === transactionTime
+    )
+
+    if (!!relevantPeriod) {
+      relevantPeriod.totalAmount += transaction.amount
+      relevantPeriod.transactions[transaction.type] =
+        (relevantPeriod.transactions[transaction.type] ?? 0) +
+        transaction.amount
+    }
+  })
+
+  return summarizedTransactionsPeriods.map((period) => ({
+    ...period,
+    transactions: Object.entries(period.transactions).map(([type, amount]) => ({
+      type,
+      amount,
+    })),
+  }))
 }

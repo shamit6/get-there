@@ -152,18 +152,8 @@ export function getCurrentYearBalanceAmount(
   return currentYearBalanceAmount
 }
 
-export function getTransactionConfigsAmounts(
-  transactionConfigs: TransactionConfig[],
-  fromDate: Date,
-  untilDate: Date
-) {
-  const occurrences = generateTransactionConfigsOccurrences(
-    transactionConfigs,
-    fromDate,
-    untilDate
-  )
-
-  const amountToType = occurrences.reduce((acc, currTransaction) => {
+export function getTransactionAmounts(transaction: Transaction[]) {
+  const amountToType = transaction.reduce((acc, currTransaction) => {
     const { type, amount } = currTransaction
     if (!acc[type]) {
       return { ...acc, [type]: amount }

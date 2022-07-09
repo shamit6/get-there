@@ -1,16 +1,18 @@
 import React from 'react'
 import { format, isAfter, subMonths } from 'date-fns'
 
-import { TransactionConfig } from 'utils/types'
+import type{ Transaction } from 'utils/types'
 import {
   generateTransactionConfigsOccurrences,
   addBalanceToSortTransaction,
-  getTransactionConfigsAmounts,
+  getTransactionAmounts,
 } from 'utils/transactionsCalculator'
 import { LineChart, BarChart } from 'components/Charts'
 import useBalanceStatus from 'hooks/useBalanceStatus'
 import useTransactions from 'hooks/useTransactions'
 import styles from './ChartsPanel.module.scss'
+import useMortgages from 'hooks/useMortgages'
+import { generateTransactionMortgageOccurrences } from 'utils/amortizationScheduleCalculator'
 
 export default function ChartPanel({
   startDate,
@@ -21,8 +23,9 @@ export default function ChartPanel({
 }) {
   const { balanceStatuses } = useBalanceStatus()
   const { transactions } = useTransactions()
+  const { mortgages } = useMortgages()
 
-  if (!transactions || !balanceStatuses) {
+  if (!transactions || !balanceStatuses || !mortgages) {
     return null
   }
 
@@ -43,6 +46,13 @@ export default function ChartPanel({
     startDate,
     endDate
   )
+    ?.concat(
+      generateTransactionMortgageOccurrences(mortgages, startDate, endDate)
+    )
+    ?.sort(function compare(t1, t2) {
+      return t1.date.getTime() - t2.date.getTime()
+    })
+
   const transactionToView = addBalanceToSortTransaction(
     allTransactionsOccurrences.filter(
       ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
@@ -70,10 +80,8 @@ export default function ChartPanel({
     },
   ]
 
-  const totalTransactionAmounts = getTransactionConfigsAmounts(
-    transactions,
-    startDate,
-    endDate
+  const totalTransactionAmounts = getTransactionAmounts(
+    allTransactionsOccurrences
   )
   const earningsSpendings = totalTransactionAmounts.reduce(
     (res, cur) => {
@@ -86,7 +94,7 @@ export default function ChartPanel({
       }
       return res
     },
-    [[], []] as [TransactionConfig[], TransactionConfig[]]
+    [[], []] as [Transaction[], Transaction[]]
   )
 
   const barChartData = earningsSpendings.map((earnSpend, index) => {
@@ -101,15 +109,10 @@ export default function ChartPanel({
     }
   })
 
-  const barChartKeys = Array.from(
-    new Set(
-      transactions
-        .filter(
-          ({ type }) => !!barChartData[0][type] || !!barChartData[1][type]
-        )
-        .map((cur) => cur.type)
-    )
-  )
+  const barChartKeys = [
+    ...earningsSpendings[0].map((cur) => cur.type),
+    ...earningsSpendings[1].map((cur) => cur.type),
+  ]
 
   return (
     <>
