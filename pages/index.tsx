@@ -89,8 +89,7 @@ export default function Wrapper({ mortgages }: { mortgages: Mortgage[] }) {
 
 // @ts-ignore
 export async function getServerSideProps({ req }) {
-  const mortgages = await fetchMortgagesForSsr(req)
-
+  // const mortgages = await fetchMortgagesForSsr(req)
   // return { props: { mortgages: JSON.parse(JSON.stringify(mortgages)) } }
   return { props: { mortgages: [] } }
 }

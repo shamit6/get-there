@@ -1,7 +1,7 @@
 import React from 'react'
 import { format, isAfter, subMonths } from 'date-fns'
 
-import type{ Transaction } from 'utils/types'
+import type { Transaction } from 'utils/types'
 import {
   generateTransactionConfigsOccurrences,
   addBalanceToSortTransaction,
@@ -24,6 +24,7 @@ export default function ChartPanel({
   const { balanceStatuses } = useBalanceStatus()
   const { transactions } = useTransactions()
   const { mortgages } = useMortgages()
+  const nowDate = new Date()
 
   if (!transactions || !balanceStatuses || !mortgages) {
     return null
@@ -31,7 +32,7 @@ export default function ChartPanel({
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
-      isAfter(createdAt, subMonths(new Date(), 5)) || index === 0
+      isAfter(createdAt, subMonths(nowDate, 5)) || index === 0
   )
 
   const balanceGraphData = lastBalanceStatuses?.map(
@@ -41,9 +42,11 @@ export default function ChartPanel({
     })
   )
 
+  const lastBalanceStatus = lastBalanceStatuses[0]
+
   const allTransactionsOccurrences = generateTransactionConfigsOccurrences(
     transactions,
-    startDate,
+    lastBalanceStatus.createdAt,
     endDate
   )
     ?.concat(
@@ -60,7 +63,12 @@ export default function ChartPanel({
     lastBalanceStatuses[0]
   )
 
-  const transactionsGraphData = [balanceGraphData![0]].concat(
+  const transactionsGraphData = [
+    {
+      x: format(lastBalanceStatus.createdAt, 'dd/MM/yyyy'),
+      y: lastBalanceStatus.amount,
+    },
+  ].concat(
     transactionToView.map(({ amount, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
       y: amount!,
