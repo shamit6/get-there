@@ -1,24 +1,25 @@
 import { useState } from 'react'
-import { format, startOfDay, addYears } from 'date-fns'
+import { startOfDay, addYears } from 'date-fns'
 import useTransaction from '../hooks/useTransactions'
 import useBalanceStatus from '../hooks/useBalanceStatus'
 import Layout from 'components/layout'
 import styles from './Status.module.scss'
 import Loader from 'components/loader'
-import Field from 'components/Field'
 import ScrollToTopButton from 'components/ScrollToTopButton'
 import Timeline from './timeline'
 import useEnsureLogin from '../hooks/useEnsureLogin'
 import ChartsPanel from 'components/ChartsPanel'
-import { fetchMortgagesForSsr } from './api/mortgages'
 import Tickers from 'components/Tickers'
 import { Mortgage } from 'utils/types'
 import { SWRConfig } from 'swr'
+import TargetPanel from 'components/TargetPanel/TargetPanel'
 
 function Home() {
   const nowDate = new Date()
   const [startDate, setStartDate] = useState<Date>(startOfDay(nowDate))
   const [endDate, setEndDate] = useState<Date>(startOfDay(addYears(nowDate, 1)))
+  const [targetAmount, setTargetAmount] = useState<number>(0)
+
   useEnsureLogin()
 
   const { balanceStatuses } = useBalanceStatus()
@@ -38,26 +39,19 @@ function Home() {
     <Layout>
       <div className={styles.status}>
         <Tickers />
-        <div className={styles.filterPanel}>
-          <Field label="From date:">
-            <input
-              type="date"
-              value={format(startDate, 'yyyy-MM-dd')}
-              onChange={(e) => {
-                setStartDate(e.target.valueAsDate!)
-              }}
-            />
-          </Field>
-          <Field label="Until date:">
-            <input
-              type="date"
-              value={format(endDate, 'yyyy-MM-dd')}
-              onChange={(e) => {
-                setEndDate(e.target.valueAsDate!)
-              }}
-            />
-          </Field>
-        </div>
+        <TargetPanel
+          endDate={endDate}
+          targetAmount={targetAmount}
+          onSubmit={({ targetAmount, endDate }) => {
+            if (targetAmount) {
+              setTargetAmount(targetAmount)
+            }
+
+            if (endDate) {
+              setEndDate(endDate)
+            }
+          }}
+        />
         <div className={styles.graphs}>
           <ChartsPanel startDate={startDate} endDate={endDate} />
           <div className={styles.timeline}>

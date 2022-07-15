@@ -14,7 +14,8 @@ export function BarChart({
       data={data}
       keys={keys}
       indexBy={indexBy}
-      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      // margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      margin={{ top: 20, right: 10, bottom: 30, left: 50 }}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       valueFormat={(value) => `${value.toLocaleString('he')}`}

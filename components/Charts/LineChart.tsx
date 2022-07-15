@@ -31,7 +31,7 @@ export function LineChart({
       ]}
       colors={(d) => d.color}
       data={data}
-      margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
+      margin={{ top: 20, right: 10, bottom: 30, left: 50 }}
       xScale={{
         type: 'time',
         format: '%d/%m/%Y',
@@ -41,12 +41,21 @@ export function LineChart({
       xFormat="time:%d/%m/%Y"
       yScale={{
         type: 'linear',
-        min: minY ?? 'auto',
+        // min: minY ?? 'auto',
+        min: 0,
         max: 'auto',
         stacked,
       }}
       yFormat={(value) => `${value.toLocaleString('he')}`}
-      axisBottom={null}
+      axisBottom={{
+        format: "%d/%m",
+        // legendPosition: "middle",
+        // legendOffset: 40,
+        // tickSize: 20,
+        legendPosition: 'start',
+        ticksPosition: 'after',
+        tickValues: 'every 2 month',
+      }}
       axisLeft={{
         tickSize: 5,
         tickPadding: 5,
@@ -55,7 +64,7 @@ export function LineChart({
         legendPosition: 'middle',
       }}
       enablePoints={false}
-      enableSlices="y"
+      enableSlices="x"
       sliceTooltip={({ slice }) => {
         return (
           <div
