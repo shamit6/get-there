@@ -53,7 +53,7 @@ export function LineChart({
         legendPosition: 'start',
         ticksPosition: 'after',
         // tickValues: 'every 2 month',
-        tickValues: 6,
+        tickValues: 4,
       }}
       axisLeft={{
         format: (value) =>
