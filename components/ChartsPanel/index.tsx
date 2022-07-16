@@ -1,5 +1,5 @@
 import React from 'react'
-import { format, isAfter, subMonths } from 'date-fns'
+import { addMonths, format, isAfter, subMonths } from 'date-fns'
 
 import type { Transaction } from 'utils/types'
 import {
@@ -13,14 +13,9 @@ import useTransactions from 'hooks/useTransactions'
 import styles from './ChartsPanel.module.scss'
 import useMortgages from 'hooks/useMortgages'
 import { generateTransactionMortgageOccurrences } from 'utils/amortizationScheduleCalculator'
+import useFilterOptions from 'hooks/useFilterOptions'
 
-export default function ChartPanel({
-  startDate,
-  endDate,
-}: {
-  startDate: Date
-  endDate: Date
-}) {
+export default function ChartPanel() {
   const { balanceStatuses } = useBalanceStatus()
   const { transactions } = useTransactions()
   const { mortgages } = useMortgages()
@@ -29,6 +24,11 @@ export default function ChartPanel({
   if (!transactions || !balanceStatuses || !mortgages) {
     return null
   }
+
+  const {
+    filter: { endDate, targetAmount },
+    filterUntilAmount,
+  } = useFilterOptions()
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
@@ -47,21 +47,41 @@ export default function ChartPanel({
   const allTransactionsOccurrences = generateTransactionConfigsOccurrences(
     transactions,
     lastBalanceStatus.createdAt,
-    endDate
+    endDate ?? addMonths(nowDate, 30 * 12 + 4)
   )
     ?.concat(
-      generateTransactionMortgageOccurrences(mortgages, startDate, endDate)
+      generateTransactionMortgageOccurrences(
+        mortgages,
+        nowDate,
+        endDate ?? addMonths(nowDate, 30 * 12 + 4)
+      )
     )
     ?.sort(function compare(t1, t2) {
       return t1.date.getTime() - t2.date.getTime()
     })
 
-  const transactionToView = addBalanceToSortTransaction(
-    allTransactionsOccurrences.filter(
-      ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
-    ),
+  const transactionWithBalance = addBalanceToSortTransaction(
+    allTransactionsOccurrences,
     lastBalanceStatuses[0]
   )
+
+  let transactionToView: Transaction[] = []
+  let targetAmountIndex
+
+  if (targetAmount) {
+    try {
+      const { index, transactionsUntilAmount } = filterUntilAmount(transactionWithBalance, targetAmount)
+      targetAmountIndex = index
+      transactionToView = transactionsUntilAmount
+    } catch {
+      transactionToView = transactionWithBalance
+      targetAmountIndex = transactionToView.length
+    }
+  } else {
+    transactionToView = transactionWithBalance.filter(
+      ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
+    )
+  }
 
   const transactionsGraphData = [
     {
@@ -88,8 +108,25 @@ export default function ChartPanel({
     },
   ]
 
+  if (targetAmountIndex !== undefined) {
+    lineChartData.push({
+      id: 'Target Amount',
+      color: '#e00a1f',
+      data: [
+        {
+          x: format(transactionToView[targetAmountIndex].date, 'dd/MM/yyyy'),
+          y: 0,
+        },
+        {
+          x: format(transactionToView[targetAmountIndex].date, 'dd/MM/yyyy'),
+          y: transactionToView[targetAmountIndex].amount + 20000,
+        },
+      ],
+    })
+  }
+
   const totalTransactionAmounts = getTransactionAmounts(
-    allTransactionsOccurrences
+    allTransactionsOccurrences.slice(0, targetAmountIndex)
   )
   const earningsSpendings = totalTransactionAmounts.reduce(
     (res, cur) => {

@@ -26,9 +26,7 @@ export function LineChart({
     <ResponsiveLine
       defs={[{ id: 'fill-color', color: 'inherit' }]}
       enableArea
-      fill={[
-        { match: '*', id: 'fill-color' },
-      ]}
+      fill={[{ match: '*', id: 'fill-color' }]}
       colors={(d) => d.color}
       data={data}
       margin={{ top: 20, right: 10, bottom: 30, left: 50 }}
@@ -48,15 +46,22 @@ export function LineChart({
       }}
       yFormat={(value) => `${value.toLocaleString('he')}`}
       axisBottom={{
-        format: "%d/%m",
+        format: '%d/%m/%y',
         // legendPosition: "middle",
         // legendOffset: 40,
         // tickSize: 20,
         legendPosition: 'start',
         ticksPosition: 'after',
-        tickValues: 'every 2 month',
+        // tickValues: 'every 2 month',
+        tickValues: 6,
       }}
       axisLeft={{
+        format: (value) =>
+          Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 1,
+            notation: 'compact',
+            compactDisplay: 'short',
+          }).format(value),
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,

@@ -15,10 +15,6 @@ import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
 
 function Home() {
-  const nowDate = new Date()
-  const [startDate, setStartDate] = useState<Date>(startOfDay(nowDate))
-  const [endDate, setEndDate] = useState<Date>(startOfDay(addYears(nowDate, 1)))
-  const [targetAmount, setTargetAmount] = useState<number>(0)
 
   useEnsureLogin()
 
@@ -39,24 +35,12 @@ function Home() {
     <Layout>
       <div className={styles.status}>
         <Tickers />
-        <TargetPanel
-          endDate={endDate}
-          targetAmount={targetAmount}
-          onSubmit={({ targetAmount, endDate }) => {
-            if (targetAmount) {
-              setTargetAmount(targetAmount)
-            }
-
-            if (endDate) {
-              setEndDate(endDate)
-            }
-          }}
-        />
+        <TargetPanel />
         <div className={styles.graphs}>
-          <ChartsPanel startDate={startDate} endDate={endDate} />
-          <div className={styles.timeline}>
-            <Timeline fromDate={startDate} untilDate={endDate} />
-          </div>
+          <ChartsPanel />
+          {/* <div className={styles.timeline}>
+            <Timeline />
+          </div> */}
         </div>
         <ScrollToTopButton />
       </div>

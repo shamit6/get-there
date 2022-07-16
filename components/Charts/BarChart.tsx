@@ -15,7 +15,7 @@ export function BarChart({
       keys={keys}
       indexBy={indexBy}
       // margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-      margin={{ top: 20, right: 10, bottom: 30, left: 50 }}
+      margin={{ top: 20, right: 130, bottom: 30, left: 60 }}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       valueFormat={(value) => `${value.toLocaleString('he')}`}
@@ -67,6 +67,12 @@ export function BarChart({
         legendOffset: 32,
       }}
       axisLeft={{
+        format: (value) =>
+          Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 1,
+            notation: 'compact',
+            compactDisplay: 'short',
+          }).format(value),
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,

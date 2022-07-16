@@ -1,4 +1,15 @@
 .filterPanel {
   display: flex;
-  align-items: baseline;
+  flex-wrap: wrap;
+  align-items: flex-end;
+
+  .filterPanelItem{
+    display: flex;
+    align-items: baseline;
+  }
+
+  .buttons {
+    flex: 1;
+  }
 }
+
