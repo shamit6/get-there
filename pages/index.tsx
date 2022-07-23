@@ -10,7 +10,7 @@ import Tickers from 'components/Tickers'
 import { Mortgage } from 'utils/types'
 import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
-import Timeline from './timeline'
+import Timeline from 'components/Timeline/Timeline'
 
 function Home() {
   useEnsureLogin()
