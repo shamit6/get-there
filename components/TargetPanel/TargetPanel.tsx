@@ -29,7 +29,7 @@ export default function TargetPanel() {
             onChange={() => setSelectedOption('end-date')}
             checked={selectedOption === 'end-date'}
           />
-          <Field label="Until date:" htmlFor="end-date">
+          <Field label="Until date:" htmlFor="end-date" className={styles.filterPanelItemField}>
             <input
               disabled={selectedOption === 'amount'}
               type="date"
@@ -50,7 +50,7 @@ export default function TargetPanel() {
             onChange={() => setSelectedOption('amount')}
             checked={selectedOption === 'amount'}
           />
-          <Field label="Target:" htmlFor="amount">
+          <Field label="Target:" htmlFor="amount" className={styles.filterPanelItemField}>
             <NumberFormat
               onValueChange={({ floatValue }) => setTargetAmount(floatValue)}
               value={localTargetAmount}

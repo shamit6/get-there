@@ -1,11 +1,16 @@
 .filterPanel {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
   align-items: flex-end;
 
-  .filterPanelItem{
+  .filterPanelItem {
     display: flex;
     align-items: baseline;
+  }
+
+  .filterPanelItemField {
+    margin-right: 0.35em;
   }
 
   .buttons {

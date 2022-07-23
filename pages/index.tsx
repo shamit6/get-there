@@ -12,7 +12,6 @@ import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
 
 function Home() {
-
   useEnsureLogin()
 
   const { balanceStatuses } = useBalanceStatus()
