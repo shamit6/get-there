@@ -3,13 +3,15 @@ import {
   addWeeks,
   addMonths,
   addYears,
-  isAfter,
   min,
   getYear,
   getMonth,
   lastDayOfYear,
   lastDayOfMonth,
   lastDayOfWeek,
+  startOfMonth,
+  startOfYear,
+  startOfDay,
 } from 'date-fns'
 
 interface SummerizedTransacrionPeriod {
@@ -113,7 +115,10 @@ export function getTransactionsSummeryByPeriod(
   )
 
   const untilDate = !maxDate ? lastDayOfPeriod : min([maxDate, lastDayOfPeriod])
-  let currentDate = fromDate
+  let currentDate =
+    periodResolution === 'month'
+      ? startOfMonth(fromDate)
+      : startOfYear(fromDate)
   const getNextDate = getNextIntervalTimeFunc(periodResolution)
 
   const summarizedTransactionsPeriods: {
@@ -123,7 +128,7 @@ export function getTransactionsSummeryByPeriod(
   }[] = []
 
   while (
-    !isAfter(currentDate, untilDate) &&
+    currentDate.getTime() <= untilDate.getTime() &&
     summarizedTransactionsPeriods.length <= itemsToGenerate + 2
   ) {
     summarizedTransactionsPeriods.push({
@@ -136,19 +141,21 @@ export function getTransactionsSummeryByPeriod(
   }
 
   transactions.forEach((transaction) => {
-    const transactionTime = JSON.stringify(
-      extractTimeByPeriod(transaction.date, periodResolution)
-    )
+    if (transaction.date.getTime() >= startOfDay(fromDate).getTime()) {
+      const transactionTime = JSON.stringify(
+        extractTimeByPeriod(transaction.date, periodResolution)
+      )
 
-    const relevantPeriod = summarizedTransactionsPeriods.find(
-      ({ time }) => JSON.stringify(time) === transactionTime
-    )
+      const relevantPeriod = summarizedTransactionsPeriods.find(
+        ({ time }) => JSON.stringify(time) === transactionTime
+      )
 
-    if (!!relevantPeriod) {
-      relevantPeriod.totalAmount += transaction.amount
-      relevantPeriod.transactions[transaction.type] =
-        (relevantPeriod.transactions[transaction.type] ?? 0) +
-        transaction.amount
+      if (!!relevantPeriod) {
+        relevantPeriod.totalAmount += transaction.amount
+        relevantPeriod.transactions[transaction.type] =
+          (relevantPeriod.transactions[transaction.type] ?? 0) +
+          transaction.amount
+      }
     }
   })
 

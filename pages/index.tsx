@@ -10,6 +10,7 @@ import Tickers from 'components/Tickers'
 import { Mortgage } from 'utils/types'
 import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
+import Timeline from './timeline'
 
 function Home() {
   useEnsureLogin()
@@ -34,9 +35,9 @@ function Home() {
         <TargetPanel />
         <div className={styles.graphs}>
           <ChartsPanel />
-          {/* <div className={styles.timeline}>
+          <div className={styles.timeline}>
             <Timeline />
-          </div> */}
+          </div>
         </div>
         <ScrollToTopButton />
       </div>

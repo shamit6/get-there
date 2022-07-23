@@ -1,17 +1,12 @@
 import {
-  calcCurrentBalanceAmount,
-  generateTransactionConfigsOccurrences,
-} from 'utils/transactionsCalculator'
-import {
   addBalanaceAmountToTransactionsSummery,
   getLastDayOfPeriod,
   getTransactionsSummeryByPeriod,
   TimelineSummerizedTransacrionsPeriod,
 } from 'utils/timelineTrascationCalc'
-import useTransaction from '../../hooks/useTransactions'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
 import { TimePeriod } from 'utils/types'
-import { format } from 'date-fns'
+import { format, min } from 'date-fns'
 import styles from './Timeline.module.scss'
 import React, { useEffect, useState } from 'react'
 import Arrow, { Direction } from 'components/arrow'
@@ -19,15 +14,16 @@ import TextNumber from 'components/textNumber'
 import Loader from 'components/loader'
 import InfiniteScroll from 'react-infinite-scroller'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
-import useMortgages from 'hooks/useMortgages'
-import { generateTransactionMortgageOccurrences } from 'utils/amortizationScheduleCalculator'
+import useTransactionsView from 'hooks/useTransactionsView'
 
 function TransactionsSummery({
   transaction,
   periodResolution,
+  maxDate,
 }: {
   transaction: TimelineSummerizedTransacrionsPeriod
   periodResolution: TimePeriod
+  maxDate: Date
 }) {
   useEnsureLogin()
   const [isOpen, setOpen] = useState(false)
@@ -75,7 +71,10 @@ function TransactionsSummery({
               <td style={{ padding: '.5em 0' }}>
                 Expected Balance on{' '}
                 {format(
-                  getLastDayOfPeriod(transaction.time, periodResolution),
+                  min([
+                    getLastDayOfPeriod(transaction.time, periodResolution),
+                    maxDate,
+                  ]),
                   'dd/MM/yyyy'
                 )}
               </td>
@@ -90,64 +89,37 @@ function TransactionsSummery({
   )
 }
 
-function Timeline({
-  fromDate = new Date(),
-  untilDate,
-}: {
-  fromDate?: Date
-  untilDate: Date
-}) {
-  const { balanceStatuses, isLoading: isLoadingBalance } =
-    useBalanceStatus(true)
+function Timeline() {
+  const { isLoading: isLoadingBalance } = useBalanceStatus(true)
 
-  const { transactions } = useTransaction()
   const [periodResolution, setPeriodResolution] = useState(TimePeriod.YEAR)
   const [timelineTransactions, setTimelineTransactions] = useState<
     TimelineSummerizedTransacrionsPeriod[]
   >([])
-  const [currentBalanceAmount, setCurrentBalanceAmount] = useState(0)
+
   const [numberOFitems, setNumberOFitems] = useState(5)
   const [hasMore, setHasMore] = useState(false)
-  const { mortgages } = useMortgages()
+
+  const { transactionsToView, targetAmountIndex, currentBalanceAmount } =
+    useTransactionsView()
+
+  const nowDate = new Date()
+  const untilDate = transactionsToView[transactionsToView.length - 1].date
 
   useEffect(() => {
-    if (
-      isLoadingBalance ||
-      !transactions ||
-      !balanceStatuses?.[0] ||
-      !mortgages
-    ) {
+    if (transactionsToView?.length === 0) {
       return
     }
 
-    const currentBalanceAmount = calcCurrentBalanceAmount(
-      transactions,
-      balanceStatuses?.[0]!
-    )
-
-    setCurrentBalanceAmount(currentBalanceAmount)
-
-    const allTransactionsOccurrences = generateTransactionConfigsOccurrences(
-      transactions,
-      fromDate,
-      untilDate
-    )
-      ?.concat(
-        generateTransactionMortgageOccurrences(mortgages, fromDate, untilDate)
-      )
-      ?.sort(function compare(t1, t2) {
-        return t1.date.getTime() - t2.date.getTime()
-      })
-
     const transactionsSummery = getTransactionsSummeryByPeriod(
-      allTransactionsOccurrences,
+      transactionsToView,
       periodResolution,
       numberOFitems,
-      fromDate,
+      nowDate,
       untilDate
     )
 
-    if (transactionsSummery.length === timelineTransactions.length) {
+    if (transactionsSummery?.length === timelineTransactions?.length) {
       setHasMore(false)
     } else {
       const transactionsWithBalanceSummery =
@@ -160,21 +132,20 @@ function Timeline({
       setHasMore(true)
     }
   }, [
-    balanceStatuses,
-    transactions,
+    transactionsToView,
     currentBalanceAmount,
     numberOFitems,
     periodResolution,
     isLoadingBalance,
-    fromDate,
     untilDate,
+    targetAmountIndex,
   ])
 
   const loadmore = () => {
     setNumberOFitems(numberOFitems + 5)
   }
 
-  if (!transactions || !balanceStatuses) {
+  if (transactionsToView.length === 0) {
     return <Loader />
   }
 
@@ -212,6 +183,7 @@ function Timeline({
                 key={index}
                 transaction={transaction}
                 periodResolution={periodResolution}
+                maxDate={untilDate}
               />
             )
           })}
