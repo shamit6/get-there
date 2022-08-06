@@ -243,7 +243,7 @@ export function generateTransactionMortgageOccurrences(
         return {
           amount: Math.trunc(-payment.totalPayment),
           date: addMonths(offeringDate, index + 1),
-          type: 'mortgage',
+          type: 'Mortgage',
         }
       }
     )

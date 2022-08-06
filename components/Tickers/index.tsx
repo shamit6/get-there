@@ -1,43 +1,14 @@
 import React from 'react'
-import {
-  calcCurrentBalanceAmount,
-  getCurrentMonthBalanceAmount,
-  getCurrentYearBalanceAmount,
-} from 'utils/transactionsCalculator'
 import styles from './Tickers.module.scss'
 import Ticker from 'components/Ticker'
-import Loader from 'components/loader'
-import useBalanceStatus from 'hooks/useBalanceStatus'
-import useTransaction from 'hooks/useTransactions'
-
+import useTransactionsView from 'hooks/useTransactionsView'
 export default function Tickers() {
-  const nowDate = new Date()
-
-  const { balanceStatuses } = useBalanceStatus()
-  const { transactions } = useTransaction()
-
-  if (!transactions || !balanceStatuses) {
-    return <Loader />
-  }
-  
-  const currentBalanceAmount = calcCurrentBalanceAmount(
-    transactions,
-    balanceStatuses[0]
-  )
-
-  const currentYearBalanceAmount = getCurrentYearBalanceAmount(
-    transactions,
-    nowDate
-  )
-  const currentMonthBalanceAmount = getCurrentMonthBalanceAmount(
-    transactions,
-    nowDate
-  )
+  const {currentBalanceAmount} = useTransactionsView()
 
   return (
     <div className={styles.first}>
       <Ticker label="Balance" number={currentBalanceAmount} />
-      <div className={styles.smallTickers}>
+      {/* <div className={styles.smallTickers}>
         <Ticker
           small
           label="This Year"
@@ -59,7 +30,7 @@ export default function Tickers() {
           number={currentYearBalanceAmount / 12}
           duration={4}
         />
-      </div>
+      </div> */}
     </div>
   )
 }

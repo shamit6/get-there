@@ -1,19 +1,14 @@
 import React from 'react'
-import { addMonths, format, isAfter, subMonths } from 'date-fns'
-
+import { format, isAfter, subMonths } from 'date-fns'
 import type { Transaction } from 'utils/types'
-import {
-  generateTransactionConfigsOccurrences,
-  addBalanceToSortTransaction,
-  getTransactionAmounts,
-} from 'utils/transactionsCalculator'
+import { getTransactionAmounts } from 'utils/transactionsCalculator'
 import { LineChart, BarChart } from 'components/Charts'
 import useBalanceStatus from 'hooks/useBalanceStatus'
 import useTransactions from 'hooks/useTransactions'
 import styles from './ChartsPanel.module.scss'
 import useMortgages from 'hooks/useMortgages'
-import { generateTransactionMortgageOccurrences } from 'utils/amortizationScheduleCalculator'
-import useFilterOptions from 'hooks/useFilterOptions'
+import useTransactionsView from 'hooks/useTransactionsView'
+import { maxBy } from 'lodash'
 
 export default function ChartPanel() {
   const { balanceStatuses } = useBalanceStatus()
@@ -26,14 +21,16 @@ export default function ChartPanel() {
   }
 
   const {
-    filter: { endDate, targetAmount },
-    filterUntilAmount,
-  } = useFilterOptions()
+    transactionsToView,
+    transactionsWithBalanceToView,
+    targetAmountIndex,
+  } = useTransactionsView()
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
       isAfter(createdAt, subMonths(nowDate, 5)) || index === 0
   )
+  const lastBalanceStatus = lastBalanceStatuses[0]
 
   const balanceGraphData = lastBalanceStatuses?.map(
     ({ amount, createdAt }) => ({
@@ -42,54 +39,13 @@ export default function ChartPanel() {
     })
   )
 
-  const lastBalanceStatus = lastBalanceStatuses[0]
-
-  const allTransactionsOccurrences = generateTransactionConfigsOccurrences(
-    transactions,
-    lastBalanceStatus.createdAt,
-    endDate ?? addMonths(nowDate, 30 * 12 + 4)
-  )
-    ?.concat(
-      generateTransactionMortgageOccurrences(
-        mortgages,
-        nowDate,
-        endDate ?? addMonths(nowDate, 30 * 12 + 4)
-      )
-    )
-    ?.sort(function compare(t1, t2) {
-      return t1.date.getTime() - t2.date.getTime()
-    })
-
-  const transactionWithBalance = addBalanceToSortTransaction(
-    allTransactionsOccurrences,
-    lastBalanceStatuses[0]
-  )
-
-  let transactionToView: Transaction[] = []
-  let targetAmountIndex
-
-  if (targetAmount) {
-    try {
-      const { index, transactionsUntilAmount } = filterUntilAmount(transactionWithBalance, targetAmount)
-      targetAmountIndex = index
-      transactionToView = transactionsUntilAmount
-    } catch {
-      transactionToView = transactionWithBalance
-      targetAmountIndex = transactionToView.length
-    }
-  } else {
-    transactionToView = transactionWithBalance.filter(
-      ({ date }) => date.getTime() >= lastBalanceStatuses[0].createdAt.getTime()
-    )
-  }
-
   const transactionsGraphData = [
     {
       x: format(lastBalanceStatus.createdAt, 'dd/MM/yyyy'),
       y: lastBalanceStatus.amount,
     },
   ].concat(
-    transactionToView.map(({ amount, date }) => ({
+    transactionsWithBalanceToView.map(({ amount, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
       y: amount!,
     }))
@@ -109,24 +65,24 @@ export default function ChartPanel() {
   ]
 
   if (targetAmountIndex !== undefined) {
-    lineChartData.push({
+    lineChartData.unshift({
       id: 'Target Amount',
       color: '#e00a1f',
       data: [
         {
-          x: format(transactionToView[targetAmountIndex].date, 'dd/MM/yyyy'),
+          x: format(transactionsToView[targetAmountIndex].date, 'dd/MM/yyyy'),
           y: 0,
         },
         {
-          x: format(transactionToView[targetAmountIndex].date, 'dd/MM/yyyy'),
-          y: transactionToView[targetAmountIndex].amount + 20000,
+          x: format(transactionsToView[targetAmountIndex].date, 'dd/MM/yyyy'),
+          y: maxBy(transactionsWithBalanceToView, 'amount')?.amount ?? 0 + 40000,
         },
       ],
     })
   }
 
   const totalTransactionAmounts = getTransactionAmounts(
-    allTransactionsOccurrences.slice(0, targetAmountIndex)
+    transactionsToView.slice(0, targetAmountIndex)
   )
   const earningsSpendings = totalTransactionAmounts.reduce(
     (res, cur) => {

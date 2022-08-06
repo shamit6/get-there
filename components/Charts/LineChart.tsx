@@ -1,6 +1,8 @@
 import { ResponsiveLine } from '@nivo/line'
 import { LegendAnchor } from '@nivo/legends'
-import style from './LineChart.module.scss'
+import { Chip, TableTooltip } from '@nivo/tooltip'
+import { useTheme } from '@nivo/core'
+import TextNumber from 'components/textNumber'
 
 export interface Point {
   x: string
@@ -69,21 +71,23 @@ export function LineChart({
         legendPosition: 'middle',
       }}
       enablePoints={false}
-      enableSlices="x"
+      enableSlices="y"
       sliceTooltip={({ slice }) => {
+        const theme = useTheme()  
         return (
-          <div
-            className={style.tooltip}
-            style={{
-              color: slice.points[0].serieColor,
-            }}
-          >
-            {slice.points[0].data.xFormatted}
-
-            <div key={slice.points[0].id}>
-              <strong>{slice.points[0].data.yFormatted}</strong>
-            </div>
-          </div>
+          <TableTooltip
+            rows={slice.points.map((point) => [
+              <Chip
+                key="chip"
+                color={point.serieColor}
+                style={theme.tooltip.chip}
+              />,
+              <div>
+                <div>{point.data.xFormatted}</div>
+                <TextNumber value={point.data.yFormatted} suffix=" ₪" />
+              </div>,
+            ])}
+          />
         )
       }}
       pointSize={10}

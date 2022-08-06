@@ -78,6 +78,15 @@ export default function useTransactionsView() {
     transactionsWithBalanceToView = transactionsWithBalance.filter(
       ({ date }) => date.getTime() >= lastBalanceStatus.createdAt.getTime()
     )
+
+    if (lastBalanceStatus.createdAt.getTime() !== endDate?.getTime()) {
+      transactionsWithBalanceToView.push({
+        ...transactionsWithBalanceToView[
+          transactionsWithBalanceToView.length - 1
+        ],
+        date: endDate!,
+      })
+    }
   }
   const transactionsToView = allTransactionsOccurrences.slice(
     0,
