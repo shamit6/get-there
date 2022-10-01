@@ -102,7 +102,7 @@ export default function UpdateBalance() {
       <Popover
         content={
           <div className={styles.balanceDisclaimer}>
-            this is your the estimated current balance. isn't it correct? click{' '}
+            This is your estimated current balance. isn't it correct? click{' '}
             <a onClick={() => setIsModalOpen(true)}>here</a> to update
           </div>
         }
