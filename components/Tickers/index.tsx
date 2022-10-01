@@ -2,12 +2,15 @@ import React from 'react'
 import styles from './Tickers.module.scss'
 import Ticker from 'components/Ticker'
 import useTransactionsView from 'hooks/useTransactionsView'
+import UpdateBalance from 'components/UpdateBalance'
+
 export default function Tickers() {
   const {currentBalanceAmount} = useTransactionsView()
 
   return (
-    <div className={styles.first}>
+    <div className={styles.currentBalanceTicker}>
       <Ticker label="Balance" number={currentBalanceAmount} />
+      <UpdateBalance />
       {/* <div className={styles.smallTickers}>
         <Ticker
           small

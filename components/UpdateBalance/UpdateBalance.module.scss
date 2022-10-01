@@ -1,7 +1,11 @@
 .balanceDisclaimer {
   cursor: pointer;
-  font-size: 0.8em;
-  opacity: 0.8;
-  margin-left: auto;
-  white-space: nowrap;
+  opacity: 0.8;  
+  width: min(14em, 100vw);
+  padding: 1em;
+
+  a {
+    text-decoration: underline;
+    color: darkblue;
+  }
 }

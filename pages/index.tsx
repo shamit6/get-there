@@ -11,6 +11,7 @@ import { Mortgage } from 'utils/types'
 import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
 import Timeline from 'components/Timeline/Timeline'
+import { fetchMortgagesForSsr } from './api/mortgages'
 
 function Home() {
   useEnsureLogin()
@@ -64,7 +65,7 @@ export default function Wrapper({ mortgages }: { mortgages: Mortgage[] }) {
 
 // @ts-ignore
 export async function getServerSideProps({ req }) {
-  // const mortgages = await fetchMortgagesForSsr(req)
-  // return { props: { mortgages: JSON.parse(JSON.stringify(mortgages)) } }
-  return { props: { mortgages: [] } }
+  const mortgages = await fetchMortgagesForSsr(req)
+  return { props: { mortgages: JSON.parse(JSON.stringify(mortgages)) } }
+  // return { props: { mortgages: [] } }
 }
