@@ -1,15 +1,12 @@
-.first {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  flex-direction: column;
+.currentBalanceTicker {
+  margin: auto;
   position: relative;
-
-  .smallTickers {
-    margin-top: 0.5em;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    font-weight: normal;
-  }
+  display: inline-block;
+  // .smallTickers {
+  //   margin-top: 0.5em;
+  //   display: flex;
+  //   justify-content: center;
+  //   align-items: flex-end;
+  //   font-weight: normal;
+  // }
 }

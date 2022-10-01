@@ -5,7 +5,11 @@ import styles from './Popover.module.scss'
 export default function SimplePopover({
   content,
   children,
-}: React.PropsWithChildren<{ content: ReactNode }>) {
+  triggerElementStyles,
+}: React.PropsWithChildren<{
+  content: ReactNode
+  triggerElementStyles?: React.CSSProperties
+}>) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const clickMeButtonRef = useRef<HTMLButtonElement | null>(null)
 
@@ -30,7 +34,16 @@ export default function SimplePopover({
         </ArrowContainer>
       )}
     >
-      <div onClick={() => setIsPopoverOpen(!isPopoverOpen)}>{children}</div>
+      <div
+        style={{
+          display: 'inline-block',
+          cursor: 'pointer',
+          ...triggerElementStyles,
+        }}
+        onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+      >
+        {children}
+      </div>
     </Popover>
   )
 }

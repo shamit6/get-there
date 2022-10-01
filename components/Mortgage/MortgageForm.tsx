@@ -194,6 +194,7 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
         </ButtonsGroup>
         {amortizationSchedule && (
           <MortgagePaymentsCharts
+            startDate={mortgage.offeringDate!}
             mortgagePaymentsSchedule={amortizationSchedule}
           />
         )}

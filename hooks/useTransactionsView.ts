@@ -56,7 +56,7 @@ export default function useTransactionsView() {
     ({ date }) => !isBefore(date, nowDate)
   )
   const currentBalanceAmount =
-    currentBalanceIndex !== -1
+    currentBalanceIndex > 0
       ? transactionsWithBalance[currentBalanceIndex - 1].amount
       : lastBalanceStatus!.amount
 
@@ -92,6 +92,8 @@ export default function useTransactionsView() {
     0,
     transactionsWithBalanceToView.length
   )
+
+  console.log('currentBalanceAmount', currentBalanceAmount)
 
   return {
     transactionsWithBalanceToView,

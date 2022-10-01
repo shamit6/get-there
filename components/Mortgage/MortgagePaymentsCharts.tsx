@@ -9,8 +9,10 @@ import { addMonths, format } from 'date-fns'
 
 export default function MortgagePaymentsCharts({
   mortgagePaymentsSchedule,
+  startDate,
 }: {
   mortgagePaymentsSchedule: AmortizationScheduleTransaction[]
+  startDate: Date,
 }) {
   return (
     <div className={styles.amortizationCharts}>
@@ -24,7 +26,7 @@ export default function MortgagePaymentsCharts({
             data: amortizationPaymantsToBurndown(
               mortgagePaymentsSchedule.map((d) => d.totalPayment)
             ).map((amount, index) => ({
-              x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
+              x: format(addMonths(startDate, index), 'dd/MM/yyyy'),
               y: amount,
             })),
           },
@@ -38,7 +40,7 @@ export default function MortgagePaymentsCharts({
             id: 'Total Payment',
             color: '#892b64',
             data: mortgagePaymentsSchedule.map((d, index) => ({
-              x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
+              x: format(addMonths(startDate, index), 'dd/MM/yyyy'),
               y: d.totalPayment,
             })),
           },
@@ -52,7 +54,7 @@ export default function MortgagePaymentsCharts({
             id: 'Interest Payment',
             color: '#5c4d7d',
             data: mortgagePaymentsSchedule.map((d, index) => ({
-              x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
+              x: format(addMonths(startDate, index), 'dd/MM/yyyy'),
               y: d.interestPayment,
             })),
           },
@@ -60,7 +62,7 @@ export default function MortgagePaymentsCharts({
             id: 'Principal Payment',
             color: '#2e6f95',
             data: mortgagePaymentsSchedule.map((d, index) => ({
-              x: format(addMonths(new Date(), index), 'dd/MM/yyyy'),
+              x: format(addMonths(startDate, index), 'dd/MM/yyyy'),
               y: d.principalPayment,
             })),
           },
