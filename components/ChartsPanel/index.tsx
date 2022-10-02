@@ -97,11 +97,22 @@ export default function ChartPanel() {
     },
     [[], []] as [Transaction[], Transaction[]]
   )
+  const sums = earningsSpendings.map((earnSpend) => {
+    return earnSpend.reduce((res, cur) => {
+      return res + Math.abs(cur.amount)
+    }, 0)
+  })
 
   const barChartData = earningsSpendings.map((earnSpend, index) => {
     const earnings = index === 0
+    const type = earnings ? 'Earnings' : 'Spendings'
+    const sum: string = Intl.NumberFormat('en-US', {
+      maximumFractionDigits: 1,
+      notation: 'compact',
+      compactDisplay: 'short',
+    }).format(sums[index])
     return {
-      type: earnings ? 'Earnings' : 'Spendings',
+      type: `${type} ${sum}`,
       ...earnSpend.reduce((res, cur) => {
         res[cur.type] = Math.abs(cur.amount)
         res[`${cur.type}Color`] = earnings ? '#036666' : '#e01e37'
