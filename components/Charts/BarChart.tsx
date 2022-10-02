@@ -1,4 +1,6 @@
 import { ResponsiveBar } from '@nivo/bar'
+import { useTheme } from '@nivo/core'
+import type { AxisTickProps } from '@nivo/axes'
 
 export function BarChart({
   data,
@@ -59,12 +61,7 @@ export function BarChart({
       axisTop={null}
       axisRight={null}
       axisBottom={{
-        tickSize: 5,
-        tickPadding: 5,
-        tickRotation: 0,
-        legend: '',
-        legendPosition: 'middle',
-        legendOffset: 32,
+        renderTick: ErningSpendingTick,
       }}
       axisLeft={{
         format: (value) =>
@@ -108,5 +105,29 @@ export function BarChart({
         },
       ]}
     />
+  )
+}
+
+function ErningSpendingTick(tick: AxisTickProps<string>) {
+  const theme = useTheme()
+
+  return (
+    <g transform={`translate(${tick.x},${tick.y + 10})`}>
+      {tick.value.split(' ').map((word, index) => (
+        <text
+          key={word}
+          textAnchor="middle"
+          dominantBaseline="middle"
+          style={{
+            ...theme.axis.ticks.text,
+            transform: `translateY(${index * 12}px)`,
+            fill: '#333',
+            fontSize: 10,
+          }}
+        >
+          {word}
+        </text>
+      ))}
+    </g>
   )
 }
