@@ -25,7 +25,7 @@ export default function SimplePopover({
           position={position}
           childRect={childRect}
           popoverRect={popoverRect}
-          arrowColor="#fa9898"
+          arrowColor="var(--warning-color)"
           arrowSize={7}
           className="popover-arrow-container"
           arrowClassName="popover-arrow"

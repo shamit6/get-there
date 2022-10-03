@@ -10,8 +10,8 @@
   line-height: 2;
   
   .tableHeader {
-    background-color: darkslategrey;
-    color: white;
+    background-color: var(--secondery-color);
+    color: var(--heading-font-color);
   }
   
   .tableRow {
@@ -19,16 +19,16 @@
     text-align: center;
 
     &:nth-of-type(even) {
-      background-color:lightgrey;
+      background-color: var(--disabled-input-color);
       &:hover {
-        background: darken(lightgrey, 10%);
+        filter: brightness(2.5);
       }
     }
 
     &:nth-of-type(odd) {
-      background-color:white;
+      background-color:var(--heading-font-color);
       &:hover {
-        background: darken(white, 10%);
+        filter: brightness(0.9);
       }
     }
   }

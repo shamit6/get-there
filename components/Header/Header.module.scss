@@ -4,13 +4,13 @@
   grid-column-end: 4;
 
   display: flex;
-  background-color: #041403c4;
-  color: white;
+  background-color: var(--heading-color);
+  color: var(--heading-font-color);
   padding: 0.5em;
 }
 
 .logutButton {
-  color: white;
+  color: var(--heading-font-color);
 }
 
 .login {
@@ -48,6 +48,9 @@
   .link {
     text-decoration: none;
     margin-right: 1em;
+    &.logo{
+      margin-right: 0;
+    }
     &.selected {
       text-decoration: underline;
       text-underline-position: under;
