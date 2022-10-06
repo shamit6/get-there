@@ -13,7 +13,7 @@ export interface Theme {
   setThemeId(themeId: 'dark' | 'light'): void
 }
 
-const ThemeContext = createContext<Theme>(null as unknown as Theme)
+const ThemeContext = createContext<Theme>({ themeId: 'light' } as Theme)
 
 export function ThemeProvider({ children }: PropsWithChildren<{}>) {
   const [themeId, setThemeId] = useState<'dark' | 'light'>(getDefaultTheme)
@@ -53,7 +53,7 @@ export function useTheme() {
 }
 
 function isBrowserDefaultDark() {
-  return global?.matchMedia('(prefers-color-scheme: dark)').matches
+  return !!global?.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
 export function getDefaultTheme(): 'dark' | 'light' {
