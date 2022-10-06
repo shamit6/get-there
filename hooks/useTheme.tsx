@@ -53,7 +53,7 @@ export function useTheme() {
 }
 
 function isBrowserDefaultDark() {
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
+  return global?.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
 export function getDefaultTheme(): 'dark' | 'light' {
