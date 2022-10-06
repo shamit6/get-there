@@ -27,7 +27,7 @@ export default function Login({
           onClick={() => signIn(providers.demo.id)}
         >
           <div className={styles.icon}>
-            <Image src={DemoUser} height={24} width={24} />
+            <Image alt="demo user" src={DemoUser} height={24} width={24} />
           </div>
           Sign in with demo user
         </button>
