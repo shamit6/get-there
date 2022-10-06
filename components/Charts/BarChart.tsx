@@ -1,5 +1,6 @@
 import { ResponsiveBar } from '@nivo/bar'
 import { useTheme } from '@nivo/core'
+import { useTheme as useCustomTheme } from '../../hooks/useTheme'
 import type { AxisTickProps } from '@nivo/axes'
 
 export function BarChart({
@@ -11,8 +12,11 @@ export function BarChart({
   indexBy: string
   keys: string[]
 }) {
+  const { theme } = useCustomTheme()
+
   return (
     <ResponsiveBar
+      theme={theme}
       data={data}
       keys={keys}
       indexBy={indexBy}
@@ -121,7 +125,6 @@ function ErningSpendingTick(tick: AxisTickProps<string>) {
           style={{
             ...theme.axis.ticks.text,
             transform: `translateY(${index * 12}px)`,
-            fill: '#333',
             fontSize: 10,
           }}
         >

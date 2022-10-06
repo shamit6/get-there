@@ -1,0 +1,36 @@
+.themeToggle{
+    display: flex;
+    justify-content: center;
+    
+    input[type='checkbox'] {
+        display: none;
+    }
+    label {
+        background-color: var(--heading-font-color);
+        border: 2px solid var(--heading-font-color);
+        border-radius: 50px;
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: all ease-in-out 0.3s;
+        width: 3em;
+        height: 1em;
+        &::after {
+            background-color: var(--font-color);
+            border-radius: 50%;
+            content: ' ';
+            cursor: pointer;
+            display: inline-block;
+            position: absolute;
+            left: 0;
+            top: -0.15em;
+            transition: all ease-in-out 0.3s;
+            width: 1em;
+            height: 1em;
+        }
+    }
+}
+
+.checked::after{
+    transform: translateX(170%);
+}

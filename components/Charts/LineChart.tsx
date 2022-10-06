@@ -1,8 +1,9 @@
-import { ResponsiveLine } from '@nivo/line'
+import { ResponsiveLine, SliceTooltipProps } from '@nivo/line'
 import { LegendAnchor } from '@nivo/legends'
 import { Chip, TableTooltip } from '@nivo/tooltip'
 import { useTheme } from '@nivo/core'
 import TextNumber from 'components/textNumber'
+import { useTheme as useCustomTheme } from '../../hooks/useTheme'
 
 export interface Point {
   x: string
@@ -24,8 +25,10 @@ export function LineChart({
   minY?: number
   stacked?: boolean
 }) {
+  const { theme } = useCustomTheme()
   return (
     <ResponsiveLine
+      theme={theme}
       defs={[{ id: 'fill-color', color: 'inherit' }]}
       enableArea
       fill={[{ match: '*', id: 'fill-color' }]}
@@ -73,22 +76,7 @@ export function LineChart({
       enablePoints={false}
       enableSlices="y"
       sliceTooltip={({ slice }) => {
-        const theme = useTheme()  
-        return (
-          <TableTooltip
-            rows={slice.points.map((point) => [
-              <Chip
-                key="chip"
-                color={point.serieColor}
-                style={theme.tooltip.chip}
-              />,
-              <div>
-                <div>{point.data.xFormatted}</div>
-                <TextNumber value={point.data.yFormatted} suffix=" ₪" />
-              </div>,
-            ])}
-          />
-        )
+        return <Tooltip slice={slice} />
       }}
       pointSize={10}
       pointColor={{ theme: 'background' }}
@@ -122,6 +110,22 @@ export function LineChart({
           ],
         },
       ]}
+    />
+  )
+}
+
+function Tooltip({ slice }: Pick<SliceTooltipProps, 'slice'>) {
+  const theme = useTheme()
+
+  return (
+    <TableTooltip
+      rows={slice.points.map((point) => [
+        <Chip key="chip" color={point.serieColor} style={theme.tooltip.chip} />,
+        <div key={point.data.xFormatted}>
+          <div>{point.data.xFormatted}</div>
+          <TextNumber value={point.data.yFormatted} suffix=" ₪" />
+        </div>,
+      ])}
     />
   )
 }

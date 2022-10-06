@@ -26,7 +26,8 @@
 
 .googleButton {
   @extend .loginButton;
-  background-color: white;
+  background-color: var(--primary-color);
+  color: var(--font-color);
 
   &:hover {
     background: #f0f0f0;

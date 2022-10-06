@@ -8,30 +8,35 @@ import Link from 'next/link'
 import classnames from 'classnames'
 import Popper from '../Popover'
 import Logo from '../../public/logo.svg'
+import { useTheme } from 'hooks/useTheme'
+import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
+
+const NavEntry = ({
+  route,
+  children,
+  logo,
+}: PropsWithChildren<{ logo?: boolean; route: string }>) => {
+  const router = useRouter()
+
+  return (
+    <Link href={route}>
+      <a
+        className={classnames(styles.link, {
+          [styles.selected]: router.pathname === route,
+          [styles.logo]: logo,
+        })}
+      >
+        {children}
+      </a>
+    </Link>
+  )
+}
 
 export default function Header() {
   const router = useRouter()
   const { data: session, status } = useSession()
+  const { themeId, setThemeId } = useTheme()
   const user = session?.user
-
-  const NavEntry = ({
-    route,
-    children,
-    logo,
-  }: PropsWithChildren<{ logo?: boolean; route: string }>) => {
-    return (
-      <Link href={route}>
-        <a
-          className={classnames(styles.link, {
-            [styles.selected]: router.pathname === route,
-            [styles.logo]: logo,
-          })}
-        >
-          {children}
-        </a>
-      </Link>
-    )
-  }
 
   return (
     <header className={styles.header}>
@@ -51,11 +56,21 @@ export default function Header() {
           <>
             <Popper
               content={
-                <Button
-                  text="Sign out"
-                  onClick={() => signOut({ callbackUrl: '/login' })}
-                  linkTheme
-                />
+                <>
+                  <Button linkTheme style={{ margin: 'auto' }}>
+                    <ThemeToggle
+                      theme={themeId}
+                      onClick={() => {
+                        setThemeId(themeId === 'light' ? 'dark' : 'light')
+                      }}
+                    />
+                  </Button>
+                  <Button
+                    text="Sign out"
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    linkTheme
+                  />
+                </>
               }
             >
               <div className={styles.user}>
