@@ -1,38 +1,52 @@
-import Button from 'components/button'
+import { PropsWithChildren } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import Button from 'components/button'
 import { useRouter } from 'next/router'
 import styles from './Header.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
 import classnames from 'classnames'
 import Popper from '../Popover'
+import Logo from '../../public/logo.svg'
+import { useTheme } from 'hooks/useTheme'
+import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
+
+const NavEntry = ({
+  route,
+  children,
+  logo,
+}: PropsWithChildren<{ logo?: boolean; route: string }>) => {
+  const router = useRouter()
+
+  return (
+    <Link href={route}>
+      <a
+        className={classnames(styles.link, {
+          [styles.selected]: router.pathname === route,
+          [styles.logo]: logo,
+        })}
+      >
+        {children}
+      </a>
+    </Link>
+  )
+}
 
 export default function Header() {
   const router = useRouter()
   const { data: session, status } = useSession()
+  const { themeId, setThemeId } = useTheme()
   const user = session?.user
-
-  const NavEntry = ({ route, label }: { route: string; label: string }) => {
-    return (
-      <Link href={route}>
-        <a
-          className={classnames(styles.link, {
-            [styles.selected]: router.pathname === route,
-          })}
-        >
-          {label}
-        </a>
-      </Link>
-    )
-  }
 
   return (
     <header className={styles.header}>
       {user && (
         <nav className={styles.nav}>
-          <NavEntry route="/" label="Home" />
-          <NavEntry route="/transactions" label="Transactions" />
-          <NavEntry route="/mortgages" label="Mortgage" />
+          <NavEntry logo route="/">
+            <Logo />
+          </NavEntry>
+          <NavEntry route="/transactions">Transactions</NavEntry>
+          <NavEntry route="/mortgages">Mortgage</NavEntry>
         </nav>
       )}
       <div className={styles.login}>
@@ -42,11 +56,21 @@ export default function Header() {
           <>
             <Popper
               content={
-                <Button
-                  text="Sign out"
-                  onClick={() => signOut({ callbackUrl: '/login' })}
-                  linkTheme
-                />
+                <>
+                  <Button linkTheme style={{ margin: 'auto' }}>
+                    <ThemeToggle
+                      theme={themeId}
+                      onClick={() => {
+                        setThemeId(themeId === 'light' ? 'dark' : 'light')
+                      }}
+                    />
+                  </Button>
+                  <Button
+                    text="Sign out"
+                    onClick={() => signOut({ callbackUrl: '/login' })}
+                    linkTheme
+                  />
+                </>
               }
             >
               <div className={styles.user}>

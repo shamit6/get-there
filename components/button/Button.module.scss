@@ -5,12 +5,14 @@
   padding: 0.6em;
 
   &.primary {
-    background-color: darkseagreen;
+    background-color: var(--primary-color);
+    border: 0;
+    box-shadow: 0.1em 0.1em 0.2em rgb(0 0 0 / 30%);
   }
 
   &:hover {
     cursor: pointer;
-    filter: contrast(50%);
+    filter: contrast(85%);
   }
 
   &.linkButton {

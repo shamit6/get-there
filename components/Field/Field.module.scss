@@ -12,8 +12,8 @@
     input, select {
       &:required:invalid {
         outline: none;
-        border-color: #c00000;
-        box-shadow: inset 0px 0px 0px 1px #c00000;
+        border-color: var(--error-color);
+        box-shadow: inset 0px 0px 0px 1px var(--error-color);
       }
       
       &:required:invalid + span {
@@ -25,8 +25,8 @@
         top: 0.4em;
         position: absolute;
         right: 1.5em;
-        color: #c00000;
-        border: #c00000 solid 1px;
+        color: var(--error-color);
+        border: var(--error-color) solid 1px;
         border-radius: 50%;
         padding: 0 0.4em;
         font-size: 1em;
@@ -75,10 +75,10 @@
     padding: 0.6em;
     border: 1px solid;
     border-radius: 0.7em;
-    background-color: white;
+    background-color: var(--bg-color);
 
     &:disabled {
-      background-color: rgba(59, 59, 59, 0.3);
+      background-color: var(--disabled-input-color);
       opacity: 1;
     }
   }

@@ -1,6 +1,6 @@
 .ticker {
   font-size: 2em;
-  color: #03045e;
+  color: var(--ticker-color);
   display: inline-flex;
   align-items: center;
   justify-content: center;
