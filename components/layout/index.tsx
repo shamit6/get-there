@@ -13,11 +13,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <>
       <Head>
-        <title>Get-There</title>
-        <meta name="description" content="Put your money where your mouth is" />
-        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="color-scheme" content="light dark" />
+        <title>Get-There</title>
       </Head>
       <main className={classnames(styles.wrapper, `theme-${themeId}`)}>
         {router.pathname !== '/login' && <Header />}
