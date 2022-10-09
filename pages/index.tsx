@@ -12,7 +12,6 @@ import { SWRConfig } from 'swr'
 import TargetPanel from 'components/TargetPanel/TargetPanel'
 import Timeline from 'components/Timeline/Timeline'
 import { fetchMortgagesForSsr } from './api/mortgages'
-import { ThemeProvider } from 'hooks/useTheme'
 
 function Home() {
   useEnsureLogin()
@@ -59,9 +58,7 @@ export default function Wrapper({ mortgages }: { mortgages: Mortgage[] }) {
         },
       }}
     >
-      <ThemeProvider>
-        <Home />
-      </ThemeProvider>
+      <Home />
     </SWRConfig>
   )
 }
