@@ -1,0 +1,29 @@
+.root {
+  border-collapse: collapse;
+  width: 100%;
+  line-height: 2.5;
+}
+
+.header {
+  background-color: var(--secondery-color);
+  color: var(--heading-font-color);
+}
+
+.row {
+  cursor: pointer;
+  text-align: center;
+
+  &:nth-of-type(even) {
+    background-color: var(--disabled-input-color);
+    &:hover {
+      filter: brightness(2.5);
+    }
+  }
+
+  &:nth-of-type(odd) {
+    background-color:var(--heading-font-color);
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}
