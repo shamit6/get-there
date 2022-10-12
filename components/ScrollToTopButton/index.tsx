@@ -30,7 +30,7 @@ export default function ScrollToTopButton() {
   return (
     <Button
       text="Go up!"
-      className={classNames(styles.button, { [styles.visable]: isVisible })}
+      className={classNames(styles.button, { [styles.visible]: isVisible })}
       primary
       onClick={scrollToTop}
     />
