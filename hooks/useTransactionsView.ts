@@ -93,8 +93,6 @@ export default function useTransactionsView() {
     transactionsWithBalanceToView.length
   )
 
-  console.log('currentBalanceAmount', currentBalanceAmount)
-
   return {
     transactionsWithBalanceToView,
     transactionsToView,
