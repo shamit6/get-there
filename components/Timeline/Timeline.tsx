@@ -98,13 +98,18 @@ function Timeline() {
   >([])
 
   const [numberOFitems, setNumberOFitems] = useState(5)
-  const [hasMore, setHasMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
 
-  const { transactionsToView, transactionsWithBalanceToView, targetAmountIndex, currentBalanceAmount } =
-    useTransactionsView()
+  const {
+    transactionsToView,
+    transactionsWithBalanceToView,
+    targetAmountIndex,
+    currentBalanceAmount,
+  } = useTransactionsView()
 
   const nowDate = new Date()
-  const untilDate = transactionsWithBalanceToView[transactionsWithBalanceToView.length - 1].date
+  const untilDate =
+    transactionsWithBalanceToView[transactionsWithBalanceToView.length - 1].date
 
   useEffect(() => {
     if (transactionsToView?.length === 0) {
@@ -132,12 +137,12 @@ function Timeline() {
       setHasMore(true)
     }
   }, [
-    transactionsToView,
+    // transactionsToView,
     currentBalanceAmount,
     numberOFitems,
     periodResolution,
     isLoadingBalance,
-    untilDate,
+    // untilDate,
     targetAmountIndex,
   ])
 
