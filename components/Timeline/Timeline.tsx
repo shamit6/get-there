@@ -173,6 +173,7 @@ function Timeline() {
       </div>
       <dl>
         <InfiniteScroll
+          style={{ overflowX: 'hidden' }}
           dataLength={numberOFitems}
           next={loadmore}
           hasMore={hasMore}
