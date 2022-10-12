@@ -12,7 +12,7 @@ import React, { useEffect, useState } from 'react'
 import Arrow, { Direction } from 'components/arrow'
 import TextNumber from 'components/textNumber'
 import Loader from 'components/loader'
-import InfiniteScroll from 'react-infinite-scroller'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 import useTransactionsView from 'hooks/useTransactionsView'
 
@@ -168,8 +168,8 @@ function Timeline() {
       </div>
       <dl>
         <InfiniteScroll
-          pageStart={0}
-          loadMore={loadmore}
+          dataLength={numberOFitems}
+          next={loadmore}
           hasMore={hasMore}
           loader={
             <div className="loader" key={0}>
