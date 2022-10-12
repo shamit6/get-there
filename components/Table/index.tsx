@@ -26,7 +26,7 @@ function formatCell(row: Row, column: Column) {
     return value
   }
 
-  if (Array.isArray(value)) {
+  if (Array.isArray(column.path)) {
     return column.format(...value)
   }
 
