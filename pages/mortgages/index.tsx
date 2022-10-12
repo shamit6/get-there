@@ -9,6 +9,22 @@ import useEnsureLogin from '../../hooks/useEnsureLogin'
 import useMortgages from 'hooks/useMortgages'
 import { sumBy } from 'lodash'
 import { PageHeader } from 'components/Field'
+import Table from 'components/Table'
+import { MortgageCourse } from 'utils/types'
+
+const TABLE_COLUMNS = [
+  { name: 'Bank', path: 'bank' },
+  {
+    name: 'Amount',
+    path: 'courses',
+    format: (courses: MortgageCourse[]) => sumBy(courses, 'amount'),
+  },
+  {
+    name: 'When',
+    path: 'offeringDate',
+    format: (offeringDate: Date) => format(offeringDate, 'dd/MM/yyyy'),
+  },
+]
 
 export default function Mortgages() {
   useEnsureLogin()
@@ -30,28 +46,13 @@ export default function Mortgages() {
               icon={<Add />}
             />
           </PageHeader>
-          <table className={styles.transactionTable}>
-            <thead>
-              <tr className={styles.tableHeader}>
-                <th>Bank</th>
-                <th>Amount</th>
-                <th>When</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(mortgages ?? []).map((mortgages) => (
-                <tr
-                  key={mortgages.id}
-                  className={styles.tableRow}
-                  onClick={() => router.push(`/mortgages/${mortgages.id}`)}
-                >
-                  <td>{mortgages.bank}</td>
-                  <td>{sumBy(mortgages.courses, 'amount')}</td>
-                  <td>{format(mortgages.offeringDate, 'dd/MM/yyyy')}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={TABLE_COLUMNS}
+            rows={mortgages}
+            onRowClick={(mortgageId: string) =>
+              router.push(`/mortgages/${mortgageId}`)
+            }
+          />
         </div>
       )}
     </Layout>

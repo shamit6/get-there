@@ -1,7 +1,6 @@
 import { format } from 'date-fns'
 import { useRouter } from 'next/router'
 import useTransaction from '../../hooks/useTransactions'
-import styles from './Transactions.module.scss'
 import Layout from 'components/layout'
 import Loader from 'components/loader'
 import useBalanceStatus from '../../hooks/useBalanceStatus'
@@ -9,6 +8,30 @@ import Add from 'components/button/plus.svg'
 import Button from 'components/button'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 import { PageHeader } from 'components/Field'
+import Table from 'components/Table'
+
+const TABLE_COLUMNS = [
+  {
+    name: 'Type',
+    path: 'type',
+  },
+  {
+    name: 'Amount',
+    path: 'amount',
+    format: (value: number) => value.toLocaleString('he'),
+  },
+  {
+    name: 'When',
+    path: 'date',
+    format: (date: Date) => format(date, 'dd/MM/yyyy'),
+  },
+  {
+    name: 'Interval',
+    path: ['timePeriod', 'periodAmount'],
+    format: (timePeriod: number, ...periodAmount: number[]) =>
+      timePeriod && `every ${periodAmount} ${timePeriod}`,
+  },
+]
 
 function List() {
   useEnsureLogin()
@@ -31,33 +54,7 @@ function List() {
               icon={<Add />}
             />
           </PageHeader>
-          <table className={styles.transactionTable}>
-            <thead>
-              <tr className={styles.tableHeader}>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>When</th>
-                <th>Interval</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(transactions ?? []).map((transaction) => (
-                <tr
-                  key={transaction.id}
-                  className={styles.tableRow}
-                  onClick={() => router.push(`/transactions/${transaction.id}`)}
-                >
-                  <td>{transaction.type}</td>
-                  <td>{transaction.amount.toLocaleString('he')}</td>
-                  <td>{format(transaction.date, 'dd/MM/yyyy')}</td>
-                  <td>
-                    {transaction.timePeriod &&
-                      `every ${transaction.periodAmount} ${transaction.timePeriod}`}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table columns={TABLE_COLUMNS} onRowClick={(id: string) => router.push(`/transactions/${id}`)} rows={transactions} />
         </>
       )}
     </Layout>
