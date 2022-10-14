@@ -2,9 +2,9 @@ import {
   addBalanaceAmountToTransactionsSummery,
   getLastDayOfPeriod,
   getTransactionsSummeryByPeriod,
+  SummerizedTransacrionsPeriod,
   TimelineSummerizedTransacrionsPeriod,
 } from 'utils/timelineTrascationCalc'
-import useBalanceStatus from '../../hooks/useBalanceStatus'
 import { TimePeriod } from 'utils/types'
 import { format, min } from 'date-fns'
 import styles from './Timeline.module.scss'
@@ -90,59 +90,86 @@ function TransactionsSummery({
 }
 
 function Timeline() {
-  const { isLoading: isLoadingBalance } = useBalanceStatus(true)
-
   const [periodResolution, setPeriodResolution] = useState(TimePeriod.YEAR)
   const [timelineTransactions, setTimelineTransactions] = useState<
     TimelineSummerizedTransacrionsPeriod[]
   >([])
 
-  const [numberOFitems, setNumberOFitems] = useState(5)
-  const [hasMore, setHasMore] = useState(false)
+  const [transactionsSummery, setTransactionsSummery] = useState<
+    SummerizedTransacrionsPeriod[]
+  >([])
+  const [hasMore, setHasMore] = useState(true)
 
-  const { transactionsToView, transactionsWithBalanceToView, targetAmountIndex, currentBalanceAmount } =
-    useTransactionsView()
+  const {
+    transactionsToView,
+    transactionsWithBalanceToView,
+    currentBalanceAmount,
+  } = useTransactionsView()
 
-  const nowDate = new Date()
-  const untilDate = transactionsWithBalanceToView[transactionsWithBalanceToView.length - 1].date
+  const untilDate =
+    transactionsWithBalanceToView[transactionsWithBalanceToView.length - 1].date
 
   useEffect(() => {
     if (transactionsToView?.length === 0) {
       return
     }
 
-    const transactionsSummery = getTransactionsSummeryByPeriod(
-      transactionsToView,
-      periodResolution,
-      numberOFitems,
-      nowDate,
-      untilDate
+    setTransactionsSummery(
+      getTransactionsSummeryByPeriod(
+        transactionsToView,
+        periodResolution,
+        new Date(),
+        transactionsToView[transactionsToView.length - 1].date
+      )
     )
-
-    if (transactionsSummery?.length === timelineTransactions?.length) {
-      setHasMore(false)
-    } else {
-      const transactionsWithBalanceSummery =
-        addBalanaceAmountToTransactionsSummery(
-          transactionsSummery,
-          currentBalanceAmount
-        )
-
-      setTimelineTransactions(transactionsWithBalanceSummery)
-      setHasMore(true)
-    }
   }, [
-    transactionsToView,
+    // transactionsToView,
+    transactionsToView.length,
     currentBalanceAmount,
-    numberOFitems,
+    transactionsSummery.length,
     periodResolution,
-    isLoadingBalance,
-    untilDate,
-    targetAmountIndex,
   ])
 
+  useEffect(() => {
+    const transactionsWithBalanceSummery =
+      addBalanaceAmountToTransactionsSummery(
+        transactionsSummery,
+        currentBalanceAmount
+      )
+    setTimelineTransactions(
+      transactionsWithBalanceSummery.slice(
+        0,
+        Math.min(5, transactionsWithBalanceSummery.length)
+      )
+    )
+    if (
+      transactionsSummery?.length ===
+      Math.min(5, transactionsWithBalanceSummery.length)
+    ) {
+      setHasMore(false)
+    } else {
+      setHasMore(true)
+    }
+  }, [transactionsSummery])
+
   const loadmore = () => {
-    setNumberOFitems(numberOFitems + 5)
+    const newTimelineTransactionsLength = Math.min(
+      timelineTransactions.length + 5,
+      transactionsSummery.length
+    )
+    const transactionsWithBalanceSummery =
+      addBalanaceAmountToTransactionsSummery(
+        transactionsSummery,
+        currentBalanceAmount
+      )
+    setTimelineTransactions(
+      transactionsWithBalanceSummery.slice(0, newTimelineTransactionsLength)
+    )
+    if (transactionsSummery?.length === newTimelineTransactionsLength) {
+      setHasMore(false)
+    } else {
+      setHasMore(true)
+    }
   }
 
   if (transactionsToView.length === 0) {
@@ -168,7 +195,8 @@ function Timeline() {
       </div>
       <dl>
         <InfiniteScroll
-          dataLength={numberOFitems}
+          style={{ overflowX: 'hidden' }}
+          dataLength={timelineTransactions.length}
           next={loadmore}
           hasMore={hasMore}
           loader={
