@@ -12,6 +12,9 @@ import {
   startOfMonth,
   startOfYear,
   startOfDay,
+  differenceInYears,
+  differenceInMonths,
+  differenceInWeeks,
 } from 'date-fns'
 
 interface SummerizedTransacrionPeriod {
@@ -20,7 +23,7 @@ interface SummerizedTransacrionPeriod {
   type: string
 }
 
-interface SummerizedTransacrionsPeriod {
+export interface SummerizedTransacrionsPeriod {
   time: { year: number; month?: number }
   totalAmount: number
   transactions: { type: string; amount: number }[]
@@ -46,16 +49,22 @@ export function getNextIntervalTimeFunc(
 
 function getLastDayOfPeriodByDate(
   timePeriod: TimePeriod,
-  amountOfPeriods: number,
-  fromDate: Date
+  fromDate: Date,
+  endDate: Date
 ): Date {
   switch (timePeriod) {
     case 'week':
-      return lastDayOfWeek(addWeeks(fromDate, amountOfPeriods))
+      return lastDayOfWeek(
+        addWeeks(fromDate, differenceInWeeks(endDate, fromDate) + 1)
+      )
     case 'month':
-      return lastDayOfMonth(addMonths(fromDate, amountOfPeriods))
+      return lastDayOfMonth(
+        addMonths(fromDate, differenceInMonths(endDate, fromDate) + 1)
+      )
     default:
-      return lastDayOfYear(addYears(fromDate, amountOfPeriods))
+      return lastDayOfYear(
+        addYears(fromDate, differenceInYears(endDate, fromDate) + 1)
+      )
   }
 }
 
@@ -104,14 +113,13 @@ export function getLastDayOfPeriod(
 export function getTransactionsSummeryByPeriod(
   transactions: Transaction[],
   periodResolution: TimePeriod,
-  itemsToGenerate: number,
   fromDate: Date = new Date(),
-  maxDate?: Date
+  maxDate: Date
 ): SummerizedTransacrionsPeriod[] {
   const lastDayOfPeriod = getLastDayOfPeriodByDate(
     periodResolution,
-    itemsToGenerate,
-    fromDate
+    fromDate,
+    maxDate
   )
 
   const untilDate = !maxDate ? lastDayOfPeriod : min([maxDate, lastDayOfPeriod])
@@ -127,10 +135,7 @@ export function getTransactionsSummeryByPeriod(
     transactions: { [type: string]: number }
   }[] = []
 
-  while (
-    currentDate.getTime() <= untilDate.getTime() &&
-    summarizedTransactionsPeriods.length <= itemsToGenerate + 2
-  ) {
+  while (currentDate.getTime() <= untilDate.getTime()) {
     summarizedTransactionsPeriods.push({
       time: extractTimeByPeriod(currentDate, periodResolution),
       totalAmount: 0,
