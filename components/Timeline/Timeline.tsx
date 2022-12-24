@@ -173,7 +173,7 @@ function Timeline() {
   }
 
   if (transactionsToView.length === 0) {
-    return <Loader />
+    return null
   }
 
   return (

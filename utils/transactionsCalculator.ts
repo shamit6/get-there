@@ -88,32 +88,6 @@ export function addBalanceToSortTransaction(
   return transactionsWithBalance
 }
 
-export function calcCurrentBalanceAmount(
-  transactionConfigs: TransactionConfig[],
-  lastBalanceStatus: BalanceStatus
-): number {
-  if (transactionConfigs.length === 0) {
-    return lastBalanceStatus.amount
-  }
-
-  const transactionsUntilNow = generateTransactionConfigsOccurrences(
-    transactionConfigs,
-    lastBalanceStatus.createdAt,
-    new Date()
-  )
-
-  if (transactionsUntilNow.length === 0) {
-    return lastBalanceStatus.amount
-  }
-
-  const transactionsWithBlance = addBalanceToSortTransaction(
-    transactionsUntilNow,
-    lastBalanceStatus
-  )
-
-  return transactionsWithBlance[transactionsWithBlance.length - 1].amount!
-}
-
 export function getCurrentMonthBalanceAmount(
   transactions: Transaction[],
   currentDate: Date = new Date()

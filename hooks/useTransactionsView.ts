@@ -21,7 +21,7 @@ export default function useTransactionsView() {
     filterUntilAmount,
   } = useFilterOptions()
 
-  if (!transactions || !balanceStatuses || !mortgages) {
+  if (!transactions || !balanceStatuses || balanceStatuses.length === 0 || !mortgages) {
     return {
       transactionsWithBalanceToView: [],
       transactionsToView: [],
