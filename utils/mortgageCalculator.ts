@@ -16,18 +16,18 @@ export function calcTotalSummery(
 ): CalculatedMortgageSummery {
   const totalAmortizationSchedule = calcAmortizationSchedule(mortgageCourses)
   const originalPrincipalPayment =
-    totalAmortizationSchedule[0].principalBalanceInStartPeriond
-  const totalPayment = sumBy(totalAmortizationSchedule, 'totalPayment') || 0
+    totalAmortizationSchedule[0]?.principalBalanceInStartPeriond ?? 0
+  const totalPayment = sumBy(totalAmortizationSchedule, 'totalPayment') ?? 0
 
   return {
     originalPrincipalPayment,
-    monthlyPayment: totalAmortizationSchedule[0].totalPayment,
+    monthlyPayment: totalAmortizationSchedule[0]?.totalPayment ?? 0,
     maxMonthlyPayment:
-      maxBy(totalAmortizationSchedule, 'totalPayment')?.totalPayment || 0,
+      maxBy(totalAmortizationSchedule, 'totalPayment')?.totalPayment ?? 0,
     cpiLinkPayment:
-      sumBy(totalAmortizationSchedule, 'principalPayment') ||
+      sumBy(totalAmortizationSchedule, 'principalPayment') ??
       0 - originalPrincipalPayment,
-    interestPayment: sumBy(totalAmortizationSchedule, 'interestPayment') || 0,
+    interestPayment: sumBy(totalAmortizationSchedule, 'interestPayment') ?? 0,
     totalPayment,
     currencyRatio: originalPrincipalPayment
       ? totalPayment / originalPrincipalPayment

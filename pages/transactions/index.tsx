@@ -54,7 +54,11 @@ function List() {
               icon={<Add />}
             />
           </PageHeader>
-          <Table columns={TABLE_COLUMNS} onRowClick={(id: string) => router.push(`/transactions/${id}`)} rows={transactions} />
+          <Table
+            columns={TABLE_COLUMNS}
+            onRowClick={(id: string) => router.push(`/transactions/${id}`)}
+            rows={transactions}
+          />
         </>
       )}
     </Layout>
