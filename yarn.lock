@@ -6611,10 +6611,10 @@ next-auth@^4.0.0-beta.2:
     preact "^10.5.13"
     preact-render-to-string "^5.1.19"
 
-next-in-it-stats@^1.0.31:
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/next-in-it-stats/-/next-in-it-stats-1.0.31.tgz#9af359fe7d0d283be76cd54a72cd34ca0b75c863"
-  integrity sha512-oBGE5EKrArjNjoA4q1oaasvoG9krgvwM/eU51kclrQZ/kWs2rjGQK5ByD9/GptkV9pjJN1cnT0PBDPztRH9xuA==
+next-in-it-stats@^1.0.33:
+  version "1.0.33"
+  resolved "https://registry.yarnpkg.com/next-in-it-stats/-/next-in-it-stats-1.0.33.tgz#90fbba54a2e3e8808ed7df0a4436b326629e7918"
+  integrity sha512-0zWq/Q55DAqKCwc08d7EdyR7BdH/aLtrBXrEqNV4n0rzJfd7ix9j8c5iEVqOEuM/SWIhUzzb8i7jTa11qiuZtg==
   dependencies:
     bytes "^3.1.2"
     cosmiconfig "^8.1.3"

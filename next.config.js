@@ -4,7 +4,7 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
 })
 
-const withInit = require('next-in-it-stats')({ legacy: true })
+const withInit = require('next-in-it-stats')({ legacy: true, serverUrl: 'http://localhost:3001/api/stats' })
 
 module.exports = withPWA(
   withInit({
