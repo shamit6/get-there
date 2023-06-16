@@ -1,0 +1,24 @@
+.status {
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.graphs {
+  flex: 1;
+  display: grid;
+  grid-template-rows: repeat(auto-fill, 320px);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-column-gap: 0.5em;
+}
+
+.timeline {
+  grid-column-start: 1;
+  width: calc(100vw - 20%);
+}
+
+.addBalanceClick {
+  color: -webkit-link;
+  cursor: pointer;
+  text-decoration: underline;
+}

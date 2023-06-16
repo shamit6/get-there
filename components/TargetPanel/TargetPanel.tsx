@@ -1,3 +1,4 @@
+'use client'
 import Button, { ButtonsGroup } from 'components/button'
 import { format } from 'date-fns'
 import useFilterOptions from 'hooks/useFilterOptions'

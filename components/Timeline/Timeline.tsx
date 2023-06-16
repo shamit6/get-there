@@ -1,3 +1,4 @@
+'use client'
 import {
   addBalanaceAmountToTransactionsSummery,
   getLastDayOfPeriod,
@@ -11,7 +12,6 @@ import styles from './Timeline.module.scss'
 import React, { useEffect, useState } from 'react'
 import Arrow, { Direction } from 'components/arrow'
 import TextNumber from 'components/textNumber'
-import Loader from 'components/loader'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useEnsureLogin from '../../hooks/useEnsureLogin'
 import useTransactionsView from 'hooks/useTransactionsView'

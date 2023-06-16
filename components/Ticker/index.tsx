@@ -1,3 +1,4 @@
+'use client'
 import CountUp from 'react-countup'
 import { useEffect } from 'react'
 import style from './Ticker.module.scss'
@@ -23,7 +24,7 @@ export default function Ticker({
   useEffect(() => {
     localStorage.setItem(label, `${number}`)
   }, [number])
-  const previousValue = Number(localStorage.getItem(label))
+  const previousValue = Number(localStorage?.getItem(label))
   const valueChanged = previousValue !== number
 
   return (

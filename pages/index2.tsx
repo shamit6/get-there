@@ -56,8 +56,8 @@ function Home() {
         <h2>Welcome to Get There</h2>
         <p>
           Please{' '}
-          <Link href="/transactions/new">
-            <span className={styles.addBalanceClick}>add</span>
+          <Link href="/transactions/new" className={styles.addBalanceClick}>
+            add
           </Link>{' '}
           transactions so we can calculate your future balance{' '}
         </p>

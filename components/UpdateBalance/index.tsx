@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react'
 import styles from './UpdateBalance.module.scss'
 import Popover from 'components/Popover'

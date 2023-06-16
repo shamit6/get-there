@@ -1,3 +1,4 @@
+'use client'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import Button from '../button'

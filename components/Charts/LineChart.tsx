@@ -1,3 +1,4 @@
+'use client'
 import { ResponsiveLine, SliceTooltipProps } from '@nivo/line'
 import { LegendAnchor } from '@nivo/legends'
 import { Chip, TableTooltip } from '@nivo/tooltip'

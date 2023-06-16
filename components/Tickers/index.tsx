@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import styles from './Tickers.module.scss'
 import Ticker from 'components/Ticker'

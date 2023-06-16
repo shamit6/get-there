@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { format, isAfter, subMonths } from 'date-fns'
 import type { Transaction } from 'utils/types'

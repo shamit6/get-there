@@ -1,7 +1,8 @@
+'use client'
 import { PropsWithChildren } from 'react'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Button from 'components/button'
-import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
 import styles from './Header.module.scss'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -16,24 +17,21 @@ const NavEntry = ({
   children,
   logo,
 }: PropsWithChildren<{ logo?: boolean; route: string }>) => {
-  const router = useRouter()
-
+  const pathname = usePathname()
   return (
-    <Link href={route}>
-      <a
-        className={classnames(styles.link, {
-          [styles.selected]: router.pathname === route,
-          [styles.logo]: logo,
-        })}
-      >
-        {children}
-      </a>
+    <Link
+      href={route}
+      className={classnames(styles.link, {
+        [styles.selected]: pathname === route,
+        [styles.logo]: logo,
+      })}
+    >
+      {children}
     </Link>
   )
 }
 
 export default function Header() {
-  const router = useRouter()
   const { data: session, status } = useSession()
   const { themeId, setThemeId } = useTheme()
   const user = session?.user

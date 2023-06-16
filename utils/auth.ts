@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth'
+import { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { getEnv } from 'utils/envs'
@@ -22,16 +22,17 @@ async function upsertUser({
   }
 }
 
-export default NextAuth({
+export const nextAuthOptions: AuthOptions = {
   jwt: {
-    signingKey: getEnv('JWT_SIGNING_PRIVATE_KEY'),
+    secret: getEnv('JWT_SIGNING_PRIVATE_KEY'),
   },
   providers: [
     CredentialsProvider({
       id: 'demo',
       name: 'Credentials',
-      async authorize() {
+      authorize() {
         const user = {
+          id: 'demo',
           email: 'demo@dummy.com',
           name: 'Dummy Demo',
           image:
@@ -73,5 +74,4 @@ export default NextAuth({
   pages: {
     signIn: '/login',
   },
-  theme: 'light',
-})
+}

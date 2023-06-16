@@ -1,3 +1,4 @@
+'use client'
 import { ResponsiveBar } from '@nivo/bar'
 import { useTheme } from '@nivo/core'
 import { useTheme as useCustomTheme } from '../../hooks/useTheme'
