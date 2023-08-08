@@ -19,15 +19,14 @@ const NavEntry = ({
   const router = useRouter()
 
   return (
-    <Link href={route}>
-      <a
-        className={classnames(styles.link, {
-          [styles.selected]: router.pathname === route,
-          [styles.logo]: logo,
-        })}
-      >
-        {children}
-      </a>
+    <Link
+      href={route}
+      className={classnames(styles.link, {
+        [styles.selected]: router.pathname === route,
+        [styles.logo]: logo,
+      })}
+    >
+      {children}
     </Link>
   )
 }
