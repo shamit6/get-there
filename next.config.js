@@ -6,10 +6,10 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
 })
 
-const withInit = require('next-in-it-stats')({ legacy: true })
+// const withInit = require('next-in-it-stats')({ legacy: true })
 
 module.exports = withPWA(
-  withInit({
+  {
     reactStrictMode: true,
     eslint: {
       dirs: ['pages', 'utils'],
@@ -26,5 +26,5 @@ module.exports = withPWA(
       return config
     },
     i18n,
-  })
+  }
 )
