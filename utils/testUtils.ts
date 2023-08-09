@@ -1,4 +1,4 @@
-export function numberValuesToFixed<T>(object: T, fractionDigits?: number): T {
+export function numberValuesToFixed<T extends Object>(object: T, fractionDigits?: number): T {
   const roundedObject = object
 
   Object.entries(object).forEach(([key, value]) => {

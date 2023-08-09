@@ -95,7 +95,7 @@ export default async function handler(
 
       res.status(200)
     }
-  } catch (e) {
+  } catch (e: any) {
     if (e.message === 'Mortgage not found') {
       res.status(404).send(e.message)
     } else {

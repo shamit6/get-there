@@ -38,7 +38,7 @@ export default async function handler(
     }
 
     res.status(200).json(response!)
-  } catch (e) {
+  } catch (e: any) {
     res.status(500).send(e.message)
   } finally {
     await prismaClient.$disconnect()

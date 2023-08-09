@@ -35,9 +35,10 @@ export default function Button({
       onClick={onClick}
       {...props}
     >
-      {icon && <div className={styles.icon}>{icon}</div>}
-
-      {text || children}
+      <>
+        {icon && <div className={styles.icon}>{icon}</div>}
+        {text ?? children}
+      </>
     </button>
   )
 }
@@ -48,7 +49,13 @@ export function ButtonsGroup({
   centered,
 }: React.PropsWithChildren<{ className?: string; centered?: boolean }>) {
   return (
-    <div className={classnames(styles.group, { [styles.centered]: centered }, className)}>
+    <div
+      className={classnames(
+        styles.group,
+        { [styles.centered]: centered },
+        className
+      )}
+    >
       {children}
     </div>
   )
