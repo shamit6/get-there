@@ -1,3 +1,5 @@
+const { i18n } = require('./next-i18next.config.js');
+
 const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
@@ -23,5 +25,6 @@ module.exports = withPWA(
 
       return config
     },
+    i18n,
   })
 )

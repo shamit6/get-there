@@ -10,6 +10,8 @@ import Popper from '../Popover'
 import Logo from '../../public/logo.svg'
 import { useTheme } from 'hooks/useTheme'
 import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
+import { useTranslation } from 'next-i18next'
+import LanguageSelector from 'components/LanguageSelector/LanguageSelector'
 
 const NavEntry = ({
   route,
@@ -35,6 +37,7 @@ export default function Header() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const { themeId, setThemeId } = useTheme()
+  const { t } = useTranslation()
   const user = session?.user
 
   return (
@@ -45,7 +48,7 @@ export default function Header() {
             <Logo />
           </NavEntry>
           <NavEntry route="/transactions">Transactions</NavEntry>
-          <NavEntry route="/mortgages">Mortgage</NavEntry>
+          <NavEntry route="/mortgages">{t('mortgage')}</NavEntry>
         </nav>
       )}
       <div className={styles.login}>
@@ -64,6 +67,7 @@ export default function Header() {
                       }}
                     />
                   </Button>
+                  <LanguageSelector />
                   <Button
                     text="Sign out"
                     onClick={() => signOut({ callbackUrl: '/login' })}

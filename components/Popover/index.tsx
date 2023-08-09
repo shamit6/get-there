@@ -1,14 +1,16 @@
 import React, { ReactNode, useRef, useState } from 'react'
-import { Popover, ArrowContainer } from 'react-tiny-popover'
+import { Popover, ArrowContainer, PopoverPosition } from 'react-tiny-popover'
 import styles from './Popover.module.scss'
 
 export default function SimplePopover({
   content,
   children,
   triggerElementStyles,
+  positions
 }: React.PropsWithChildren<{
   content: ReactNode
   triggerElementStyles?: React.CSSProperties
+  positions?: PopoverPosition[]
 }>) {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
   const clickMeButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -16,7 +18,7 @@ export default function SimplePopover({
   return (
     <Popover
       isOpen={isPopoverOpen}
-      positions={['bottom', 'top', 'right', 'left']}
+      positions={positions ?? ['bottom', 'top', 'right', 'left']}
       padding={3}
       onClickOutside={() => setIsPopoverOpen(false)}
       ref={clickMeButtonRef}

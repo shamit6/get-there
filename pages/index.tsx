@@ -15,6 +15,7 @@ import { fetchMortgagesForSsr } from './api/mortgages'
 import { useState } from 'react'
 import { UpdateBalanceModal } from 'components/UpdateBalance/UpdateBalanceModal'
 import Link from 'next/link'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 
 function Home() {
   useEnsureLogin()
@@ -104,8 +105,14 @@ export default function Wrapper({ mortgages }: { mortgages: Mortgage[] }) {
 }
 
 // @ts-ignore
-export async function getServerSideProps({ req }) {
+export async function getServerSideProps({ req, locale }) {
   const mortgages = await fetchMortgagesForSsr(req)
-  return { props: { mortgages: JSON.parse(JSON.stringify(mortgages)) } }
+
+  return {
+    props: {
+      mortgages: JSON.parse(JSON.stringify(mortgages)),
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  }
   // return { props: { mortgages: [] } }
 }
