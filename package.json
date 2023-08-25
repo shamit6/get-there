@@ -16,7 +16,7 @@
     "@nivo/line": "^0.80.0",
     "@nivo/tooltip": "^0.80.0",
     "@prisma/client": "^3.14.0",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^8.1.0",
     "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "bson": "^4.6.3",
