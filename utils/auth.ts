@@ -23,9 +23,7 @@ async function upsertUser({
 }
 
 export const nextAuthOptions: AuthOptions = {
-    jwt: {
-        secret: getEnv('JWT_SIGNING_PRIVATE_KEY'),
-    },
+    secret: getEnv('JWT_SIGNING_PRIVATE_KEY'),
     providers: [
         CredentialsProvider({
             id: 'demo',
