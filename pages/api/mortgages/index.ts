@@ -1,10 +1,11 @@
-import { getSession } from 'next-auth/react'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prismaClient } from '../../../utils/prisma'
 import { Mortgage } from 'utils/types'
+import { getServerSession } from 'next-auth/next'
+import { nextAuthOptions } from 'utils/auth'
 
-export async function fetchMortgagesForSsr(req: NextApiRequest) {
-  const session = await getSession({ req })
+export async function fetchMortgagesForSsr(req: NextApiRequest, res: NextApiResponse<Mortgage[]>) {
+  const session = await getServerSession(req, res, nextAuthOptions)
   const userEmail = session?.user?.email
 
   try {
@@ -33,7 +34,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Mortgage | Mortgage[]>
 ) {
-  const session = await getSession({ req })
+  const session = await getServerSession(req, res, nextAuthOptions)
   const userEmail = session?.user?.email
 
   if (!userEmail) {

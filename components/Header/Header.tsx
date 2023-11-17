@@ -12,6 +12,7 @@ import { useTheme } from 'hooks/useTheme'
 import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
 import { useTranslation } from 'next-i18next'
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector'
+import Logout from './logout.svg'
 
 const NavEntry = ({
   route,
@@ -72,6 +73,7 @@ export default function Header() {
                     text="Sign out"
                     onClick={() => signOut({ callbackUrl: '/login' })}
                     linkTheme
+                    icon={<Logout />}
                   />
                 </>
               }

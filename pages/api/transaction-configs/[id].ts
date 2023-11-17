@@ -1,13 +1,14 @@
-import { getSession } from 'next-auth/react'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prismaClient } from 'utils/prisma'
 import type { TransactionConfig } from '@prisma/client'
+import { getServerSession } from 'next-auth/next'
+import { nextAuthOptions } from 'utils/auth'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<TransactionConfig | null>
 ) {
-  const session = await getSession({ req })
+  const session = await getServerSession(req, res, nextAuthOptions)
   const userEmail = session?.user?.email
 
   const {
