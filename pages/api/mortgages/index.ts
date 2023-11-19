@@ -4,7 +4,10 @@ import { Mortgage } from 'utils/types'
 import { getServerSession } from 'next-auth/next'
 import { nextAuthOptions } from 'utils/auth'
 
-export async function fetchMortgagesForSsr(req: NextApiRequest, res: NextApiResponse<Mortgage[]>) {
+export async function fetchMortgagesForSsr(
+  req: NextApiRequest,
+  res: NextApiResponse<Mortgage[]>
+) {
   const session = await getServerSession(req, res, nextAuthOptions)
   const userEmail = session?.user?.email
 
