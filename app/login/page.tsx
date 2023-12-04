@@ -1,17 +1,24 @@
+'use client'  
 import { ClientSafeProvider, getProviders, signIn } from 'next-auth/react'
-import Layout from 'components/layout'
+// import Layout from 'components/layout'
 import styles from './Login.module.scss'
 import GoogleIcon from './google-logo.svg'
 import Image from 'next/image'
 import DemoUser from './demo-user.png'
+import { useEffect, useState } from 'react'
 
-export default function Login({
-  providers,
-}: {
-  providers: Record<string, ClientSafeProvider>
-}) {
+export default function Login() {
+
+  const [providers, setProviders] = useState<Record<string, ClientSafeProvider>>({}) 
+  useEffect(() => {
+    getProviders().then((providers) => {
+      console.log(providers)
+      setProviders(providers ?? {})
+    })
+  }, [])
+  
+    
   return (
-    <Layout>
       <div className={styles.wrapper}>
         <button
           className={styles.googleButton}
@@ -32,13 +39,5 @@ export default function Login({
           Sign in with demo user
         </button>
       </div>
-    </Layout>
   )
-}
-
-export async function getServerSideProps() {
-  const providers = await getProviders()
-  return {
-    props: { providers },
-  }
 }

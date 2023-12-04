@@ -1,0 +1,61 @@
+.wrapper {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: [col1-start] max(2.5em, 5%) [col2-start] 5% [col3-start] 1fr [col4-start] 20% [col5-start] 5% [col5-end];
+  grid-template-columns:
+    [col1-start] max(1em, 5%) [col2-start] auto [col3-start] max(1em, 5%)
+    [col3-end];
+}
+
+.header {
+  grid-row-start: 1;
+  grid-column-start: 2;
+  a {
+    margin-right: 2em;
+  }
+  display: inline-grid;
+}
+
+.login {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 0.8em;
+}
+
+.user {
+  border-width: 2px;
+  border-radius: 3em;
+  border: solid 1px gray;
+  padding: 0.2em;
+  display: flex;
+  align-items: center;
+
+  .avatar {
+    border-radius: 50%;
+    margin-right: 3px;
+  }
+
+  .name {
+    margin: auto 0.2em;
+  }
+}
+
+.nav {
+  grid-row-start: 2;
+  grid-column-start: 2;
+  display: flex;
+  align-items: center;
+  column-gap: 2em;
+  flex-wrap: wrap;
+}
+
+.content {
+  grid-column-start: 2;
+  grid-row-start: 3;
+}
+
+.footer {
+  grid-column-start: 2;
+  grid-row-start: 4;
+}
