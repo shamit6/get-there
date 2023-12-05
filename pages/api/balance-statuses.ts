@@ -16,7 +16,7 @@ export default async function handler(
   }
 
   try {
-    await prismaClient.$connect()
+    // await prismaClient.$connect()
     let response: BalanceStatus[]
     if (req.method === 'GET') {
       const userBlanceStatuses = await prismaClient.balanceStatus.findMany({
@@ -42,6 +42,6 @@ export default async function handler(
   } catch (e: any) {
     res.status(500).send(e.message)
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }

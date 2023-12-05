@@ -20,7 +20,7 @@ export async function getTransactionConfigs(): Promise<TransactionConfig[]> {
     })
     return transactionconfigs as TransactionConfig[]
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }
 
@@ -42,7 +42,7 @@ export async function createTransactionConfig(
     })
     return response
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }
 
@@ -64,7 +64,7 @@ export async function deleteTransactionConfig(
     })
     return response
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }
 
@@ -94,6 +94,6 @@ export async function updateTransactionConfig(
     })
     return response
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }

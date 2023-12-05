@@ -16,7 +16,7 @@ import {
 import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 import { Mortgage } from 'utils/types'
 import useMortgages from 'hooks/useMortgages'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Delete from 'components/button/delete.svg'
 
 function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
