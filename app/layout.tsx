@@ -9,6 +9,7 @@ import classnames from 'classnames'
 import styles from './Layout.module.scss'
 import { getTransactionConfigs } from 'db/transactionConfigs'
 import { getMortgages } from 'db/mortgages'
+import { getBalanceStatuses } from 'db/balanceStatuses'
 
 export const metadata: Metadata = {
   description: 'Put your money where your mouth is',
@@ -26,9 +27,10 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(nextAuthOptions)
-  const [transactionconfigs, mortgages] = await Promise.all([
+  const [transactionconfigs, mortgages, balanceStatuses] = await Promise.all([
     getTransactionConfigs(),
     getMortgages(),
+    getBalanceStatuses(),
   ])
   return (
     <html>
@@ -38,6 +40,7 @@ export default async function RootLayout({
           swrFallback={{
             '/api/transaction-configs': transactionconfigs,
             '/api/mortgages': mortgages,
+            '/api/balance-statuses': balanceStatuses,
           }}
         >
           <main className={classnames(styles.wrapper, `theme-light`)}>
@@ -45,6 +48,7 @@ export default async function RootLayout({
             <div className={styles.content}>{children}</div>
           </main>
         </Providers>
+        <div id="modal-root"></div>
       </body>
     </html>
   )

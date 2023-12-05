@@ -23,7 +23,9 @@ export default function Ticker({
   useEffect(() => {
     localStorage.setItem(label, `${number}`)
   }, [number])
-  const previousValue = Number(localStorage.getItem(label))
+  const previousValue = Number(
+    typeof window !== 'undefined' ? localStorage.getItem(label) : 0
+  )
   const valueChanged = previousValue !== number
 
   return (

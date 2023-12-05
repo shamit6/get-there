@@ -9,8 +9,6 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  // console.log('request', await request.json())
   const transactionconfig = await createTransactionConfig(await request.json())
   return Response.json(transactionconfig)
 }
-

@@ -1,3 +1,4 @@
+'use client'
 import MortgageComp from './MortgageCalculator'
 import classNames from 'classnames'
 import styles from 'components/Field/Field.module.scss'
