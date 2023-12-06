@@ -9,7 +9,7 @@ export async function getBalanceStatuses(): Promise<BalanceStatus[]> {
   const userEmail = session?.user?.email
 
   if (!userEmail) {
-    throw new Error('Unauthorized')
+    return []
   }
 
   return await prismaClient.balanceStatus.findMany({

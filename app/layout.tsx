@@ -10,9 +10,11 @@ import styles from './Layout.module.scss'
 import { getTransactionConfigs } from 'db/transactionConfigs'
 import { getMortgages } from 'db/mortgages'
 import { getBalanceStatuses } from 'db/balanceStatuses'
+import { getDefaultTheme } from 'utils/theme'
 
 export const metadata: Metadata = {
   description: 'Put your money where your mouth is',
+  manifest: '/manifest.json',
 }
 
 export const viewPort = {
@@ -27,18 +29,27 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(nextAuthOptions)
-  const [transactionconfigs, mortgages, balanceStatuses] = await Promise.all([
+  const [transactionsConfigs, mortgages, balanceStatuses] = await Promise.all([
     getTransactionConfigs(),
     getMortgages(),
     getBalanceStatuses(),
   ])
   return (
     <html>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.document?.head?.parentElement?.setAttribute('data-theme', (${getDefaultTheme.toString()})())
+          `,
+          }}
+        />
+      </head>
       <body>
         <Providers
           session={session}
           swrFallback={{
-            '/api/transaction-configs': transactionconfigs,
+            '/api/transaction-configs': transactionsConfigs,
             '/api/mortgages': mortgages,
             '/api/balance-statuses': balanceStatuses,
           }}

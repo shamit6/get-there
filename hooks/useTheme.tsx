@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import { dark, light } from '../components/Charts/theme'
+import { getDefaultTheme } from 'utils/theme'
 
 export interface Theme {
   theme: any
@@ -17,8 +18,7 @@ export interface Theme {
 const ThemeContext = createContext<Theme>({ themeId: 'light' } as Theme)
 
 export function ThemeProvider({ children }: PropsWithChildren<{}>) {
-  const [themeId, setThemeId] = useState<'dark' | 'light'>(getDefaultTheme)
-  setDataThemeAttribute(getDefaultTheme())
+  const [themeId, setThemeId] = useState<'dark' | 'light'>(getDefaultTheme())
   const [theme, setTheme] = useState<any>()
 
   useEffect(() => {
@@ -51,23 +51,6 @@ export function ThemeProvider({ children }: PropsWithChildren<{}>) {
 export function useTheme() {
   const value = useContext(ThemeContext)
   return value
-}
-
-function isBrowserDefaultDark() {
-  return !!global?.matchMedia('(prefers-color-scheme: dark)').matches
-}
-
-export function getDefaultTheme(): 'dark' | 'light' {
-  try {
-    const localStorageTheme = localStorage.getItem('theme')
-    if (localStorageTheme === 'dark' || localStorageTheme === 'light') {
-      return localStorageTheme
-    }
-    const browserDefault = isBrowserDefaultDark() ? 'dark' : 'light'
-    return browserDefault
-  } catch (error) {
-    return 'light'
-  }
 }
 
 function setDataThemeAttribute(themeId: string) {
