@@ -27,7 +27,8 @@ export default function useBalanceStatus(last?: boolean) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ amount }),
         })
-        const [newBalance] = await response.json()
+        const newBalance = await response.json()
+        console.log('newBalance', newBalance);
 
         return [
           {

@@ -1,6 +1,7 @@
+'use client'
 import React, { useCallback, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import overrideStyles from './Form.module.scss'
 import styles from 'components/Field/Field.module.scss'
 import NumberFormat from 'react-number-format'

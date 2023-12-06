@@ -18,7 +18,7 @@ async function upsertUser({
       update: { name, image },
     })
   } finally {
-    await prismaClient.$disconnect()
+    // await prismaClient.$disconnect()
   }
 }
 

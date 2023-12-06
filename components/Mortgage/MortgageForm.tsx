@@ -1,3 +1,4 @@
+'use client'
 import MortgageComp from './MortgageCalculator'
 import classNames from 'classnames'
 import styles from 'components/Field/Field.module.scss'
@@ -16,7 +17,7 @@ import {
 import MortgagePaymentsCharts from './MortgagePaymentsCharts'
 import { Mortgage } from 'utils/types'
 import useMortgages from 'hooks/useMortgages'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import Delete from 'components/button/delete.svg'
 
 function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
