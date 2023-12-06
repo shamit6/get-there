@@ -1,6 +1,8 @@
 import { AuthOptions } from 'next-auth'
+import { getServerSession } from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
+import { redirect } from 'next/navigation'
 import { getEnv } from 'utils/envs'
 import { prismaClient } from 'utils/prisma'
 import { User } from 'utils/types'
@@ -73,4 +75,11 @@ export const nextAuthOptions: AuthOptions = {
     signIn: '/login',
   },
   // theme: 'light',
+}
+
+export async function ensureAuth() {
+  const session = await getServerSession(nextAuthOptions)
+  if (!session?.user) {
+    redirect('/login')
+  }
 }

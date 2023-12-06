@@ -10,11 +10,25 @@ import Timeline from 'components/Timeline/Timeline'
 import { useState } from 'react'
 import { UpdateBalanceModal } from 'components/UpdateBalance/UpdateBalanceModal'
 import Link from 'next/link'
+import { useSession } from 'next-auth/react'
 
 export default function Page() {
   const [isBalanceModalOpen, setIsBalanceModalOpen] = useState(false)
   const { balanceStatuses } = useBalanceStatus()
   const { transactions } = useTransaction()
+  const { data: session } = useSession()
+  const user = session?.user
+
+  if (!user) {
+    return (
+      <>
+        <h2>Welcome to Get There</h2>
+        <p>
+          Please <Link href="/login">sign in</Link> to use the app{' '}
+        </p>
+      </>
+    )
+  }
   if (balanceStatuses?.length === 0) {
     return (
       <>
