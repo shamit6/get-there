@@ -11,10 +11,10 @@ import Popper from '../Popover'
 import Logo from '../../public/logo.svg'
 import { useTheme } from 'hooks/useTheme'
 import { ThemeToggle } from 'components/ThemeToggle/ThemeToggle'
-import { useTranslation } from 'next-i18next'
 import LanguageSelector from 'components/LanguageSelector/LanguageSelector'
 import Logout from './logout.svg'
 import { usePathname } from 'next/navigation'
+import { useTranslation } from 'hooks/useTranslation'
 
 const NavEntry = ({
   route,
@@ -37,9 +37,9 @@ const NavEntry = ({
 }
 
 export default function Header() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const { themeId, setThemeId } = useTheme()
-  const { t } = useTranslation()
+  const { translations } = useTranslation()
   const user = session?.user
 
   return (
@@ -50,7 +50,9 @@ export default function Header() {
             <Logo />
           </NavEntry>
           <NavEntry route="/transactions">Transactions</NavEntry>
-          <NavEntry route="/mortgages">{t('mortgage')}</NavEntry>
+          <NavEntry route="/mortgages" key={translations['mortgage']}>
+            {translations['mortgage']}
+          </NavEntry>
         </nav>
       )}
       <div className={styles.login}>

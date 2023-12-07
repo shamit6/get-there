@@ -11,12 +11,13 @@ import { getTransactionConfigs } from 'db/transactionConfigs'
 import { getMortgages } from 'db/mortgages'
 import { getBalanceStatuses } from 'db/balanceStatuses'
 import { getDefaultTheme } from 'utils/theme'
+import { getDictionary } from '../utils/dictionaries'
 
 export const metadata: Metadata = {
   description: 'Put your money where your mouth is',
   manifest: '/manifest.json',
 }
-
+export const revalidate = 0
 export const viewPort = {
   colorScheme: 'light dark',
   width: 'device-width',
@@ -29,6 +30,8 @@ export default async function RootLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession(nextAuthOptions)
+  const { locale, translations } = await getDictionary()
+
   const [transactionsConfigs, mortgages, balanceStatuses] = await Promise.all([
     getTransactionConfigs(),
     getMortgages(),
@@ -53,8 +56,9 @@ export default async function RootLayout({
             '/api/mortgages': mortgages,
             '/api/balance-statuses': balanceStatuses,
           }}
+          translations={{ translations, locale }}
         >
-          <main className={classnames(styles.wrapper, `theme-light`)}>
+          <main className={classnames(styles.wrapper)}>
             <Header />
             <div className={styles.content}>{children}</div>
           </main>

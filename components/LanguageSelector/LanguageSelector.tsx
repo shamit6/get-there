@@ -1,10 +1,8 @@
-// language selector component with popover to select hebrew or english language svg
 import Popper from 'components/Popover'
-import { useTranslation } from 'next-i18next'
-import { useRouter } from 'next/router'
 import LanguageIcon from './language.svg'
 import Button from 'components/button'
-import Link from 'next/link'
+import { setLocale } from 'app/actions/setLocale'
+import { useTranslation } from 'hooks/useTranslation'
 
 function LanguageLink({
   locale,
@@ -13,20 +11,24 @@ function LanguageLink({
   locale: string
   language: string
 }) {
-  const { i18n } = useTranslation()
+  const { locale: currentLocale } = useTranslation()
   return (
-    <Link
-      href="/"
-      locale={locale}
-      style={{ display: 'block', textDecoration: 'none' }}
-    >
-      <Button text={language} linkTheme disabled={i18n.language === locale} />
-    </Link>
+    <div style={{ display: 'block', textDecoration: 'none' }}>
+      <Button
+        text={language}
+        linkTheme
+        disabled={locale === currentLocale}
+        onClick={async () => {
+          await setLocale(locale)
+          location.reload()
+        }}
+      />
+    </div>
   )
 }
 
 export default function LanguageSelector() {
-  const { t } = useTranslation()
+  const { translations } = useTranslation()
 
   return (
     <Popper
@@ -38,7 +40,11 @@ export default function LanguageSelector() {
         </div>
       }
     >
-      <Button icon={<LanguageIcon />} text={t('language')} linkTheme />
+      <Button
+        icon={<LanguageIcon />}
+        text={translations['language']}
+        linkTheme
+      />
     </Popper>
   )
 }
