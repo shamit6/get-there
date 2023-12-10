@@ -29,6 +29,11 @@
     height: 1em;
     width: 1em;
     margin-right: 0.4em;
+
+    @at-root [dir="rtl"] & {
+      margin-left: 0.4em;
+      margin-right: 0;
+    }
   }
 }
 

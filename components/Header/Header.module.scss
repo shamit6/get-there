@@ -32,6 +32,11 @@
   .avatar {
     border-radius: 50%;
     margin-right: 3px;
+
+    @at-root [dir="rtl"] & {
+      margin-left: 3px;
+      margin-right: 0;
+    }
   }
 
   .name {

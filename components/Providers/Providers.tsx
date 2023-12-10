@@ -5,7 +5,7 @@ import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'hooks/useTheme'
 import { Session } from 'next-auth'
 import { SWRConfig } from 'swr'
-import { Translations, TranslationsProvider } from 'hooks/useTranslation'
+import { TranslationsProvider } from 'hooks/useTranslation'
 
 function Providers({
   session,
@@ -16,7 +16,7 @@ function Providers({
   children: React.ReactNode
   session: Session | null
   swrFallback: { [key: string]: any }
-  translations: Translations
+  translations: { translations: any; locale: string }
 }) {
   return (
     <SWRConfig value={{ suspense: true, fallback }}>

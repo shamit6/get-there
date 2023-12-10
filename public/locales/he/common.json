@@ -1,4 +1,14 @@
 {
+  "transactions": "הכנסות והוצאות",
   "mortgage": "משכנתא",
-  "language": "שפה"
+  "language": "שפה",
+  "balance": "יתרה",
+  "newTransaction": "הכנסה/הוצאה חדשה",
+  "filerOptions": "אפשרויות סינון",
+  "interval": "כל כמה זמן",
+  "when": "מתי",
+  "amount": "סכום",
+  "transactionType": "תיאור",
+  "target": "יעד",
+  "targetAmount": "סכום יעד"
 }

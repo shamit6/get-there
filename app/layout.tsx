@@ -37,8 +37,9 @@ export default async function RootLayout({
     getMortgages(),
     getBalanceStatuses(),
   ])
+  const rtl = locale === 'he'
   return (
-    <html>
+    <html dir={rtl ? 'rtl' : 'ltr'}>
       <head>
         <script
           dangerouslySetInnerHTML={{

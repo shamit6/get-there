@@ -28,7 +28,7 @@ function LanguageLink({
 }
 
 export default function LanguageSelector() {
-  const { translations } = useTranslation()
+  const { t } = useTranslation()
 
   return (
     <Popper
@@ -40,11 +40,7 @@ export default function LanguageSelector() {
         </div>
       }
     >
-      <Button
-        icon={<LanguageIcon />}
-        text={translations['language']}
-        linkTheme
-      />
+      <Button icon={<LanguageIcon />} text={t('language')} linkTheme />
     </Popper>
   )
 }

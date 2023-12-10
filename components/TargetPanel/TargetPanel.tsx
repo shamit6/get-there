@@ -6,6 +6,7 @@ import NumberFormat from 'react-number-format'
 import Collapsible from '../Collapsible/Collapsible'
 import Field from '../Field'
 import styles from './TargetPanel.module.scss'
+import { useTranslation } from 'hooks/useTranslation'
 
 export default function TargetPanel() {
   const { filter, setFilter } = useFilterOptions()
@@ -17,9 +18,10 @@ export default function TargetPanel() {
   const [selectedOption, setSelectedOption] = useState<'amount' | 'end-date'>(
     !!targetAmount ? 'amount' : 'end-date'
   )
+  const { t } = useTranslation()
 
   return (
-    <Collapsible label="Filter options">
+    <Collapsible label={t('filerOptions')}>
       <div className={styles.filterPanel}>
         <div className={styles.filterPanelItem}>
           <input
@@ -29,7 +31,11 @@ export default function TargetPanel() {
             onChange={() => setSelectedOption('end-date')}
             checked={selectedOption === 'end-date'}
           />
-          <Field label="Until date:" htmlFor="end-date" className={styles.filterPanelItemField}>
+          <Field
+            label="Until date:"
+            htmlFor="end-date"
+            className={styles.filterPanelItemField}
+          >
             <input
               disabled={selectedOption === 'amount'}
               type="date"
@@ -50,12 +56,16 @@ export default function TargetPanel() {
             onChange={() => setSelectedOption('amount')}
             checked={selectedOption === 'amount'}
           />
-          <Field label="Target:" htmlFor="amount" className={styles.filterPanelItemField}>
+          <Field
+            label={t('target')}
+            htmlFor="amount"
+            className={styles.filterPanelItemField}
+          >
             <NumberFormat
               onValueChange={({ floatValue }) => setTargetAmount(floatValue)}
               value={localTargetAmount}
               disabled={selectedOption === 'end-date'}
-              placeholder="target amount"
+              placeholder={t('targetAmount')}
               prefix="₪"
               thousandSeparator
               required

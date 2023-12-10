@@ -3,37 +3,16 @@ import styles from './Tickers.module.scss'
 import Ticker from 'components/Ticker'
 import useTransactionsView from 'hooks/useTransactionsView'
 import UpdateBalance from 'components/UpdateBalance'
+import { useTranslation } from 'hooks/useTranslation'
 
 export default function Tickers() {
-  const {currentBalanceAmount} = useTransactionsView()
+  const { currentBalanceAmount } = useTransactionsView()
+  const { t } = useTranslation()
 
   return (
     <div className={styles.currentBalanceTicker}>
-      <Ticker label="Balance" number={currentBalanceAmount} />
+      <Ticker label={t('balance')} number={currentBalanceAmount} />
       <UpdateBalance />
-      {/* <div className={styles.smallTickers}>
-        <Ticker
-          small
-          label="This Year"
-          prefix={currentYearBalanceAmount < 0 ? '-' : '+'}
-          number={currentYearBalanceAmount}
-          duration={4}
-        />
-        <Ticker
-          small
-          label="This Month"
-          prefix={currentMonthBalanceAmount < 0 ? '-' : '+'}
-          number={currentMonthBalanceAmount}
-          duration={4}
-        />
-        <Ticker
-          small
-          label="Month AVG"
-          prefix={currentYearBalanceAmount < 0 ? '-' : '+'}
-          number={currentYearBalanceAmount / 12}
-          duration={4}
-        />
-      </div> */}
     </div>
   )
 }

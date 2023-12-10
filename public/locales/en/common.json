@@ -1,4 +1,14 @@
 {
+  "transactions": "Transactions",
   "mortgage": "Mortgage",
-  "language": "Language"
+  "language": "Language",
+  "balance": "Balance",
+  "newTransaction": "New Transaction",
+  "filerOptions": "Filter Options",
+  "interval": "Interval",
+  "when": "When",
+  "amount": "Amount",
+  "transactionType": "Description",
+  "target": "Target",
+  "targetAmount": "Target Amount"
 }

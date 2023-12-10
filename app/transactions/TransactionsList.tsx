@@ -6,6 +6,7 @@ import Button from 'components/button'
 import { PageHeader } from 'components/Field'
 import Table from 'components/Table'
 import useTransactions from 'hooks/useTransactions'
+import { useTranslation } from 'hooks/useTranslation'
 
 const TABLE_COLUMNS = [
   {
@@ -30,15 +31,41 @@ const TABLE_COLUMNS = [
   },
 ]
 
+const getTableColumns = (t: any) => [
+  {
+    name: t('transactionType'),
+    path: 'type',
+  },
+  {
+    name: t('amount'),
+    path: 'amount',
+    format: (value: number) => value.toLocaleString('he'),
+  },
+  {
+    name: t('when'),
+    path: 'date',
+    format: (date: Date) => format(date, 'dd/MM/yyyy'),
+  },
+  {
+    name: t('interval'),
+    path: ['timePeriod', 'periodAmount'],
+    format: (timePeriod: number, ...periodAmount: number[]) =>
+      timePeriod && `every ${periodAmount} ${timePeriod}`,
+  },
+]
+
 function List() {
   const router = useRouter()
   const { transactions } = useTransactions()
+  const { t } = useTranslation()
+
+  const tableColumns = getTableColumns(t)
 
   return (
     <>
-      <PageHeader title="Transactions">
+      <PageHeader title={t('transactions')}>
         <Button
-          text="New transaction"
+          text={t('newTransaction')}
           onClick={() => router.push('/transactions/new')}
           bordered
           linkTheme
@@ -46,7 +73,7 @@ function List() {
         />
       </PageHeader>
       <Table
-        columns={TABLE_COLUMNS}
+        columns={tableColumns}
         onRowClick={(id: string) => router.push(`/transactions/${id}`)}
         rows={transactions}
       />

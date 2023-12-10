@@ -9,11 +9,21 @@
 .right {
   transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
+
+  @at-root [dir="rtl"] & {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
 }
 
 .left {
   transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
+
+  @at-root [dir="rtl"] & {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
 }
 
 .up {

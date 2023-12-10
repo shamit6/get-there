@@ -39,7 +39,7 @@ const NavEntry = ({
 export default function Header() {
   const { data: session } = useSession()
   const { themeId, setThemeId } = useTheme()
-  const { translations } = useTranslation()
+  const { t } = useTranslation()
   const user = session?.user
 
   return (
@@ -49,10 +49,8 @@ export default function Header() {
           <NavEntry logo route="/">
             <Logo />
           </NavEntry>
-          <NavEntry route="/transactions">Transactions</NavEntry>
-          <NavEntry route="/mortgages" key={translations['mortgage']}>
-            {translations['mortgage']}
-          </NavEntry>
+          <NavEntry route="/transactions">{t('transactions')}</NavEntry>
+          <NavEntry route="/mortgages">{t('mortgage')}</NavEntry>
         </nav>
       )}
       <div className={styles.login}>
