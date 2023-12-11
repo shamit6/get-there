@@ -38,6 +38,7 @@
     "react-popper": "^2.3.0",
     "react-tiny-popover": "^7.0.1",
     "react-vertical-timeline-component": "^3.3.3",
+    "resolve-accept-language": "^2.1.10",
     "sass": "^1.35.2",
     "swr": "^1.3.0",
     "usehooks-ts": "^2.6.0"

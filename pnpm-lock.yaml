@@ -83,6 +83,9 @@ dependencies:
   react-vertical-timeline-component:
     specifier: ^3.3.3
     version: 3.6.0(react@18.2.0)
+  resolve-accept-language:
+    specifier: ^2.1.10
+    version: 2.1.10
   sass:
     specifier: ^1.35.2
     version: 1.69.5
@@ -6828,6 +6831,11 @@ packages:
   /requires-port@1.0.0:
     resolution: {integrity: sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ==}
     dev: true
+
+  /resolve-accept-language@2.1.10:
+    resolution: {integrity: sha512-X/jP+JHsIbSlXwen3b+xrjmD46dEGTmbSH++GqWwime2bBI5QEFe2bCyKIdHMuyZLp5sxRxhJSCwPbGOOutqUA==}
+    engines: {node: ^14.18.1 || >=16.0.0}
+    dev: false
 
   /resolve-cwd@3.0.0:
     resolution: {integrity: sha512-OrZaX2Mb+rJCpH/6CpSqt9xFVpN++x01XnN2ie9g6P5/3xelLAkXWVADpdz1IHD/KFfEXyE6V0U01OQ3UO2rEg==}

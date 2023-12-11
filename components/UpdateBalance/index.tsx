@@ -3,9 +3,12 @@ import styles from './UpdateBalance.module.scss'
 import Popover from 'components/Popover'
 import Icon from './info.svg'
 import { UpdateBalanceModal } from './UpdateBalanceModal'
+import { useTranslation } from 'hooks/useTranslation'
 
 export default function UpdateBalance() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { t } = useTranslation()
+
   return (
     <>
       <UpdateBalanceModal
@@ -15,8 +18,8 @@ export default function UpdateBalance() {
       <Popover
         content={
           <div className={styles.balanceDisclaimer}>
-            This is your estimated current balance. isn't it correct? click{' '}
-            <a onClick={() => setIsModalOpen(true)}>here</a> to update
+            {t('updateBalanceMessage')}{' '}
+            <a onClick={() => setIsModalOpen(true)}>{t('here')}</a>
           </div>
         }
         triggerElementStyles={{ height: '24px' }}

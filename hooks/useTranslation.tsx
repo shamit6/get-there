@@ -2,8 +2,20 @@ import React, { useCallback } from 'react'
 import { PropsWithChildren } from 'react'
 
 export interface Translations {
-  t: (key: string) => string
+  t: (key: string, variables?: Record<string, string>) => string
   locale: string
+}
+
+function createStringFromTemplate(
+  template: string,
+  variables: Record<string, string> = {}
+) {
+  return template.replace(
+    new RegExp('{([^{]+)}', 'g'),
+    function (_unused, varName) {
+      return variables[varName]
+    }
+  )
 }
 
 const TranslationsContext = React.createContext({
@@ -20,8 +32,8 @@ export function TranslationsProvider({
   locale: string
 }>) {
   const t = useCallback(
-    (key: string) => {
-      return translations[key] ?? key
+    (key: string, variables?: Record<string, string>) => {
+      return createStringFromTemplate(translations[key], variables) ?? key
     },
     [translations]
   )

@@ -10,5 +10,15 @@
   "amount": "Amount",
   "transactionType": "Description",
   "target": "Target",
-  "targetAmount": "Target Amount"
+  "targetAmount": "Target Amount",
+  "updateBalanceMessage": "This is your estimated balance according to your transactions. You can update it by clicking",
+  "here": "here",
+  "signOut": "Sign Out",
+  "untilDate": "Until Date",
+  "filter": "Filter",
+  "currentEstimatedBalanceIs": "Current estimated balance is {amount}",
+  "lastBalanceUpdate": "Last balance update was on {date} for {amount}",
+  "cancel": "Cancel",
+  "updateBalance": "Update Balance",
+  "newBalanceAmount": "New Amount:"
 }

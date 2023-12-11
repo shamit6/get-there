@@ -10,5 +10,15 @@
   "amount": "סכום",
   "transactionType": "תיאור",
   "target": "יעד",
-  "targetAmount": "סכום יעד"
+  "targetAmount": "סכום יעד",
+  "updateBalanceMessage": "זו היא יתרתך המשוערת על פי ההכנסות וההוצאות שהזנת, לעדכון היתרה לחץ",
+  "here": "כאן",
+  "signOut": "התנתק",
+  "untilDate": "עד תאריך",
+  "filter": "סנן",
+  "currentEstimatedBalanceIs": "היתרה המשוערת הנוכחית היא {amount}",
+  "lastBalanceUpdate": "עדכון אחרון היה ב {date} ל {amount}",
+  "cancel": "ביטול",
+  "updateBalance": "עדכן יתרה",
+  "newBalanceAmount": ":יתרה חדשה"
 }

@@ -71,7 +71,7 @@ export default function Header() {
                   </Button>
                   <LanguageSelector />
                   <Button
-                    text="Sign out"
+                    text={t('signOut')}
                     onClick={() => signOut({ callbackUrl: '/login' })}
                     linkTheme
                     icon={<Logout />}

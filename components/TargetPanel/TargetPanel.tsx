@@ -32,7 +32,7 @@ export default function TargetPanel() {
             checked={selectedOption === 'end-date'}
           />
           <Field
-            label="Until date:"
+            label={t('untilDate')}
             htmlFor="end-date"
             className={styles.filterPanelItemField}
           >
@@ -83,7 +83,7 @@ export default function TargetPanel() {
               )
             }}
           >
-            Submit
+            {t('filter')}
           </Button>
         </ButtonsGroup>
       </div>

@@ -1,12 +1,12 @@
 import { format } from 'date-fns'
 import React, { useState } from 'react'
 import useBalanceStatus from 'hooks/useBalanceStatus'
-import useTransaction from 'hooks/useTransactions'
 import Button, { ButtonsGroup } from '../button'
 import Modal from '../Modal'
 import Field from 'components/Field'
 import NumberFormat from 'react-number-format'
 import useTransactionsView from 'hooks/useTransactionsView'
+import { useTranslation } from 'hooks/useTranslation'
 
 export function UpdateBalanceModal({
   isOpen,
@@ -17,56 +17,52 @@ export function UpdateBalanceModal({
 }) {
   const [editedAmount, setEditedAmount] = useState(0)
 
-  const { balanceStatuses, updateBalanceStatus, isLoading } =
-    useBalanceStatus(true)
-  const { transactions, isLoading: isLoadingTransactions } = useTransaction()
-
-  if (isLoadingTransactions || isLoading) {
-    return null
-  }
-
-  const isThereAnyBalance = !!balanceStatuses?.[0]
-
+  const { balanceStatuses, updateBalanceStatus } = useBalanceStatus()
   const { currentBalanceAmount } = useTransactionsView()
 
+  const isThereAnyBalance = !!balanceStatuses?.[0]
   const currentBalanceStatus = balanceStatuses?.[0]
+
+  const { t, locale } = useTranslation()
 
   return (
     <Modal isOpen={isOpen}>
       <>
         {isThereAnyBalance && (
           <p>
-            Current estimated balance is{' '}
-            {currentBalanceAmount.toLocaleString('he', {
-              style: 'currency',
-              currency: 'ILS',
-              maximumFractionDigits: 0,
+            {t('currentEstimatedBalanceIs', {
+              amount: currentBalanceAmount?.toLocaleString(locale, {
+                style: 'currency',
+                currency: 'ILS',
+                maximumFractionDigits: 0,
+              }),
             })}
             <br />
-            Last updated was on{' '}
-            {format(currentBalanceStatus!.createdAt, 'dd/MM/yyyy  ')} for{' '}
-            {currentBalanceStatus!.amount.toLocaleString('he', {
-              style: 'currency',
-              currency: 'ILS',
-              maximumFractionDigits: 0,
+            {t('lastBalanceUpdate', {
+              date: format(currentBalanceStatus!.createdAt, 'P'),
+              amount: currentBalanceStatus!.amount.toLocaleString(locale, {
+                style: 'currency',
+                currency: 'ILS',
+                maximumFractionDigits: 0,
+              }),
             })}
           </p>
         )}
-        <Field label="New amount:" horizontal>
+        <Field label={t('newBalanceAmount')} horizontal>
           <NumberFormat
             onValueChange={(values) => {
               const { floatValue } = values
               setEditedAmount(Math.floor(floatValue!))
             }}
             thousandSeparator
-            placeholder="new amount"
+            placeholder="30,000₪"
             suffix="₪"
             tabIndex={1}
           />
         </Field>
         <ButtonsGroup>
           <Button
-            text={`${isThereAnyBalance ? 'Update' : 'Set'} Balance`}
+            text={t('updateBalance')}
             onClick={async () => {
               updateBalanceStatus(editedAmount!)
               onClose()
@@ -75,7 +71,7 @@ export function UpdateBalanceModal({
             primary
           />
           <Button
-            text="Cancel"
+            text={t('cancel')}
             onClick={async () => {
               onClose()
             }}
