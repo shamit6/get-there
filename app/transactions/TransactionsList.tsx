@@ -50,7 +50,7 @@ const getTableColumns = (t: any) => [
     name: t('interval'),
     path: ['timePeriod', 'periodAmount'],
     format: (timePeriod: number, ...periodAmount: number[]) =>
-      timePeriod && `every ${periodAmount} ${timePeriod}`,
+      timePeriod && t('intervalDescription', { periodAmount, timePeriod: t(timePeriod) }),
   },
 ]
 

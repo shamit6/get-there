@@ -33,7 +33,7 @@ export function TranslationsProvider({
 }>) {
   const t = useCallback(
     (key: string, variables?: Record<string, string>) => {
-      return createStringFromTemplate(translations[key], variables) ?? key
+      return createStringFromTemplate(translations[key] ?? key, variables)
     },
     [translations]
   )

@@ -55,7 +55,12 @@ export default function Header() {
       )}
       <div className={styles.login}>
         {!user ? (
-          <Button text="Sign in" onClick={() => signIn()} linkTheme bordered />
+          <Button
+            text={t('signIn')}
+            onClick={() => signIn()}
+            linkTheme
+            bordered
+          />
         ) : (
           <>
             <Popper
@@ -90,7 +95,7 @@ export default function Header() {
                   height={'20'}
                   alt={user?.email!}
                 />
-                <span className={styles.name}>{user!.name}</span>
+                <span className={styles.name}>{t(user.name!)}</span>
               </div>
             </Popper>
           </>

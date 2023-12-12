@@ -13,6 +13,7 @@ import Arrow, { Direction } from 'components/arrow'
 import TextNumber from 'components/textNumber'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import useTransactionsView from 'hooks/useTransactionsView'
+import { useTranslation } from 'hooks/useTranslation'
 
 function TransactionsSummery({
   transaction,
@@ -24,6 +25,7 @@ function TransactionsSummery({
   maxDate: Date
 }) {
   const [isOpen, setOpen] = useState(false)
+  const { t } = useTranslation()
 
   return (
     <div>
@@ -35,29 +37,31 @@ function TransactionsSummery({
       </dt>
       <dd className={styles.periodContent}>
         <table className={styles.periodTransactionAmounts}>
+          <Arrow
+            className={styles.collapseIcon}
+            direction={isOpen ? Direction.DOWN : Direction.RIGHT}
+          />
           <thead>
             <tr
               onClick={() => setOpen(!isOpen)}
               style={{ cursor: 'pointer', userSelect: 'none' }}
             >
-              <th style={{ textAlign: 'left' }}>
-                <Arrow
-                  className={styles.collapseIcon}
-                  direction={isOpen ? Direction.DOWN : Direction.RIGHT}
-                />{' '}
-                Total income
-              </th>
-              <th style={{ textAlign: 'right' }}>
+              <td>{t('totalIncome')}</td>
+              <td dir="ltr" className={styles.amount}>
                 <TextNumber value={transaction.totalAmount} />
-              </th>
+              </td>
             </tr>
           </thead>
           <tbody>
             {isOpen &&
               transaction.transactions.map((spesificTransaction) => (
                 <tr key={spesificTransaction.type}>
-                  <td>{spesificTransaction.type}</td>
-                  <td style={{ textAlign: 'right' }}>
+                  <td>
+                    {spesificTransaction.type === 'Mortgage'
+                      ? t('mortgage')
+                      : spesificTransaction.type}
+                  </td>
+                  <td dir="ltr" className={styles.amount}>
                     <TextNumber value={spesificTransaction.amount} />
                   </td>
                 </tr>
@@ -66,16 +70,21 @@ function TransactionsSummery({
           <tfoot style={{ margin: '.3em 0' }}>
             <tr>
               <td style={{ padding: '.5em 0' }}>
-                Expected Balance on{' '}
-                {format(
-                  min([
-                    getLastDayOfPeriod(transaction.time, periodResolution),
-                    maxDate,
-                  ]),
-                  'dd/MM/yyyy'
-                )}
+                {t('expectedBalanceOn', {
+                  date: format(
+                    min([
+                      getLastDayOfPeriod(transaction.time, periodResolution),
+                      maxDate,
+                    ]),
+                    'P'
+                  ),
+                })}
               </td>
-              <td style={{ textAlign: 'right', padding: '.5em 0' }}>
+              <td
+                style={{ padding: '.5em 0' }}
+                dir="ltr"
+                className={styles.amount}
+              >
                 <TextNumber value={transaction.amountWithBalance} />
               </td>
             </tr>
@@ -96,6 +105,7 @@ function Timeline() {
     SummerizedTransacrionsPeriod[]
   >([])
   const [hasMore, setHasMore] = useState(true)
+  const { t } = useTranslation()
 
   const {
     transactionsToView,
@@ -177,7 +187,13 @@ function Timeline() {
     <div className={styles.timeline}>
       <div style={{ display: 'flex' }}>
         <span style={{ flex: '1' }}>
-          current balance amount <TextNumber value={currentBalanceAmount} />
+          {t('currentEstimatedBalanceIs', {
+            amount: currentBalanceAmount.toLocaleString('he', {
+              style: 'currency',
+              currency: 'ILS',
+              maximumFractionDigits: 0,
+            }),
+          })}
         </span>
         <select
           defaultValue={TimePeriod.YEAR}
@@ -186,8 +202,8 @@ function Timeline() {
             setPeriodResolution(e.target.value as TimePeriod)
           }}
         >
-          <option value={TimePeriod.MONTH}>month</option>
-          <option value={TimePeriod.YEAR}>year</option>
+          <option value={TimePeriod.MONTH}>{t('month')}</option>
+          <option value={TimePeriod.YEAR}>{t('year')}</option>
         </select>
       </div>
       <dl>

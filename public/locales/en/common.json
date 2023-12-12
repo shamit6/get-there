@@ -6,6 +6,7 @@
   "newTransaction": "New Transaction",
   "filerOptions": "Filter Options",
   "interval": "Interval",
+  "intervalDescription": "every {periodAmount} {timePeriod}",
   "when": "When",
   "amount": "Amount",
   "transactionType": "Description",
@@ -20,5 +21,14 @@
   "lastBalanceUpdate": "Last balance update was on {date} for {amount}",
   "cancel": "Cancel",
   "updateBalance": "Update Balance",
-  "newBalanceAmount": "New Amount:"
+  "newBalanceAmount": "New Amount:",
+  "totalIncome": "Total Income",
+  "year": "Year",
+  "expectedBalanceOn": "Expected balance on {date} is ",
+
+
+  "signIn": "Sign In",
+  "signInWithGoogle": "Sign in with Google",
+  "signInWithDummyUser": "Sign in with a dummy user",
+  "dummyUser": "Dummy User"
 }

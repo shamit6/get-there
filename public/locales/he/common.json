@@ -6,6 +6,7 @@
   "newTransaction": "הכנסה/הוצאה חדשה",
   "filerOptions": "אפשרויות סינון",
   "interval": "כל כמה זמן",
+  "intervalDescription": "כל {periodAmount} {timePeriod}",
   "when": "מתי",
   "amount": "סכום",
   "transactionType": "תיאור",
@@ -20,5 +21,14 @@
   "lastBalanceUpdate": "עדכון אחרון היה ב {date} ל {amount}",
   "cancel": "ביטול",
   "updateBalance": "עדכן יתרה",
-  "newBalanceAmount": ":יתרה חדשה"
+  "newBalanceAmount": ":יתרה חדשה",
+  "totalIncome": "סה\"כ הכנסות",
+  "year": "שנה",
+  "month": "חודש",
+  "expectedBalanceOn": "יתרה משוערת בתאריך {date}",
+
+  "signIn": "התחבר",
+  "signInWithGoogle": "התחבר עם גוגל",
+  "signInWithDummyUser": "התחבר עם משתמש דמה",
+  "dummyUser": "ישראל ישראלי"
 }

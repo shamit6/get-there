@@ -21,6 +21,11 @@
     position: absolute;
     top: .5em;
     left: -1em;
+
+    @at-root [dir="rtl"] & {
+      left: auto;
+      right: -1em;
+    }
   }
 
   .periodTransactionAmounts {
@@ -36,6 +41,10 @@
 
     tfoot {
       font-weight: 500;
+    }
+
+    .amount {
+      text-align: right;
     }
   }
 }

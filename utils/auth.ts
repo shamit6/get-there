@@ -34,7 +34,7 @@ export const nextAuthOptions: AuthOptions = {
         const user = {
           id: 'demo',
           email: 'demo@dummy.com',
-          name: 'Dummy Demo',
+          name: 'dummyUser',
           image:
             'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/V8BNOaftJmYSAdW0ROdfRQw4cuWPEXxKwCLcDEAEiGQoBRBD___________8BGJ6i0f_______wE/s72-c-k-no/photo.jpg',
         }
