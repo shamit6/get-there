@@ -89,7 +89,7 @@ export function addBalanceToSortTransaction(
 }
 
 export function getCurrentMonthBalanceAmount(
-  transactions: Transaction[],
+  transactions: TransactionConfig[],
   currentDate: Date = new Date()
 ) {
   const monthStartDate = startOfMonth(currentDate)
@@ -109,7 +109,7 @@ export function getCurrentMonthBalanceAmount(
 }
 
 export function getCurrentYearBalanceAmount(
-  transactions: Transaction[],
+  transactions: TransactionConfig[],
   currentDate: Date = new Date()
 ) {
   const yearStartDate = startOfYear(currentDate)
