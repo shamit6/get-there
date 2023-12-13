@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import { TransactionConfig } from 'utils/types'
@@ -29,12 +28,12 @@ export default function useTransactions() {
           return transactionConfigs.map(({ date, endDate, ...rest }) => ({
             ...rest,
             date: new Date(date),
-            endDate: endDate ? new Date(endDate) : undefined,
+            endDate: endDate ? new Date(endDate) : null,
           }))
         })
   )
 
-  const deleteTrasaction = useCallback(
+  const deleteTransaction = useCallback(
     async (transactionId: string) => {
       await mutate(
         async (transactionConfigs: TransactionConfig[] = []) => {
@@ -43,17 +42,13 @@ export default function useTransactions() {
             headers: { 'Content-Type': 'application/json' },
           })
 
-          return transactionConfigs.filter(
-            ({id}) => id === transactionId
-          )
+          return transactionConfigs.filter(({ id }) => id === transactionId)
         },
         {
           populateCache: false,
           rollbackOnError: true,
           optimisticData: (transactionConfigs: TransactionConfig[] = []) => {
-            return transactionConfigs.filter(
-              ({id}) => id !== transactionId
-            )
+            return transactionConfigs.filter(({ id }) => id !== transactionId)
           },
         }
       )
@@ -61,8 +56,8 @@ export default function useTransactions() {
     [mutate]
   )
 
-  const upsertTrasaction = useCallback(
-    async (transactionConfig: TransactionConfig) => {
+  const upsertTransaction = useCallback(
+    async (transactionConfig: Partial<TransactionConfig>) => {
       await mutate(
         async () => {
           const { id, ...transactionData } = transactionConfig
@@ -80,17 +75,20 @@ export default function useTransactions() {
             .then(({ date, endDate, ...rest }) => ({
               ...rest,
               date: new Date(date),
-              endDate: endDate ? new Date(endDate) : undefined,
+              endDate: endDate ? new Date(endDate) : null,
             }))
 
-          return upsertToTransactionList(data || [], updatedTransactionConfig)
+          return upsertToTransactionList(
+            data || [],
+            updatedTransactionConfig
+          ) as TransactionConfig[]
         },
         {
           optimisticData: (transactionConfigs = []) => {
             return upsertToTransactionList(
               transactionConfigs,
-              transactionConfig
-            )
+              transactionConfig as TransactionConfig
+            ) as TransactionConfig[]
           },
           populateCache: true,
           rollbackOnError: true,
@@ -105,7 +103,7 @@ export default function useTransactions() {
     isLoading: !error && !data,
     isError: error,
     mutate,
-    deleteTrasaction,
-    upsertTrasaction,
+    deleteTransaction,
+    upsertTransaction,
   }
 }
