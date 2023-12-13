@@ -12,6 +12,7 @@ import {
 
 export type {
   // BalanceStatus,
+  TransactionConfig,
   User,
 } from '@prisma/client'
 export {
@@ -31,16 +32,6 @@ export enum TimePeriod {
 export interface TransactionInterval {
   timePeriod: TimePeriod
   amount: number
-  endDate?: Date
-}
-
-export interface TransactionConfig {
-  id?: string
-  type: string
-  date: Date
-  amount: number
-  timePeriod?: TimePeriod
-  periodAmount?: number
   endDate?: Date
 }
 

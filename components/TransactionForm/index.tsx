@@ -39,13 +39,13 @@ export default function Form({
     })
 
   const router = useRouter()
-  const { upsertTrasaction, deleteTrasaction } = useTransaction()
+  const { upsertTransaction, deleteTransaction } = useTransaction()
   const onSubmit = useCallback(
     async (data: TransactionFormProps) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
 
-      const newTransactionData: TransactionConfig = {
+      const newTransactionData: Partial<TransactionConfig> = {
         ...rest,
         amount: Number(amount),
         id: transactionConfig?.id,
@@ -56,18 +56,17 @@ export default function Form({
         newTransactionData.endDate = endDate
       }
 
-      upsertTrasaction(newTransactionData)
+      upsertTransaction(newTransactionData)
 
       await router.push('/transactions')
     },
-    [upsertTrasaction, router]
+    [upsertTransaction, router]
   )
 
   const onDelete = useCallback(async () => {
-    deleteTrasaction(transactionConfig?.id!)
+    deleteTransaction(transactionConfig?.id!)
     await router.push('/transactions')
-  }, [deleteTrasaction, transactionConfig, router])
-
+  }, [deleteTransaction, transactionConfig, router])
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
   const endDateEl = useRef<HTMLInputElement>(null)
@@ -80,12 +79,14 @@ export default function Form({
       noValidate
     >
       <PageHeader title="Transaction">
-        {transactionConfig?.id && <Button
-          text="delete"
-          bordered
-          onClick={() => onDelete()}
-          icon={<Delete />}
-        />}
+        {transactionConfig?.id && (
+          <Button
+            text="delete"
+            bordered
+            onClick={() => onDelete()}
+            icon={<Delete />}
+          />
+        )}
       </PageHeader>
       <Field label="Amount">
         <Controller
