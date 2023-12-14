@@ -1,9 +1,15 @@
 {
+  "manage": "Manage My Money",
   "transactions": "Transactions",
+  "newTransaction": "New Transaction",
+  "assets": "Assets",
+  "assetNew": "New Asset",
+  "mortgages": "Mortgages",
+  "mortgageNew": "New Mortgage",
+
   "mortgage": "Mortgage",
   "language": "Language",
   "balance": "Balance",
-  "newTransaction": "New Transaction",
   "filerOptions": "Filter Options",
   "interval": "Interval",
   "intervalDescription": "every {periodAmount} {timePeriod}",
@@ -32,8 +38,6 @@
   "dummyUser": "Dummy User",
 
   "asset": "Asset",
-  "assets": "Assets",
-  "assetNew": "New Asset",
   "assetType": "Asset Type",
   "assetTypePlaceholder": "apartment/stocks/deposit",
   "assetValue": "Cash Value",
@@ -42,5 +46,6 @@
   "assetPeriodicIncomeAmount": "Periodic Income",
   "assetTimePeriod": "Every",
 
+  "delete": "Delete",
   "save": "Save"
 }

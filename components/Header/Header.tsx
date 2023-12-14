@@ -49,8 +49,10 @@ export default function Header() {
           <NavEntry logo route="/">
             <Logo />
           </NavEntry>
-          <NavEntry route="/transactions">{t('transactions')}</NavEntry>
+          {/* <NavEntry route="/transactions">{t('transactions')}</NavEntry>
           <NavEntry route="/mortgages">{t('mortgage')}</NavEntry>
+          <NavEntry route="/assets">{t('assets')}</NavEntry> */}
+          <NavEntry route="/manage">{t('manage')}</NavEntry>
         </nav>
       )}
       <div className={styles.login}>

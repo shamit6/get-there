@@ -55,8 +55,9 @@ export async function updateAsset(asset: Asset): Promise<Asset> {
     throw new Error('Unauthorized')
   }
 
+  const { id, ...rest } = asset
   return await prismaClient.asset.update({
-    where: { id: asset.id },
-    data: { ...asset, userEmail },
+    where: { id: asset.id, userEmail },
+    data: { ...rest },
   })
 }

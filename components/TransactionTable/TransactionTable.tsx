@@ -31,7 +31,7 @@ const getTableColumns = (t: any) => [
   },
 ]
 
-function List() {
+export default function TransactionTable() {
   const router = useRouter()
   const { transactions } = useTransactions()
   const { t } = useTranslation()
@@ -57,4 +57,3 @@ function List() {
     </>
   )
 }
-export default List

@@ -21,17 +21,24 @@ export default function Form({ asset }: { asset?: Asset }) {
     })
 
   const { upsertAsset, deleteAsset } = useAssets()
-  const onSubmit = useCallback(async (data: Asset) => {
-    let { ...asset } = data
+  const onSubmit = useCallback(
+    async (data: Asset) => {
+      let { ...asset } = data
 
-    if (!asset.periodicIncomeAmount) {
-      asset.periodAmount = null
-      asset.timePeriod = null
+      if (!asset.periodicIncomeAmount) {
+        asset.periodAmount = null
+        asset.timePeriod = null
+      }
+      upsertAsset(asset)
+      console.log('onSubmit', data)
+    },
+    [upsertAsset]
+  )
+  const onDelete = useCallback(async () => {
+    if (asset?.id) {
+      deleteAsset(asset.id)
     }
-    upsertAsset(asset)
-    console.log('onSubmit', data)
-  }, [])
-  const onDelete = useCallback(async () => {}, [])
+  }, [deleteAsset])
 
   const { t } = useTranslation()
   const isRepeated = watch('periodicIncomeAmount') !== undefined
@@ -46,7 +53,7 @@ export default function Form({ asset }: { asset?: Asset }) {
       <PageHeader title={t('asset')}>
         {asset?.id && (
           <Button
-            text="delete"
+            text={t('delete')}
             bordered
             onClick={() => onDelete()}
             icon={<Delete />}
@@ -60,6 +67,7 @@ export default function Form({ asset }: { asset?: Asset }) {
           placeholder={t('assetTypePlaceholder')}
           required
           {...register('type', { required: true })}
+          defaultValue={asset?.type}
         />
       </Field>
       <Field label={t('assetValue')}>
@@ -105,6 +113,7 @@ export default function Form({ asset }: { asset?: Asset }) {
             <NumberFormat
               onValueChange={({ floatValue }) => onChange(Number(floatValue))}
               onBlur={onBlur}
+              value={value}
               thousandSeparator
               required
               tabIndex={1}
@@ -142,6 +151,7 @@ export default function Form({ asset }: { asset?: Asset }) {
             required: isRepeated,
             setValueAs: (value) => Number(value),
           })}
+          defaultValue={asset?.periodAmount ?? undefined}
           required={isRepeated}
           className={overrideStyles.periodAmountField}
           placeholder="1"
@@ -152,6 +162,7 @@ export default function Form({ asset }: { asset?: Asset }) {
           {...register('timePeriod')}
           className={overrideStyles.timePeriodField}
           disabled={!isRepeated}
+          defaultValue={asset?.timePeriod ?? undefined}
         >
           <option value="week">{t('week')}</option>
           <option value="month">{t('month')}</option>

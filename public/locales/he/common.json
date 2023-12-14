@@ -1,9 +1,15 @@
 {
+  "manage": "עדכון פעולות",
   "transactions": "הכנסות והוצאות",
+  "newTransaction": "הכנסה/הוצאה חדשה",
+  "assets": "נכסים",
+  "assetNew": "נכס חדש",
+  "mortgages": "משכנתאות",
+  "mortgageNew": "משכנתא חדשה",
+
   "mortgage": "משכנתא",
   "language": "שפה",
   "balance": "יתרה",
-  "newTransaction": "הכנסה/הוצאה חדשה",
   "filerOptions": "אפשרויות סינון",
   "interval": "כל כמה זמן",
   "intervalDescription": "כל {periodAmount} {timePeriod}",
@@ -33,8 +39,6 @@
   "dummyUser": "ישראל ישראלי",
 
   "asset": "נכס",
-  "assets": "נכסים",
-  "assetNew": "נכס חדש",
   "assetType": "סוג נכס",
   "assetTypePlaceholder": "דירה/מניות/פקדון",
   "assetValue": "שווי נכס במזומן",
@@ -43,5 +47,6 @@
   "assetPeriodicIncomeAmount": "סכום הכנסה תקופתית",
   "assetTimePeriod": "כל",
 
+  "delete": "מחק",
   "save": "שמור"
 }
