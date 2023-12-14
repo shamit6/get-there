@@ -30,5 +30,18 @@
   "signIn": "התחבר",
   "signInWithGoogle": "התחבר עם גוגל",
   "signInWithDummyUser": "התחבר עם משתמש דמה",
-  "dummyUser": "ישראל ישראלי"
+  "dummyUser": "ישראל ישראלי",
+
+  "asset": "נכס",
+  "assets": "נכסים",
+  "assetNew": "נכס חדש",
+  "assetType": "סוג נכס",
+  "assetTypePlaceholder": "דירה/מניות/פקדון",
+  "assetValue": "שווי נכס במזומן",
+  "assetValueDate": "תאריך שווי הנכס",
+  "assetIncreasingValueRate": "שיעור עליית שווי הנכס",
+  "assetPeriodicIncomeAmount": "סכום הכנסה תקופתית",
+  "assetTimePeriod": "כל",
+
+  "save": "שמור"
 }

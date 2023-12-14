@@ -26,9 +26,21 @@
   "year": "Year",
   "expectedBalanceOn": "Expected balance on {date} is ",
 
-
   "signIn": "Sign In",
   "signInWithGoogle": "Sign in with Google",
   "signInWithDummyUser": "Sign in with a dummy user",
-  "dummyUser": "Dummy User"
+  "dummyUser": "Dummy User",
+
+  "asset": "Asset",
+  "assets": "Assets",
+  "assetNew": "New Asset",
+  "assetType": "Asset Type",
+  "assetTypePlaceholder": "apartment/stocks/deposit",
+  "assetValue": "Cash Value",
+  "assetValueDate": "Value Asset Date",
+  "assetIncreasingValueRate": "Increasing Value Rate",
+  "assetPeriodicIncomeAmount": "Periodic Income",
+  "assetTimePeriod": "Every",
+
+  "save": "Save"
 }

@@ -2,29 +2,36 @@
   display: flex;
   flex-wrap: wrap;
   margin: auto;
-  
+
   hr {
     width: 100%;
     border: 0;
   }
-  
+
   &.submitted {
-    input, select {
+    input,
+    select {
       &:required:invalid {
         outline: none;
         border-color: var(--error-color);
         box-shadow: inset 0px 0px 0px 1px var(--error-color);
       }
-      
+
       &:required:invalid + span {
         position: absolute;
       }
-      
+
       &:required:invalid + span::after {
         content: '!';
         top: 0.4em;
         position: absolute;
         right: 1.5em;
+
+        @at-root [dir='rtl'] & {
+          right: auto;
+          left: 1.5em;
+        }
+
         color: var(--error-color);
         border: var(--error-color) solid 1px;
         border-radius: 50%;
@@ -34,7 +41,7 @@
       }
     }
   }
-  
+
   .submitButton {
     align-self: center;
   }
@@ -43,7 +50,12 @@
 .field {
   margin-top: 1em;
   margin-right: 1em;
-  
+
+  @at-root [dir='rtl'] & {
+    margin-right: 0;
+    margin-left: 1em;
+  }
+
   label {
     width: auto;
     margin-left: 0.3em;
@@ -53,7 +65,7 @@
     font-size: 0.9em;
     min-height: 1.2em;
   }
-  
+
   &.horizontal {
     display: flex;
     align-items: center;
@@ -107,9 +119,9 @@
   padding: 0 0 0.5em 1em;
   border: 1px #80808080 solid;
   margin-bottom: 1em;
-  border-radius: 1em;  
-  
-  >label {
+  border-radius: 1em;
+
+  > label {
     padding: 0.5em 0 0 0.2em;
     display: block;
     font-size: 1.05em;
@@ -117,7 +129,7 @@
     text-decoration: underline;
     text-underline-position: from-font;
   }
-  
+
   .sectionItems {
     display: flex;
     flex-wrap: wrap;
@@ -129,13 +141,12 @@
   }
 }
 
-
 .pageHeader {
   display: flex;
   align-items: center;
-  margin-bottom: .6em;
+  margin-bottom: 0.6em;
   width: 100%;
-  
+
   .title {
     flex: 1;
     font-size: 1.5em;

@@ -12,6 +12,7 @@ import { getMortgages } from 'db/mortgages'
 import { getBalanceStatuses } from 'db/balanceStatuses'
 import { getDefaultTheme } from 'utils/theme'
 import { getDictionary } from '../utils/dictionaries'
+import { getAssets } from 'db/assets'
 
 export const metadata: Metadata = {
   description: 'Put your money where your mouth is',
@@ -32,11 +33,13 @@ export default async function RootLayout({
   const session = await getServerSession(nextAuthOptions)
   const { locale, translations } = await getDictionary()
 
-  const [transactionsConfigs, mortgages, balanceStatuses] = await Promise.all([
-    getTransactionConfigs(),
-    getMortgages(),
-    getBalanceStatuses(),
-  ])
+  const [transactionsConfigs, mortgages, balanceStatuses, assets] =
+    await Promise.all([
+      getTransactionConfigs(),
+      getMortgages(),
+      getBalanceStatuses(),
+      getAssets(),
+    ])
   const rtl = locale === 'he'
   return (
     <html dir={rtl ? 'rtl' : 'ltr'}>
@@ -56,6 +59,7 @@ export default async function RootLayout({
             '/api/transaction-configs': transactionsConfigs,
             '/api/mortgages': mortgages,
             '/api/balance-statuses': balanceStatuses,
+            '/api/assets': assets,
           }}
           translations={{ translations, locale }}
         >

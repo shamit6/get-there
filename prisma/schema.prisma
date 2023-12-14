@@ -29,6 +29,7 @@ model User {
   transactionConfig TransactionConfig[]
   MortgageCourse    MortgageCourse[]
   Mortgage          Mortgage[]
+  Asset             Asset[]
   @@map("users")
 }
 
@@ -104,4 +105,17 @@ model Mortgage {
   offeringDate DateTime
   marketValue  Int
   adderss      String?
+}
+
+model Asset {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  type                String
+  cashValue           Int
+  cashValueDate       DateTime
+  increasingValueRate Float?
+  periodicIncomeAmount  Int?
+  timePeriod          String?
+  periodAmount        Int?
+  userEmail           String   
+  user                User     @relation(fields: [userEmail], references: [email])
 }
