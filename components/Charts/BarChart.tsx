@@ -90,7 +90,7 @@ export function BarChart({
           anchor: 'bottom-right',
           direction: 'column',
           justify: false,
-          translateX: 120,
+          translateX: 110,
           translateY: 0,
           itemsSpacing: 2,
           itemWidth: 100,

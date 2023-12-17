@@ -18,6 +18,7 @@
   "transactionType": "תיאור",
   "target": "יעד",
   "targetAmount": "סכום יעד",
+  "assetsIncomes": "הכנסות מנכסים",
   "updateBalanceMessage": "זו היא יתרתך המשוערת על פי ההכנסות וההוצאות שהזנת, לעדכון היתרה לחץ",
   "here": "כאן",
   "signOut": "התנתק",

@@ -1,7 +1,8 @@
 import { addMonths, isBefore } from 'date-fns'
-import { generateTransactionMortgageOccurrences } from 'utils/amortizationScheduleCalculator'
+import { generateMortgageTransactionsOccurrences } from 'utils/amortizationScheduleCalculator'
 import {
   addBalanceToSortTransaction,
+  generateAssetsTransactionsOccurrences,
   generateTransactionConfigsOccurrences,
 } from 'utils/transactionsCalculator'
 import { Transaction } from 'utils/types'
@@ -9,11 +10,13 @@ import useBalanceStatus from './useBalanceStatus'
 import useFilterOptions from './useFilterOptions'
 import useMortgages from './useMortgages'
 import useTransactions from './useTransactions'
+import useAssets from './useAssets'
 
 export default function useTransactionsView() {
   const { balanceStatuses } = useBalanceStatus()
-  const { transactions } = useTransactions()
-  const { mortgages } = useMortgages()
+  const { transactions = [] } = useTransactions()
+  const { mortgages = [] } = useMortgages()
+  const { assets = [] } = useAssets()
   const nowDate = new Date()
 
   const {
@@ -21,7 +24,7 @@ export default function useTransactionsView() {
     filterUntilAmount,
   } = useFilterOptions()
 
-  if (!transactions || !balanceStatuses || balanceStatuses.length === 0 || !mortgages) {
+  if (!balanceStatuses || balanceStatuses.length === 0) {
     return {
       transactionsWithBalanceToView: [],
       transactionsToView: [],
@@ -37,8 +40,15 @@ export default function useTransactionsView() {
     endDate ?? addMonths(nowDate, 30 * 12 + 4)
   )
     ?.concat(
-      generateTransactionMortgageOccurrences(
+      generateMortgageTransactionsOccurrences(
         mortgages,
+        lastBalanceStatus.createdAt,
+        endDate ?? addMonths(nowDate, 30 * 12 + 4)
+      )
+    )
+    ?.concat(
+      generateAssetsTransactionsOccurrences(
+        assets,
         lastBalanceStatus.createdAt,
         endDate ?? addMonths(nowDate, 30 * 12 + 4)
       )

@@ -56,11 +56,7 @@ function TransactionsSummery({
             {isOpen &&
               transaction.transactions.map((spesificTransaction) => (
                 <tr key={spesificTransaction.type}>
-                  <td>
-                    {spesificTransaction.type === 'Mortgage'
-                      ? t('mortgage')
-                      : spesificTransaction.type}
-                  </td>
+                  <td>{t(spesificTransaction.type)}</td>
                   <td dir="ltr" className={styles.amount}>
                     <TextNumber value={spesificTransaction.amount} />
                   </td>

@@ -15,9 +15,10 @@ import {
 } from 'date-fns'
 import { TransactionConfig } from './types'
 import { getNextIntervalTimeFunc } from './timelineTrascationCalc'
+import { Asset } from '@prisma/client'
 
 function generateTransactionConfigOccurances(
-  transactionConfig: TransactionConfig,
+  transactionConfig: Omit<TransactionConfig, 'id'>,
   fromDate: Date,
   untilDate: Date
 ): Transaction[] {
@@ -140,4 +141,33 @@ export function getTransactionAmounts(transaction: Transaction[]) {
     type,
     amount,
   }))
+}
+
+// generate Asset income transactions
+export function generateAssetsTransactionsOccurrences(
+  assets: Asset[],
+  startDate: Date,
+  endDate: Date
+): Transaction[] {
+  const transactionAssetsOccurrences = assets
+    .filter((asset) => !!asset.periodicIncomeAmount)
+    .flatMap((asset) =>
+      generateTransactionConfigOccurances(
+        {
+          type: 'assetsIncomes',
+          date: asset.cashValueDate,
+          amount: asset.periodicIncomeAmount!,
+          timePeriod: asset.timePeriod,
+          periodAmount: asset.periodAmount,
+          userEmail: asset.userEmail,
+          endDate: null,
+        },
+        startDate,
+        endDate
+      )
+    )
+
+  return transactionAssetsOccurrences.sort(function compare(t1, t2) {
+    return t1.date.getTime() - t2.date.getTime()
+  })
 }

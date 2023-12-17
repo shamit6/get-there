@@ -18,6 +18,7 @@
   "transactionType": "Description",
   "target": "Target",
   "targetAmount": "Target Amount",
+  "assetsIncomes": "Assets Incomes",
   "updateBalanceMessage": "This is your estimated balance according to your transactions. You can update it by clicking",
   "here": "here",
   "signOut": "Sign Out",

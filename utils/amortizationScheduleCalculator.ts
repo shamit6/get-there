@@ -230,7 +230,7 @@ export function calcDisplayedMortgageProgram(
   }
 }
 
-export function generateTransactionMortgageOccurrences(
+export function generateMortgageTransactionsOccurrences(
   mortgages: Mortgage[],
   startDate: Date,
   endDate: Date
@@ -243,7 +243,7 @@ export function generateTransactionMortgageOccurrences(
         return {
           amount: Math.trunc(-payment.totalPayment),
           date: addMonths(offeringDate, index + 1),
-          type: 'Mortgage',
+          type: 'mortgage',
         }
       }
     )
