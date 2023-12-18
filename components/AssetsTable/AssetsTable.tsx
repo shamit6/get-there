@@ -6,32 +6,48 @@ import { useTranslation } from 'hooks/useTranslation'
 import { useRouter } from 'next/navigation'
 import Add from 'components/button/plus.svg'
 import Table from 'components/Table'
+import { Asset } from '@prisma/client'
+import { calcCurrentEstimatedAssetValue } from 'utils/assetsCalculator'
 
-function getTableColumns(t: any) {
+function getTableColumns() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t, locale } = useTranslation()
+
   return [
     {
       name: t('assetType'),
       path: 'type',
     },
     {
-      name: t('assetCashValue'),
-      path: 'cashValue',
-      format: (value: number) =>
-        value.toLocaleString('he', { currency: 'ILS', style: 'currency' }),
+      name: t('estimatedCurrentAssetValue'),
+      format: (asset: Asset) => {
+        const estimatedCurrentValue = calcCurrentEstimatedAssetValue(asset)
+        return Intl.NumberFormat('en-US', {
+          maximumFractionDigits: 1,
+          notation: 'compact',
+          compactDisplay: 'short',
+          currency: 'ILS',
+          style: 'currency',
+        }).format(estimatedCurrentValue)
+      },
     },
     {
-      name: t('interval'),
+      name: t('assetPeriodicIncomeAmount'),
       path: ['periodicIncomeAmount', 'timePeriod', 'periodAmount'],
       format: (
         periodicIncomeAmount: number,
-        timePeriod: number,
-        ...periodAmount: number[]
+        timePeriod: string,
+        periodAmount: string
       ) =>
         timePeriod &&
-        `${periodicIncomeAmount.toLocaleString('he')} ${t(
-          'intervalDescription',
-          { periodAmount, timePeriod: t(timePeriod) }
-        )}`,
+        `${periodicIncomeAmount.toLocaleString('he', {
+          currency: 'ILS',
+          style: 'currency',
+          maximumFractionDigits: 0,
+        })} ${t('intervalDescription', {
+          periodAmount,
+          timePeriod: t(timePeriod),
+        })}`,
     },
   ]
 }

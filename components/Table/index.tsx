@@ -3,7 +3,7 @@ import classNames from 'classnames'
 import styles from './Table.module.scss'
 
 type Column = {
-  path: string | string[]
+  path?: string | string[]
   name: string
   format?: (...value: any[]) => string | number
 }
@@ -13,7 +13,11 @@ type Row = {
   [key: string]: any
 }
 
-function getPathValue(row: Row, path: string | string[]) {
+function getPathValue(row: Row, path?: string | string[]) {
+  if (!path) {
+    return row
+  }
+
   if (!Array.isArray(path)) {
     return row[path]
   }

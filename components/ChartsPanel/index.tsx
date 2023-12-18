@@ -4,27 +4,25 @@ import type { Transaction } from 'utils/types'
 import { getTransactionAmounts } from 'utils/transactionsCalculator'
 import { LineChart, BarChart } from 'components/Charts'
 import useBalanceStatus from 'hooks/useBalanceStatus'
-import useTransactions from 'hooks/useTransactions'
 import styles from './ChartsPanel.module.scss'
-import useMortgages from 'hooks/useMortgages'
 import useTransactionsView from 'hooks/useTransactionsView'
 import { maxBy } from 'lodash'
+import { useTranslation } from 'hooks/useTranslation'
 
 export default function ChartPanel() {
   const { balanceStatuses } = useBalanceStatus()
-  const { transactions } = useTransactions()
-  const { mortgages } = useMortgages()
   const nowDate = new Date()
-
-  if (!transactions || !balanceStatuses || !mortgages) {
-    return null
-  }
+  const { t } = useTranslation()
 
   const {
     transactionsToView,
     transactionsWithBalanceToView,
     targetAmountIndex,
   } = useTransactionsView()
+
+  if (!balanceStatuses) {
+    return null
+  }
 
   const lastBalanceStatuses = balanceStatuses?.filter(
     ({ createdAt }, index) =>
@@ -75,7 +73,8 @@ export default function ChartPanel() {
         },
         {
           x: format(transactionsToView[targetAmountIndex].date, 'dd/MM/yyyy'),
-          y: maxBy(transactionsWithBalanceToView, 'amount')?.amount ?? 0 + 40000,
+          y:
+            maxBy(transactionsWithBalanceToView, 'amount')?.amount ?? 0 + 40000,
         },
       ],
     })
@@ -114,16 +113,16 @@ export default function ChartPanel() {
     return {
       type: `${type} ${sum}`,
       ...earnSpend.reduce((res, cur) => {
-        res[cur.type] = Math.abs(cur.amount)
-        res[`${cur.type}Color`] = earnings ? '#036666' : '#e01e37'
+        res[t(cur.type)] = Math.abs(cur.amount)
+        res[`${t(cur.type)}Color`] = earnings ? '#036666' : '#e01e37'
         return res
       }, {} as any),
     }
   })
 
   const barChartKeys = [
-    ...earningsSpendings[0].map((cur) => cur.type),
-    ...earningsSpendings[1].map((cur) => cur.type),
+    ...earningsSpendings[0].map((cur) => t(cur.type)),
+    ...earningsSpendings[1].map((cur) => t(cur.type)),
   ]
 
   return (

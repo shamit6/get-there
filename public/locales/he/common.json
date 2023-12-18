@@ -15,6 +15,7 @@
   "intervalDescription": "כל {periodAmount} {timePeriod}",
   "when": "מתי",
   "amount": "סכום",
+  "estimatedCurrentAssetValue": "שווי נכס משוער",
   "transactionType": "תיאור",
   "target": "יעד",
   "targetAmount": "סכום יעד",
@@ -47,6 +48,9 @@
   "assetIncreasingValueRate": "שיעור עליית שווי הנכס",
   "assetPeriodicIncomeAmount": "סכום הכנסה תקופתית",
   "assetTimePeriod": "כל",
+
+  "mortgageBank": "בנק",
+  "mortgageDate": "תאריך לקיחת המשכנתא",
 
   "delete": "מחק",
   "save": "שמור"

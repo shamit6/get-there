@@ -10,19 +10,30 @@ import Table from 'components/Table'
 import { MortgageCourse } from 'utils/types'
 import { useTranslation } from 'hooks/useTranslation'
 
-const TABLE_COLUMNS = [
-  { name: 'Bank', path: 'bank' },
-  {
-    name: 'Amount',
-    path: 'courses',
-    format: (courses: MortgageCourse[]) => sumBy(courses, 'amount'),
-  },
-  {
-    name: 'When',
-    path: 'offeringDate',
-    format: (offeringDate: Date) => format(offeringDate, 'dd/MM/yyyy'),
-  },
-]
+const getTableColumns = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useTranslation()
+  return [
+    { name: t('mortgageBank'), path: 'bank' },
+    {
+      name: t('amount'),
+      path: 'courses',
+      format: (courses: MortgageCourse[]) =>
+        Intl.NumberFormat('en-US', {
+          maximumFractionDigits: 0,
+          notation: 'compact',
+          compactDisplay: 'short',
+          currency: 'ILS',
+          style: 'currency',
+        }).format(sumBy(courses, 'amount')),
+    },
+    {
+      name: t('mortgageDate'),
+      path: 'offeringDate',
+      format: (offeringDate: Date) => format(offeringDate, 'dd/MM/yyyy'),
+    },
+  ]
+}
 
 export default function MortgagesList() {
   const router = useRouter()
@@ -41,7 +52,7 @@ export default function MortgagesList() {
         />
       </PageHeader>
       <Table
-        columns={TABLE_COLUMNS}
+        columns={getTableColumns()}
         rows={mortgages}
         onRowClick={(mortgageId: string) =>
           router.push(`/mortgages/${mortgageId}`)

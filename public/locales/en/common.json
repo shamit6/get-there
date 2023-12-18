@@ -15,6 +15,7 @@
   "intervalDescription": "every {periodAmount} {timePeriod}",
   "when": "When",
   "amount": "Amount",
+  "estimatedCurrentAssetValue": "Estimated Current Value",
   "transactionType": "Description",
   "target": "Target",
   "targetAmount": "Target Amount",
@@ -46,6 +47,9 @@
   "assetIncreasingValueRate": "Increasing Value Rate",
   "assetPeriodicIncomeAmount": "Periodic Income",
   "assetTimePeriod": "Every",
+
+  "mortgageBank": "Bank",
+  "mortgageDate": "Mortgage Date",
 
   "delete": "Delete",
   "save": "Save"
