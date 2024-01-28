@@ -121,6 +121,10 @@
   margin-bottom: 1em;
   border-radius: 1em;
 
+  @at-root [dir='rtl'] & {
+    padding: 0 1em 0.5em 0;
+  }
+
   > label {
     padding: 0.5em 0 0 0.2em;
     display: block;

@@ -21,6 +21,11 @@
 
   .arrow {
     margin-right: 0.5em;
+
+    @at-root [dir='rtl'] & {
+      margin-left: 0.5em;
+      margin-right: 0;
+    }
   }
 }
 

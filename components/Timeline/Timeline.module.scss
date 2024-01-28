@@ -11,10 +11,9 @@
 }
 
 .periodContent {
-  width: 100%;
+  width: calc(100% - 2.5em);
   position: relative;
   line-height: 1.3;
-  width: 100%;
   margin-inline-start: 2.5em;
 
   .collapseIcon {

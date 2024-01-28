@@ -43,7 +43,7 @@ export default function MortgageProgram({
   }, [inputRef, isFocus])
 
   useEffect(() => {
-    if (course.periodInMonths && course.interest) {    
+    if (course.periodInMonths && course.interest) {
       const calculatedMortgageProgram = calcDisplayedMortgageProgram(course)
       setCalculatedMortgageProgram(calculatedMortgageProgram)
     }
