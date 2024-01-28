@@ -57,7 +57,7 @@ export default function AssetsTable() {
   const { assets } = useAssets()
   const { t } = useTranslation()
 
-  const tableColumns = getTableColumns(t)
+  const tableColumns = getTableColumns()
 
   return (
     <>
