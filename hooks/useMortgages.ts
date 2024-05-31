@@ -1,4 +1,3 @@
-import { remove } from 'lodash'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import type { Mortgage } from 'utils/types'
@@ -28,35 +27,38 @@ export default function useMortgages() {
       })
   )
 
-  const upsertMortgage = useCallback(async (mortgage: Mortgage) => {
-    await mutate(
-      async () => {
-        const { id, ...transactionData } = mortgage
-        const isNewMortgage = !id
-        const url = isNewMortgage ? '/api/mortgages' : `/api/mortgages/${id}`
+  const upsertMortgage = useCallback(
+    async (mortgage: Mortgage) => {
+      await mutate(
+        async () => {
+          const { id, ...transactionData } = mortgage
+          const isNewMortgage = !id
+          const url = isNewMortgage ? '/api/mortgages' : `/api/mortgages/${id}`
 
-        const upsertedMortgage = await fetch(url, {
-          method: isNewMortgage ? 'POST' : 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(transactionData),
-        })
-          .then((r) => r.json())
-          .then(({ offeringDate, ...rest }) => ({
-            ...rest,
-            offeringDate: new Date(offeringDate),
-          }))
+          const upsertedMortgage = await fetch(url, {
+            method: isNewMortgage ? 'POST' : 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(transactionData),
+          })
+            .then((r) => r.json())
+            .then(({ offeringDate, ...rest }) => ({
+              ...rest,
+              offeringDate: new Date(offeringDate),
+            }))
 
-        return upsertToMortgageList(data || [], upsertedMortgage)
-      },
-      {
-        optimisticData: (mortgages = []) => {
-          return upsertToMortgageList(mortgages, mortgage)
+          return upsertToMortgageList(data || [], upsertedMortgage)
         },
-        populateCache: true,
-        rollbackOnError: true,
-      }
-    )
-  }, [])
+        {
+          optimisticData: (mortgages = []) => {
+            return upsertToMortgageList(mortgages, mortgage)
+          },
+          populateCache: true,
+          rollbackOnError: true,
+        }
+      )
+    },
+    [mutate, data]
+  )
 
   const deleteMortgage = useCallback(
     async (mortgageId: string) => {

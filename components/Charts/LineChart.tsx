@@ -17,7 +17,7 @@ export interface Searies {
 export function LineChart({
   data,
   anchor,
-  minY,
+  // minY,
   stacked,
 }: {
   data: Searies[]

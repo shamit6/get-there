@@ -16,10 +16,10 @@ export default function useBalanceStatus(last?: boolean) {
       )
   )
 
-  const updateBalanceStatus = async (amount: number) => {
+  const updateBalanceStatus = (amount: number) => {
     const optimisticData = [{ amount, createdAt: new Date() }, ...(data || [])]
 
-    mutate(
+    return mutate(
       url,
       async () => {
         const response = await fetch(url, {

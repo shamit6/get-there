@@ -19,7 +19,7 @@ function Providers({
   translations: { translations: any; locale: string }
 }) {
   return (
-    <SWRConfig value={{ suspense: true, fallback, fetcher: fetch }}>
+    <SWRConfig value={{ suspense: true, fallback }}>
       <SessionProvider session={session}>
         <ThemeProvider>
           <TranslationsProvider {...translations}>

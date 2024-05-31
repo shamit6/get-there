@@ -16,7 +16,7 @@ export default function TargetPanel() {
     targetAmount
   )
   const [selectedOption, setSelectedOption] = useState<'amount' | 'end-date'>(
-    !!targetAmount ? 'amount' : 'end-date'
+    targetAmount ? 'amount' : 'end-date'
   )
   const { t } = useTranslation()
 

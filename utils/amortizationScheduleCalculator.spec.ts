@@ -9,6 +9,7 @@ import {
   MortgageType,
   MortgageEarlyPayoffPurpose,
   CalculatedMortgageProgram,
+  ReturnType,
 } from './types'
 
 function roundScheduleTransaction(
@@ -50,9 +51,10 @@ describe('Amortization Schedule Calculator', () => {
 
   it('non-linked-fixed, complete early payoff', () => {
     const program: MortgageCourse = {
+      id: '',
       amount: 125000,
       type: MortgageType.NON_LINKED_FIXED,
-      returnType: '',
+      returnType: ReturnType.Shpitzer,
       periodInMonths: 180,
       interest: 3,
       earlyPayoffType: MortgageEarlyPayoffType.COMPLETE,

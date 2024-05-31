@@ -8,7 +8,7 @@ import Table from 'components/Table'
 import useTransactions from 'hooks/useTransactions'
 import { useTranslation } from 'hooks/useTranslation'
 
-const getTableColumns = (t: any) => [
+const getTableColumns = (t: (key: string) => string) => [
   {
     name: t('transactionType'),
     path: 'type',
@@ -27,7 +27,8 @@ const getTableColumns = (t: any) => [
     name: t('interval'),
     path: ['timePeriod', 'periodAmount'],
     format: (timePeriod: number, ...periodAmount: number[]) =>
-      timePeriod && t('intervalDescription', { periodAmount, timePeriod: t(timePeriod) }),
+      timePeriod &&
+      t('intervalDescription', { periodAmount, timePeriod: t(timePeriod) }),
   },
 ]
 

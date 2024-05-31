@@ -11,7 +11,7 @@ import { calcCurrentEstimatedAssetValue } from 'utils/assetsCalculator'
 
 function getTableColumns() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { t, locale } = useTranslation()
+  const { t } = useTranslation()
 
   return [
     {

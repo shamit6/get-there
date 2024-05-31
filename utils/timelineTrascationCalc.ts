@@ -17,11 +17,11 @@ import {
   differenceInWeeks,
 } from 'date-fns'
 
-interface SummerizedTransacrionPeriod {
-  time: { year: number; month?: number }
-  totalAmout: number
-  type: string
-}
+// interface SummerizedTransacrionPeriod {
+//   time: { year: number; month?: number }
+//   totalAmout: number
+//   type: string
+// }
 
 export interface SummerizedTransacrionsPeriod {
   time: { year: number; month?: number }
@@ -155,7 +155,7 @@ export function getTransactionsSummeryByPeriod(
         ({ time }) => JSON.stringify(time) === transactionTime
       )
 
-      if (!!relevantPeriod) {
+      if (relevantPeriod) {
         relevantPeriod.totalAmount += transaction.amount
         relevantPeriod.transactions[transaction.type] =
           (relevantPeriod.transactions[transaction.type] ?? 0) +

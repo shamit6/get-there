@@ -55,6 +55,7 @@ function calcMonthPayment(mortgageProgramData: MortgageCourse) {
     : null
 }
 
+// eslint-disable-next-line no-unused-vars
 function calcMonthlyPaymentToShortenDuration(
   currentMonthlyPayment: number,
   updateProgramData: MortgageCourse
@@ -69,7 +70,7 @@ function calcMonthlyPaymentToShortenDuration(
   while (currentPrincipalBalanceInStartPeriond > 0) {
     const interestPayment =
       currentPrincipalBalanceInStartPeriond * monthlyInterest
-    let principalPayment = Math.min(
+    const principalPayment = Math.min(
       currentMonthlyPayment - interestPayment,
       currentPrincipalBalanceInStartPeriond
     )
@@ -203,7 +204,7 @@ export function amortizationPaymantsToBurndown(payments: number[]): number[] {
 
   let runningAmount = startAmount
 
-  const burnDown = payments.map((payment, index, payments) => {
+  const burnDown = payments.map((payment) => {
     runningAmount = runningAmount - payment
     return runningAmount
   })

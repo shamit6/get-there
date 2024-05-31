@@ -32,7 +32,7 @@ export default function Form({
 }: {
   transactionConfig?: TransactionConfig
 }) {
-  const { register, handleSubmit, watch, control, formState, getValues } =
+  const { register, handleSubmit, watch, control, formState } =
     useForm<TransactionFormProps>({
       shouldUseNativeValidation: false,
       defaultValues: getTransactionConfigDefaultFormValues(transactionConfig),
@@ -41,7 +41,7 @@ export default function Form({
   const router = useRouter()
   const { upsertTransaction, deleteTransaction } = useTransaction()
   const onSubmit = useCallback(
-    async (data: TransactionFormProps) => {
+    (data: TransactionFormProps) => {
       const { repeated, timePeriod, periodAmount, endDate, amount, ...rest } =
         data
 
@@ -56,16 +56,16 @@ export default function Form({
         newTransactionData.endDate = endDate
       }
 
-      upsertTransaction(newTransactionData)
+      void upsertTransaction(newTransactionData)
 
-      await router.push('/transactions')
+      router.push('/transactions')
     },
     [upsertTransaction, router]
   )
 
-  const onDelete = useCallback(async () => {
-    deleteTransaction(transactionConfig?.id!)
-    await router.push('/transactions')
+  const onDelete = useCallback(() => {
+    void deleteTransaction(transactionConfig?.id!)
+    router.push('/transactions')
   }, [deleteTransaction, transactionConfig, router])
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)

@@ -10,7 +10,6 @@ import {
   CalculatedMortgageProgram,
   MortgageEarlyPayoffPurpose,
   MortgageEarlyPayoffType,
-  MortgageCourse,
   MortgageType,
   ReturnType,
 } from 'utils/types'
@@ -27,7 +26,7 @@ export default function MortgageProgram({
   isFocus: boolean
   index: number
 }) {
-  const { control, register, setFocus } = useFormContext()
+  const { control, register } = useFormContext()
   const course = useWatch({ name: `courses.${index}` })
   const [calculatedMortgageProgram, setCalculatedMortgageProgram] = useState(
     {} as CalculatedMortgageProgram
@@ -78,7 +77,7 @@ export default function MortgageProgram({
             control={control}
             name={`courses.${index}.periodInMonths`}
             rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <NumberFormat
                 onValueChange={({ floatValue }) => onChange(floatValue)}
                 onBlur={onBlur}
@@ -96,7 +95,7 @@ export default function MortgageProgram({
             control={control}
             name={`courses.${index}.interest`}
             rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <NumberFormat
                 onValueChange={({ floatValue }) => onChange(floatValue)}
                 onBlur={onBlur}
@@ -115,7 +114,7 @@ export default function MortgageProgram({
             control={control}
             name={`courses.${index}.type`}
             rules={{ required: true }}
-            render={({ field: { onChange, onBlur, value } }) => (
+            render={({ field: { onChange, onBlur } }) => (
               <select
                 tabIndex={1}
                 defaultValue={course.type}
@@ -201,7 +200,7 @@ export default function MortgageProgram({
                   control={control}
                   name={`courses.${index}.earlyPayoffMonths`}
                   rules={{ required: !!course.earlyPayoffType }}
-                  render={({ field: { onChange, onBlur, value } }) => (
+                  render={({ field: { onChange, onBlur } }) => (
                     <NumberFormat
                       onValueChange={({ floatValue }) => onChange(floatValue)}
                       onBlur={onBlur}

@@ -13,7 +13,7 @@ export default function Login() {
     Record<string, ClientSafeProvider>
   >({})
   useEffect(() => {
-    getProviders().then((providers) => {
+    void getProviders().then((providers) => {
       setProviders(providers ?? {})
     })
   }, [])

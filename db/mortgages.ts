@@ -100,7 +100,7 @@ export async function updateMortgage(
   try {
     const response = await prismaClient.$transaction(
       async (prisma) => {
-        const { courses, ...reqMortgageRest } = mortgageToUpdate
+        const { courses } = mortgageToUpdate
 
         await prisma.mortgageCourse.deleteMany({
           where: { mortgageId: mortgageToUpdate.id as string, userEmail },

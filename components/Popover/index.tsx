@@ -6,7 +6,7 @@ export default function SimplePopover({
   content,
   children,
   triggerElementStyles,
-  positions
+  positions,
 }: React.PropsWithChildren<{
   content: ReactNode
   triggerElementStyles?: React.CSSProperties

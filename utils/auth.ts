@@ -61,7 +61,7 @@ export const nextAuthOptions: AuthOptions = {
         return false
       }
     },
-    async redirect({ url, baseUrl }) {
+    redirect({ url, baseUrl }) {
       try {
         const structuredUrl = new URL(url)
         const redirectPath = structuredUrl.searchParams.get('redirect')

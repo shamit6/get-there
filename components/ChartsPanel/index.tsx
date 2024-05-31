@@ -45,7 +45,7 @@ export default function ChartPanel() {
   ].concat(
     transactionsWithBalanceToView.map(({ amount, date }) => ({
       x: format(date, 'dd/MM/yyyy'),
-      y: amount!,
+      y: amount,
     }))
   )
 

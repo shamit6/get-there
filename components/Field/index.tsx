@@ -7,7 +7,7 @@ export default function Field({
   horizontal,
   children,
   htmlFor,
-  className
+  className,
 }: {
   label?: string
   horizontal?: boolean
@@ -17,7 +17,11 @@ export default function Field({
 }) {
   return (
     <div
-      className={classnames(styles.field, { [styles.horizontal]: horizontal }, className)}
+      className={classnames(
+        styles.field,
+        { [styles.horizontal]: horizontal },
+        className
+      )}
     >
       {label && <label htmlFor={htmlFor}>{label}</label>}
       {children}

@@ -9,12 +9,10 @@ import { useFieldArray, useFormContext } from 'react-hook-form'
 export default function Mortgage() {
   const { control } = useFormContext()
   const [programToFocus, setProgramToFocus] = useState(0)
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: 'courses',
-    }
-  )
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'courses',
+  })
 
   return (
     <Section label="Courses" direction="column">

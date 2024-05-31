@@ -15,11 +15,10 @@ import useAssets from 'hooks/useAssets'
 import { useRouter } from 'next/navigation'
 
 export default function Form({ asset }: { asset?: Asset }) {
-  const { register, handleSubmit, watch, control, formState, getValues } =
-    useForm<Asset>({
-      shouldUseNativeValidation: false,
-      defaultValues: { timePeriod: 'month', ...asset },
-    })
+  const { register, handleSubmit, watch, control, formState } = useForm<Asset>({
+    shouldUseNativeValidation: false,
+    defaultValues: { timePeriod: 'month', ...asset },
+  })
   const router = useRouter()
   const { upsertAsset, deleteAsset } = useAssets()
   const onSubmit = useCallback(
@@ -30,12 +29,12 @@ export default function Form({ asset }: { asset?: Asset }) {
         asset.periodAmount = null
         asset.timePeriod = null
       }
-      upsertAsset(asset)
+      void upsertAsset(asset)
     },
     [upsertAsset]
   )
   const onDelete = useCallback(() => {
-    deleteAsset(asset!.id)
+    void deleteAsset(asset!.id)
     router.push('/transactions')
   }, [deleteAsset])
 

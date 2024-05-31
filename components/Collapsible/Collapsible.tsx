@@ -20,7 +20,7 @@ export default function Collapsible({
         onClick={() => setIsOpen(!isOpen)}
         tabIndex={1}
         type="button"
-        style={{fontSize: '1.2em'}}
+        style={{ fontSize: '1.2em' }}
       >
         <Arrow
           className={styles.arrow}

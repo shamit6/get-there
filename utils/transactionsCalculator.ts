@@ -35,17 +35,17 @@ function generateTransactionConfigOccurances(
 
   let currentDate = date
   const getNextIntervalTime = getNextIntervalTimeFunc(
-    interval!.timePeriod as TimePeriod
+    interval.timePeriod as TimePeriod
   )
-  const generateUntilDate = interval!.endDate
-    ? min([untilDate, interval!.endDate])
+  const generateUntilDate = interval.endDate
+    ? min([untilDate, interval.endDate])
     : untilDate
 
   while (!isAfter(currentDate, generateUntilDate)) {
     if (!isBefore(currentDate, fromDate)) {
       transactionOccurrences.push({ amount, type, date: currentDate })
     }
-    currentDate = getNextIntervalTime(currentDate, interval!.periodAmount!)
+    currentDate = getNextIntervalTime(currentDate, interval.periodAmount!)
   }
 
   return transactionOccurrences

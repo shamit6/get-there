@@ -63,8 +63,8 @@ export function UpdateBalanceModal({
         <ButtonsGroup>
           <Button
             text={t('updateBalance')}
-            onClick={async () => {
-              updateBalanceStatus(editedAmount!)
+            onClick={() => {
+              void updateBalanceStatus(editedAmount!)
               onClose()
             }}
             disabled={!editedAmount}

@@ -33,9 +33,9 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
   const router = useRouter()
   const courses = watch('courses')
 
-  const onDelete = useCallback(async () => {
-    deleteMortgage(mortgage?.id!)
-    await router.push('/mortgages')
+  const onDelete = useCallback(() => {
+    void deleteMortgage(mortgage?.id!)
+    router.push('/mortgages')
   }, [deleteMortgage, mortgage, router])
 
   return (
@@ -45,7 +45,7 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
           [styles.submitted]: formState.isSubmitted,
         })}
         style={{ flexDirection: 'column', width: 'fit-content' }}
-        onSubmit={handleSubmit(async (data) => {
+        onSubmit={handleSubmit((data) => {
           data.courses?.forEach((course) => {
             if (!course.earlyPayoffType) {
               course.earlyPayoffMonths = undefined
@@ -53,19 +53,21 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
               course.earlyPayoffAmount = undefined
             }
           })
-          upsertMortgage(data as Mortgage)
+          void upsertMortgage(data as Mortgage)
 
-          await router.push('/mortgages')
+          router.push('/mortgages')
         })}
         noValidate
       >
         <PageHeader title="Mortgage">
-          {mortgage?.id && <Button
-            text="delete"
-            bordered
-            onClick={() => onDelete()}
-            icon={<Delete />}
-          />}
+          {mortgage?.id && (
+            <Button
+              text="delete"
+              bordered
+              onClick={() => onDelete()}
+              icon={<Delete />}
+            />
+          )}
         </PageHeader>
         <MortgageComp />
         <Section label="Propose Details">
