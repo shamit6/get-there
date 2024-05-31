@@ -16,11 +16,12 @@ function upsertToAssetsList(list: Asset[], asset: Asset) {
 }
 
 export default function useAssets() {
-  const { data, mutate } = useSWR<Asset[]>('/api/assets')
+  const { data: assets = [], mutate } = useSWR<Asset[]>('/api/assets')
+
   const deleteAsset = useCallback(
     async (assetId: string) => {
       await mutate(
-        async (assets: Asset[] = []) => {
+        async () => {
           await fetch(`/api/assets/${assetId}`, { method: 'DELETE' })
           return assets.filter((a) => a.id !== assetId)
         },
@@ -49,12 +50,12 @@ export default function useAssets() {
 
           const newAsset = await res.json()
 
-          return upsertToAssetsList(data ?? [], newAsset)
+          return upsertToAssetsList(assets, newAsset)
         },
         {
           populateCache: false,
           rollbackOnError: true,
-          optimisticData: (assets: Asset[] = []) => {
+          optimisticData: () => {
             return upsertToAssetsList(assets, asset as Asset)
           },
         }
@@ -64,7 +65,7 @@ export default function useAssets() {
   )
 
   return {
-    assets: data,
+    assets,
     // error,
     // loading: !data && !error,
     deleteAsset,

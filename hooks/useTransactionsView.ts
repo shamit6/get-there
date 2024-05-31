@@ -17,6 +17,7 @@ export default function useTransactionsView() {
   const { transactions = [] } = useTransactions()
   const { mortgages = [] } = useMortgages()
   const { assets = [] } = useAssets()
+  // const assets = [] as any
   const nowDate = new Date()
 
   const {

@@ -23,8 +23,9 @@ function Providers({
       value={{
         suspense: true,
         fallback,
-        fetcher: (resource, init) =>
-          fetch(resource, init).then((res) => res.json()),
+        // fetcher: function(url){
+        //   fetch(url).then((r) => r.json()
+        // ),
       }}
     >
       <SessionProvider session={session}>
