@@ -12,6 +12,7 @@ import Delete from 'components/button/delete.svg'
 import { useTranslation } from 'hooks/useTranslation'
 import { format } from 'date-fns'
 import useAssets from 'hooks/useAssets'
+import { useRouter } from 'next/navigation'
 
 export default function Form({ asset }: { asset?: Asset }) {
   const { register, handleSubmit, watch, control, formState, getValues } =
@@ -19,7 +20,7 @@ export default function Form({ asset }: { asset?: Asset }) {
       shouldUseNativeValidation: false,
       defaultValues: { timePeriod: 'month', ...asset },
     })
-
+  const router = useRouter()
   const { upsertAsset, deleteAsset } = useAssets()
   const onSubmit = useCallback(
     async (data: Asset) => {
@@ -30,14 +31,12 @@ export default function Form({ asset }: { asset?: Asset }) {
         asset.timePeriod = null
       }
       upsertAsset(asset)
-      console.log('onSubmit', data)
     },
     [upsertAsset]
   )
-  const onDelete = useCallback(async () => {
-    if (asset?.id) {
-      deleteAsset(asset.id)
-    }
+  const onDelete = useCallback(() => {
+    deleteAsset(asset!.id)
+    router.push('/transactions')
   }, [deleteAsset])
 
   const { t } = useTranslation()

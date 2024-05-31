@@ -155,6 +155,7 @@ function MortgageForm({ mortgage }: { mortgage: Partial<Mortgage> }) {
           </Field>
           <Field label="Offering Date">
             <Controller
+              defaultValue={mortgage.offeringDate}
               control={control}
               name="offeringDate"
               rules={{ required: true }}

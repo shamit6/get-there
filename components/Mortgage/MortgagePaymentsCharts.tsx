@@ -12,7 +12,7 @@ export default function MortgagePaymentsCharts({
   startDate,
 }: {
   mortgagePaymentsSchedule: AmortizationScheduleTransaction[]
-  startDate: Date,
+  startDate: Date
 }) {
   return (
     <div className={styles.amortizationCharts}>

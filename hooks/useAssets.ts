@@ -17,17 +17,12 @@ function upsertToAssetsList(list: Asset[], asset: Asset) {
 
 export default function useAssets() {
   const { data, mutate } = useSWR<Asset[]>('/api/assets')
-
   const deleteAsset = useCallback(
     async (assetId: string) => {
       await mutate(
         async (assets: Asset[] = []) => {
-          const asset = assets.find((a) => a.id === assetId)
-          if (asset) {
-            await fetch(`/api/assets/${assetId}`, { method: 'DELETE' })
-            return assets.filter((a) => a.id !== assetId)
-          }
-          return assets
+          await fetch(`/api/assets/${assetId}`, { method: 'DELETE' })
+          return assets.filter((a) => a.id !== assetId)
         },
         {
           populateCache: false,

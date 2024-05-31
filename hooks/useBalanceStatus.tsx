@@ -28,7 +28,6 @@ export default function useBalanceStatus(last?: boolean) {
           body: JSON.stringify({ amount }),
         })
         const newBalance = await response.json()
-        console.log('newBalance', newBalance);
 
         return [
           {
@@ -42,7 +41,7 @@ export default function useBalanceStatus(last?: boolean) {
         optimisticData,
         rollbackOnError: true,
         populateCache: true,
-        revalidate: false
+        revalidate: false,
       }
     )
   }

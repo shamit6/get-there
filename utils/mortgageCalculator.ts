@@ -35,7 +35,7 @@ export function calcTotalSummery(
   }
 }
 
-export function generateNewMortageCourse(): MortgageCourse {
+export function generateNewMortgageCourse(): MortgageCourse {
   return {
     id: new ObjectId().toJSON(),
     amount: 100000,
@@ -46,12 +46,13 @@ export function generateNewMortageCourse(): MortgageCourse {
   }
 }
 
-export function generateNewMortage(): Partial<Mortgage> {
+export function generateNewMortgage(): Partial<Mortgage> {
   return {
+    offeringDate: new Date(),
     courses: [
-      generateNewMortageCourse(),
-      generateNewMortageCourse(),
-      generateNewMortageCourse(),
+      generateNewMortgageCourse(),
+      generateNewMortgageCourse(),
+      generateNewMortgageCourse(),
     ],
   }
 }

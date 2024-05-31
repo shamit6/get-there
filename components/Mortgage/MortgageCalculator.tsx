@@ -1,22 +1,24 @@
 import React, { useState } from 'react'
 import Button, { ButtonsGroup } from 'components/button'
 import Add from 'components/button/plus.svg'
-import { generateNewMortageCourse } from 'utils/mortgageCalculator'
+import { generateNewMortgageCourse } from 'utils/mortgageCalculator'
 import MortgageCourseComponent from './MortgageCourse'
 import { Section } from 'components/Field'
 import { useFieldArray, useFormContext } from 'react-hook-form'
 
 export default function Mortgage() {
-  const {control} = useFormContext();  
+  const { control } = useFormContext()
   const [programToFocus, setProgramToFocus] = useState(0)
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray({
-    control,
-    name: "courses",
-  });
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control,
+      name: 'courses',
+    }
+  )
 
   return (
     <Section label="Courses" direction="column">
-      {fields.map(({id}, i) => (
+      {fields.map(({ id }, i) => (
         <MortgageCourseComponent
           key={id}
           index={i}
@@ -32,7 +34,7 @@ export default function Mortgage() {
           text="Add program"
           onClick={() => {
             setProgramToFocus(fields.length)
-            append([generateNewMortageCourse()])
+            append([generateNewMortgageCourse()])
           }}
           bordered
           linkTheme

@@ -32,7 +32,6 @@ export default async function RootLayout({
 }) {
   const session = await getServerSession(nextAuthOptions)
   const { locale, translations } = await getDictionary()
-
   const [transactionsConfigs, mortgages, balanceStatuses, assets] =
     await Promise.all([
       getTransactionConfigs(),
@@ -40,6 +39,7 @@ export default async function RootLayout({
       getBalanceStatuses(),
       getAssets(),
     ])
+
   const rtl = locale === 'he'
   return (
     <html dir={rtl ? 'rtl' : 'ltr'}>
