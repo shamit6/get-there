@@ -1,4 +1,4 @@
-import type {
+import {
   Transaction,
   TimePeriod,
   BalanceStatus,
@@ -16,6 +16,7 @@ import {
 import { TransactionConfig } from './types'
 import { getNextIntervalTimeFunc } from './timelineTrascationCalc'
 import { Asset } from '@prisma/client'
+import { calcCurrentEstimatedAssetValue } from './assetsCalculator'
 
 function generateTransactionConfigOccurances(
   transactionConfig: Omit<TransactionConfig, 'id'>,
@@ -170,4 +171,23 @@ export function generateAssetsTransactionsOccurrences(
   return transactionAssetsOccurrences.sort(function compare(t1, t2) {
     return t1.date.getTime() - t2.date.getTime()
   })
+}
+
+export function generateAssetsValuesOccurrences(
+  assets: Asset[],
+  transactions: Transaction[] = []
+): Transaction[] {
+  return assets
+    .flatMap((asset) => {
+      return transactions.map(({ date }) => {
+        return {
+          type: asset.type,
+          date,
+          amount: calcCurrentEstimatedAssetValue(asset, date),
+        }
+      })
+    })
+    .sort(function compare(t1, t2) {
+      return t1.date.getTime() - t2.date.getTime()
+    })
 }

@@ -1,13 +1,17 @@
 import React from 'react'
 import { format, isAfter, subMonths } from 'date-fns'
 import type { Transaction } from 'utils/types'
-import { getTransactionAmounts } from 'utils/transactionsCalculator'
+import {
+  generateAssetsValuesOccurrences,
+  getTransactionAmounts,
+} from 'utils/transactionsCalculator'
 import { LineChart, BarChart } from 'components/Charts'
 import useBalanceStatus from 'hooks/useBalanceStatus'
 import styles from './ChartsPanel.module.scss'
 import useTransactionsView from 'hooks/useTransactionsView'
-import { maxBy } from 'lodash'
 import { useTranslation } from 'hooks/useTranslation'
+import useAssets from 'hooks/useAssets'
+import type { CartesianMarkerProps } from '@nivo/core'
 
 export default function ChartPanel() {
   const { balanceStatuses } = useBalanceStatus()
@@ -20,6 +24,8 @@ export default function ChartPanel() {
     targetAmountIndex,
   } = useTransactionsView()
 
+  const { assets } = useAssets()
+
   if (!balanceStatuses) {
     return null
   }
@@ -30,12 +36,12 @@ export default function ChartPanel() {
   )
   const lastBalanceStatus = lastBalanceStatuses[0]
 
-  const balanceGraphData = lastBalanceStatuses?.map(
-    ({ amount, createdAt }) => ({
-      x: format(createdAt, 'dd/MM/yyyy'),
-      y: amount,
-    })
-  )
+  // const balanceGraphData = lastBalanceStatuses?.map(
+  //   ({ amount, createdAt }) => ({
+  //     x: format(createdAt, 'dd/MM/yyyy'),
+  //     y: amount,
+  //   })
+  // )
 
   const transactionsGraphData = [
     {
@@ -49,11 +55,28 @@ export default function ChartPanel() {
     }))
   )
 
+  const assetValuesGraphData = generateAssetsValuesOccurrences(
+    assets,
+    [
+      {
+        date: lastBalanceStatus.createdAt,
+      } as Transaction,
+    ].concat(transactionsWithBalanceToView)
+  ).map(({ amount, date }) => ({
+    x: format(date, 'dd/MM/yyyy'),
+    y: amount,
+  }))
+
   const lineChartData = [
+    // {
+    //   id: 'Balance',
+    //   color: '#9d4edd',
+    //   data: balanceGraphData,
+    // },
     {
-      id: 'Balance',
-      color: '#9d4edd',
-      data: balanceGraphData,
+      id: 'Assets',
+      color: '#9d0e0d',
+      data: assetValuesGraphData,
     },
     {
       id: 'Predicted Balance',
@@ -62,22 +85,19 @@ export default function ChartPanel() {
     },
   ]
 
+  let markers: CartesianMarkerProps[] = []
   if (targetAmountIndex !== undefined) {
-    lineChartData.unshift({
-      id: 'Target Amount',
-      color: '#e00a1f',
-      data: [
-        {
-          x: format(transactionsToView[targetAmountIndex].date, 'dd/MM/yyyy'),
-          y: 0,
+    markers = [
+      {
+        axis: 'x',
+        value: transactionsToView[targetAmountIndex].date,
+        lineStyle: {
+          stroke: '#e00a1f',
+          strokeWidth: 2,
         },
-        {
-          x: format(transactionsToView[targetAmountIndex].date, 'dd/MM/yyyy'),
-          y:
-            maxBy(transactionsWithBalanceToView, 'amount')?.amount ?? 0 + 40000,
-        },
-      ],
-    })
+        legend: t('target'),
+      },
+    ]
   }
 
   const totalTransactionAmounts = getTransactionAmounts(
@@ -128,7 +148,7 @@ export default function ChartPanel() {
   return (
     <>
       <div className={styles.lineChart}>
-        <LineChart data={lineChartData} />
+        <LineChart data={lineChartData} stacked markers={markers} />
       </div>
       <div className={styles.barChart}>
         <BarChart data={barChartData} indexBy="type" keys={barChartKeys} />

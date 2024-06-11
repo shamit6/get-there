@@ -1,4 +1,5 @@
 import { Asset } from '@prisma/client'
+import { getAssets } from 'db/assets'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 
@@ -16,7 +17,10 @@ function upsertToAssetsList(list: Asset[], asset: Asset) {
 }
 
 export default function useAssets() {
-  const { data: assets = [], mutate } = useSWR<Asset[]>('/api/assets')
+  const { data: assets = [], mutate } = useSWR<Asset[]>(
+    '/api/assets',
+    getAssets
+  )
 
   const deleteAsset = useCallback(
     async (assetId: string) => {

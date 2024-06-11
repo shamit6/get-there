@@ -57,6 +57,20 @@ export default function useTransactionsView() {
     ?.sort(function compare(t1, t2) {
       return t1.date.getTime() - t2.date.getTime()
     })
+    .reduce((transactions: Transaction[], current: Transaction) => {
+      const index = transactions.length - 1
+      if (index === -1) {
+        return [current]
+      } else if (
+        transactions[index].date.toLocaleDateString() ===
+        current.date.toLocaleDateString()
+      ) {
+        transactions[index].amount += current.amount
+        return transactions
+      } else {
+        return [...transactions, current]
+      }
+    }, [])
 
   const transactionsWithBalance = addBalanceToSortTransaction(
     allTransactionsOccurrences,

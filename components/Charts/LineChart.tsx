@@ -1,4 +1,6 @@
-import { ResponsiveLine, SliceTooltipProps } from '@nivo/line'
+import { ResponsiveLine } from '@nivo/line'
+import type { SliceTooltipProps, Serie } from '@nivo/line'
+import type { CartesianMarkerProps } from '@nivo/core'
 import { LegendAnchor } from '@nivo/legends'
 import { Chip, TableTooltip } from '@nivo/tooltip'
 import { useTheme } from '@nivo/core'
@@ -9,25 +11,24 @@ export interface Point {
   x: string
   y: number
 }
-export interface Searies {
-  id: string
-  color: string
-  data: Point[]
-}
 export function LineChart({
   data,
   anchor,
   // minY,
   stacked,
+  markers,
 }: {
-  data: Searies[]
+  data: Serie[]
   anchor?: LegendAnchor
   minY?: number
   stacked?: boolean
+  markers?: CartesianMarkerProps[]
 }) {
   const { theme } = useCustomTheme()
+
   return (
     <ResponsiveLine
+      markers={markers}
       theme={theme}
       defs={[{ id: 'fill-color', color: 'inherit' }]}
       enableArea
@@ -86,6 +87,11 @@ export function LineChart({
       useMesh={true}
       legends={[
         {
+          // data: data.map(({ id, color }) => ({
+          //   id,
+          //   label: id,
+          //   color,
+          // })),
           anchor: anchor ?? 'top-left',
           direction: 'column',
           justify: false,
