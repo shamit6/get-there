@@ -1,3 +1,4 @@
+import { getTransactionConfigs } from 'db/transactionConfigs'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import { TransactionConfig } from 'utils/types'
@@ -21,16 +22,8 @@ function upsertToTransactionList(
 export default function useTransactions() {
   const { data, error, mutate } = useSWR<TransactionConfig[]>(
     '/api/transaction-configs',
-    (url) =>
-      fetch(url)
-        .then((r) => r.json())
-        .then((transactionConfigs: TransactionConfig[]) => {
-          return transactionConfigs.map(({ date, endDate, ...rest }) => ({
-            ...rest,
-            date: new Date(date),
-            endDate: endDate ? new Date(endDate) : null,
-          }))
-        })
+
+    getTransactionConfigs
   )
 
   const deleteTransaction = useCallback(

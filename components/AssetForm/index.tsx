@@ -30,12 +30,13 @@ export default function Form({ asset }: { asset?: Asset }) {
         asset.timePeriod = null
       }
       void upsertAsset(asset)
+      router.push('/manage')
     },
     [upsertAsset]
   )
   const onDelete = useCallback(() => {
     void deleteAsset(asset!.id)
-    router.push('/transactions')
+    router.push('/manage')
   }, [deleteAsset])
 
   const { t } = useTranslation()

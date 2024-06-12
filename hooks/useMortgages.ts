@@ -1,3 +1,4 @@
+import { getMortgages } from 'db/mortgages'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 import type { Mortgage } from 'utils/types'
@@ -16,15 +17,9 @@ function upsertToMortgageList(list: Mortgage[], mortgage: Mortgage) {
 }
 
 export default function useMortgages() {
-  const { data, mutate, error } = useSWR<Mortgage[]>('/api/mortgages', (url) =>
-    fetch(url)
-      .then((r) => r.json())
-      .then((mortgages: Mortgage[]) => {
-        return mortgages.map((mortgage) => ({
-          ...mortgage,
-          offeringDate: new Date(mortgage.offeringDate),
-        }))
-      })
+  const { data, mutate, error } = useSWR<Mortgage[]>(
+    '/api/mortgages',
+    getMortgages
   )
 
   const upsertMortgage = useCallback(

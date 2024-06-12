@@ -1,3 +1,4 @@
+'use server'
 import { Mortgage as PrismaMortgage } from '@prisma/client'
 import { Mortgage } from 'utils/types'
 import { getServerSession } from 'next-auth/next'

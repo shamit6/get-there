@@ -1,3 +1,4 @@
+'use server'
 import { TransactionConfig } from '@prisma/client'
 import { getServerSession } from 'next-auth'
 import { nextAuthOptions } from 'utils/auth'

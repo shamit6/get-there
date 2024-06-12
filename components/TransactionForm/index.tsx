@@ -57,15 +57,14 @@ export default function Form({
       }
 
       void upsertTransaction(newTransactionData)
-
-      router.push('/transactions')
+      router.push('/manage')
     },
     [upsertTransaction, router]
   )
 
   const onDelete = useCallback(() => {
     void deleteTransaction(transactionConfig?.id!)
-    router.push('/transactions')
+    router.push('/manage')
   }, [deleteTransaction, transactionConfig, router])
 
   const isRepeated = watch('repeated', !!transactionConfig?.timePeriod)
