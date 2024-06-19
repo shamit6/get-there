@@ -68,22 +68,25 @@ export default function ChartPanel() {
   }))
 
   const lineChartData = [
-    // {
-    //   id: 'Balance',
-    //   color: '#9d4edd',
-    //   data: balanceGraphData,
-    // },
-    {
-      id: 'Assets',
-      color: '#9d0e0d',
-      data: assetValuesGraphData,
-    },
     {
       id: 'Predicted Balance',
       color: '#e0aaff',
       data: transactionsGraphData,
     },
+    // {
+    //   id: 'Balance',
+    //   color: '#9d4edd',
+    //   data: balanceGraphData,
+    // },
   ]
+
+  if (assets.length > 0) {
+    lineChartData.unshift({
+      id: 'Assets',
+      color: '#9d0e0d',
+      data: assetValuesGraphData,
+    })
+  }
 
   let markers: CartesianMarkerProps[] = []
   if (targetAmountIndex !== undefined) {

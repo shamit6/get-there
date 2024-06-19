@@ -36,11 +36,11 @@ function TransactionsSummery({
         {transaction.time.year}
       </dt>
       <dd className={styles.periodContent}>
+        <Arrow
+          className={styles.collapseIcon}
+          direction={isOpen ? Direction.DOWN : Direction.RIGHT}
+        />
         <table className={styles.periodTransactionAmounts}>
-          <Arrow
-            className={styles.collapseIcon}
-            direction={isOpen ? Direction.DOWN : Direction.RIGHT}
-          />
           <thead>
             <tr
               onClick={() => setOpen(!isOpen)}
