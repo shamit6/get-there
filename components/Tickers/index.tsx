@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './Tickers.module.scss'
 import Ticker from 'components/Ticker'
 import useTransactionsView from 'hooks/useTransactionsView'
 import UpdateBalance from 'components/UpdateBalance'
@@ -10,7 +9,7 @@ export default function Tickers() {
   const { t } = useTranslation()
 
   return (
-    <div className={styles.currentBalanceTicker}>
+    <div className="mx-auto relative inline-block">
       <Ticker label={t('balance')} number={currentBalanceAmount} />
       <UpdateBalance />
     </div>

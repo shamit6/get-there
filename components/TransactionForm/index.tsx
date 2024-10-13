@@ -2,8 +2,6 @@
 import React, { useCallback, useRef } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import overrideStyles from './Form.module.scss'
-import styles from 'components/Field/Field.module.scss'
 import NumberFormat from 'react-number-format'
 import useTransaction from 'hooks/useTransactions'
 import { TimePeriod, TransactionConfig } from 'utils/types'
@@ -72,8 +70,8 @@ export default function Form({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className={classNames(styles.form, overrideStyles.form, {
-        [styles.submitted]: formState.isSubmitted,
+      className={classNames('max-w-[21em]', {
+        submitted: formState.isSubmitted,
       })}
       noValidate
     >
@@ -131,7 +129,7 @@ export default function Form({
           {...register('type', { required: true })}
         />
       </Field>
-      <hr />
+      <hr className="w-full border-0" />
       <Field htmlFor="repeated" label="Repeated" horizontal>
         <input
           type="checkbox"
@@ -140,7 +138,7 @@ export default function Form({
           {...register('repeated', { required: isRepeated })}
         />
       </Field>
-      <hr />
+      <hr className="w-full border-0" />
       <Field label="In">
         <input
           type="number"
@@ -161,7 +159,7 @@ export default function Form({
           control={control}
           name="endDate"
           render={({ field: { onChange, value } }) => (
-            <>
+            <div className="flex items-center">
               <input
                 ref={endDateEl}
                 type="date"
@@ -170,9 +168,10 @@ export default function Form({
                 }}
                 disabled={!isRepeated}
                 value={value ? format(value, 'yyyy-MM-dd') : undefined}
+                className="flex-grow"
               />
               <div
-                className={overrideStyles.clearInput}
+                className="ml-1 text-error-color cursor-pointer opacity-70 hover:opacity-100"
                 onClick={() => {
                   onChange(null)
                   endDateEl.current!.value = ''
@@ -180,12 +179,12 @@ export default function Form({
               >
                 X
               </div>
-            </>
+            </div>
           )}
         />
       </Field>
-      <hr />
-      <ButtonsGroup centered className={overrideStyles.submitGroupButton}>
+      <hr className="w-full border-0" />
+      <ButtonsGroup centered className="flex-1">
         <Button text="Save" primary />
       </ButtonsGroup>
     </form>
