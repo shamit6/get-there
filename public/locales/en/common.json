@@ -6,6 +6,12 @@
   "assetNew": "New Asset",
   "mortgages": "Mortgages",
   "mortgageNew": "New Mortgage",
+  "stocks": "Stocks",
+  "newStock": "New Stock",
+  "stockSymbol": "Symbol",
+  "stocksAmount": "Amount",
+  "buyingPrice": "Buying Price",
+  "stockBuyDate": "Buy Date",
 
   "mortgage": "Mortgage",
   "language": "Language",

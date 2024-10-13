@@ -6,6 +6,12 @@
   "assetNew": "נכס חדש",
   "mortgages": "משכנתאות",
   "mortgageNew": "משכנתא חדשה",
+  "stocks": "מניות",
+  "newStock": "מניה חדשה",
+  "stockSymbol": "סימול",
+  "stocksAmount": "כמות",
+  "buyingPrice": "מחיר רכישה",
+  "stockBuyDate": "תאריך רכישה",
 
   "mortgage": "משכנתא",
   "language": "שפה",

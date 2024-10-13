@@ -7,7 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["interactiveTransactions"]
 }
 
@@ -15,14 +15,15 @@ model BalanceStatus {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   createdAt DateTime @default(now())
   amount    Int
-  userEmail String   
+  userEmail String
   user      User     @relation(fields: [userEmail], references: [email])
+
   @@map("balanceStatuses")
 }
 
 model User {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  email             String   @unique
+  id                String              @id @default(auto()) @map("_id") @db.ObjectId
+  email             String              @unique
   name              String?
   image             String?
   balanceStatus     BalanceStatus[]
@@ -30,22 +31,25 @@ model User {
   MortgageCourse    MortgageCourse[]
   Mortgage          Mortgage[]
   Asset             Asset[]
+  Stock             Stock[]
+
   @@map("users")
 }
 
 model TransactionConfig {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  type          String
-  date          DateTime
-  amount        Int
-  timePeriod    String?
-  periodAmount  Int?
-  endDate       DateTime?
-  userEmail     String   
-  user          User     @relation(fields: [userEmail], references: [email])
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  type         String
+  date         DateTime
+  amount       Int
+  timePeriod   String?
+  periodAmount Int?
+  endDate      DateTime?
+  userEmail    String
+  user         User      @relation(fields: [userEmail], references: [email])
+
   @@map("transactionConfigs")
 }
-  
+
 enum MortgageType {
   NON_LINKED_FIXED
   LINKED_FIXED
@@ -80,7 +84,7 @@ model MortgageCourse {
   earlyPayoffAmount  Int?
   earlyPayoffPurpose MortgageEarlyPayoffPurpose?
   user               User?                       @relation(fields: [userEmail], references: [email])
-  userEmail          String?                     
+  userEmail          String?
   Mortgage           Mortgage?                   @relation(fields: [mortgageId], references: [id])
   mortgageId         String?                     @db.ObjectId
 }
@@ -108,14 +112,24 @@ model Mortgage {
 }
 
 model Asset {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  type                String
-  cashValue           Int
-  cashValueDate       DateTime
-  increasingValueRate Float?
-  periodicIncomeAmount  Int?
-  timePeriod          String?
-  periodAmount        Int?
-  userEmail           String   
-  user                User     @relation(fields: [userEmail], references: [email])
+  id                   String   @id @default(auto()) @map("_id") @db.ObjectId
+  type                 String
+  cashValue            Int
+  cashValueDate        DateTime
+  increasingValueRate  Float?
+  periodicIncomeAmount Int?
+  timePeriod           String?
+  periodAmount         Int?
+  userEmail            String
+  user                 User     @relation(fields: [userEmail], references: [email])
+}
+
+model Stock {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  symbol       String
+  amount       Int
+  buyingPrice  Float
+  stockBuyDate DateTime
+  userEmail    String
+  user         User     @relation(fields: [userEmail], references: [email])
 }

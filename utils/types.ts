@@ -88,3 +88,11 @@ export interface CalculatedMortgageSummery {
   totalPayment: number
   currencyRatio: number
 }
+
+export interface Stock {
+  id?: string
+  symbol: string
+  amount: number
+  buyingPrice: number
+  stockBuyDate: Date
+}
